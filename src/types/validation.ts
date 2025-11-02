@@ -41,7 +41,7 @@ export const projectInfoSchema = z.object({
   description: z
     .string()
     .min(10, 'Description must be at least 10 characters')
-    .max(500, 'Description must be less than 500 characters'),
+    .max(2000, 'Description must be less than 2000 characters'),
 
   type: z.enum(['Website', 'Web App', 'Mobile App', 'Dashboard', 'E-commerce', 'Portfolio'], {
     errorMap: () => ({ message: 'Please select a valid project type' }),

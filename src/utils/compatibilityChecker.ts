@@ -25,7 +25,7 @@ export interface CompatibilityResult {
   score: number; // 0-100
   issues: CompatibilityIssue[];
   warnings: CompatibilityIssue[];
-  harmony: 'excellent' | 'good' | 'fair' | 'poor';
+  harmony: 'excellent' | 'good' | 'fair' | 'poor' | 'pending';
 }
 
 /**
@@ -41,12 +41,38 @@ export interface SelectionsToCheck {
 }
 
 /**
+ * Count the number of distinct design selections made
+ */
+const countSelections = (selections: SelectionsToCheck): number => {
+  let count = 0;
+  if (selections.selectedDesignStyle) count++;
+  if (selections.selectedColorTheme) count++;
+  if (selections.selectedComponents && selections.selectedComponents.length > 0) count++;
+  if (selections.selectedFunctionality && selections.selectedFunctionality.length > 0) count++;
+  if (selections.selectedBackground) count++;
+  if (selections.selectedAnimations && selections.selectedAnimations.length > 0) count++;
+  return count;
+};
+
+/**
  * Main compatibility checking function
  * Validates design choices work well together
  */
 export const checkCompatibility = (selections: SelectionsToCheck): CompatibilityResult => {
   const issues: CompatibilityIssue[] = [];
   const warnings: CompatibilityIssue[] = [];
+
+  // Check if minimum selections have been made (at least 2)
+  const selectionCount = countSelections(selections);
+  if (selectionCount < 2) {
+    // Return pending state - no score calculated yet
+    return {
+      score: 0,
+      issues: [],
+      warnings: [],
+      harmony: 'pending' as any, // Will be handled in UI
+    };
+  }
 
   // Check design style + color theme compatibility
   if (selections.selectedDesignStyle && selections.selectedColorTheme) {

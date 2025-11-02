@@ -481,3 +481,21 @@ export const applyNLPResults = (
 
   return updates;
 };
+
+/**
+ * Safe wrapper for parseProjectDescription that handles errors gracefully
+ * 
+ * @param description - The user's project description text
+ * @returns NLPParseResult or default empty result on error
+ */
+export const safeParseProjectDescription = (description: string): NLPParseResult => {
+  try {
+    return parseProjectDescription(description);
+  } catch (error) {
+    console.error('NLP parsing failed:', error);
+    return {
+      confidence: {},
+      detectedKeywords: [],
+    };
+  }
+};

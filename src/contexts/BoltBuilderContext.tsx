@@ -13,6 +13,12 @@ import {
   BackgroundSelection,
 } from '../types';
 import { useHistory } from './HistoryContext';
+import {
+  startWizardSession,
+  updateWizardStep,
+  completeWizardSession,
+} from '../utils/metricsTracking';
+import { toast } from '@/hooks/use-toast';
 
 /**
  * State that can be tracked for undo/redo
@@ -139,6 +145,9 @@ const defaultTypography: Typography = {
 export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Step management
   const [currentStep, setCurrentStep] = useState('project-setup');
+  
+  // Track if session has been started
+  const sessionStartedRef = useRef(false);
 
   // Form state
   const [projectInfo, setProjectInfo] = useState<ProjectInfo>({
@@ -164,7 +173,24 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [selectedAnimations, setSelectedAnimations] = useState<AnimationOption[]>([]);
 
   // Background selection state (new comprehensive type)
-  const [backgroundSelection, setBackgroundSelection] = useState<BackgroundSelection | null>(null);
+  const [backgroundSelectionState, setBackgroundSelectionState] = useState<BackgroundSelection | null>(null);
+
+  // Wrapper for setBackgroundSelection with logging
+  const setBackgroundSelection = React.useCallback((selection: BackgroundSelection | null) => {
+    console.log('[Background Selection] State update:', {
+      type: selection?.type,
+      reactBitsComponent: selection?.reactBitsComponent?.title,
+      solidColor: selection?.solidColor,
+      gradientColors: selection?.gradientColors,
+      gradientDirection: selection?.gradientDirection,
+      pattern: selection?.pattern,
+      timestamp: new Date().toISOString(),
+    });
+    setBackgroundSelectionState(selection);
+  }, []);
+
+  // Use the state value for reading
+  const backgroundSelection = backgroundSelectionState;
 
   // Prompt state
   const [promptText, setPromptText] = useState('');
@@ -217,6 +243,64 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
   })();
 
   /**
+   * Validation result interface
+   */
+  interface ValidationResult {
+    isValid: boolean;
+    errors: string[];
+    warnings: string[];
+  }
+
+  /**
+   * Validates that prompt generation data matches user selections
+   * Logs warnings for any mismatches
+   */
+  const validatePromptData = (): ValidationResult => {
+    const warnings: string[] = [];
+    const errors: string[] = [];
+    
+    // Validate background selection
+    if (backgroundSelectionState?.type === 'react-bits') {
+      const reactBitsComponent = backgroundSelectionState.reactBitsComponent;
+      const legacyBackground = selectedBackground;
+      
+      if (reactBitsComponent && legacyBackground) {
+        if (reactBitsComponent.id !== legacyBackground.id) {
+          errors.push(
+            `Background mismatch: backgroundSelection has "${reactBitsComponent.title}" ` +
+            `but selectedBackground has "${legacyBackground.title}"`
+          );
+        }
+      } else if (reactBitsComponent && !legacyBackground) {
+        warnings.push(
+          `backgroundSelection has "${reactBitsComponent.title}" but selectedBackground is null. ` +
+          `This may indicate a sync issue.`
+        );
+      }
+    }
+    
+    // Validate component selections
+    if (selectedComponents.length > 0) {
+      const componentNames = selectedComponents.map(c => c.title).join(', ');
+      console.log('[Validation] Components selected:', componentNames);
+    }
+    
+    // Log results
+    if (errors.length > 0) {
+      console.error('[Validation] Errors found:', errors);
+    }
+    if (warnings.length > 0) {
+      console.warn('[Validation] Warnings found:', warnings);
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors,
+      warnings
+    };
+  };
+
+  /**
    * Generates a comprehensive, detailed prompt for AI-powered development
    *
    * Creates a structured markdown document containing all project specifications including:
@@ -250,9 +334,32 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
    * components (backgrounds, UI components, and animations) with their dependencies.
    */
   const generatePrompt = (): string => {
+    const timestamp = new Date().toISOString();
+    console.log(`[Prompt Gen] ${timestamp} - Starting prompt generation`);
+    
+    // Validate before generating
+    const validation = validatePromptData();
+    
+    if (!validation.isValid) {
+      console.error(`[Prompt Gen] ${timestamp} - Validation failed:`, validation.errors);
+      // Log but continue - don't block prompt generation
+    }
+    
+    if (validation.warnings.length > 0) {
+      console.warn(`[Prompt Gen] ${timestamp} - Validation warnings:`, validation.warnings);
+    }
+    
     if (!projectInfo.name || !selectedLayout || !selectedDesignStyle || !selectedColorTheme) {
+      console.error(`[Prompt Gen] ${timestamp} - Missing required fields:`, {
+        hasProjectName: !!projectInfo.name,
+        hasLayout: !!selectedLayout,
+        hasDesignStyle: !!selectedDesignStyle,
+        hasColorTheme: !!selectedColorTheme,
+      });
       return 'Please complete all required sections before generating a prompt.';
     }
+    
+    console.log(`[Prompt Gen] ${timestamp} - Required fields validated successfully`);
 
     const functionalityTier = selectedFunctionality.find((item) => item.tier);
     const technicalFeatures = selectedFunctionality.filter((item) => !item.tier);
@@ -262,18 +369,100 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
     });
 
     // Background section (Section 7)
-    const backgroundSection = selectedBackground
-      ? `## 7. Background Effect
+    // Priority 1: Check backgroundSelection (comprehensive state)
+    const backgroundSection = (() => {
+      const bgTimestamp = new Date().toISOString();
+      console.log(`[Prompt Gen] ${bgTimestamp} - Processing background selection:`, {
+        backgroundSelectionType: backgroundSelectionState?.type || 'none',
+        hasReactBitsComponent: !!(backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent),
+        hasSolidColor: !!(backgroundSelectionState?.type === 'solid' && backgroundSelectionState.solidColor),
+        hasGradient: !!(backgroundSelectionState?.type === 'gradient' && backgroundSelectionState.gradientColors),
+        hasPattern: !!(backgroundSelectionState?.type === 'pattern' && backgroundSelectionState.pattern),
+        hasLegacyBackground: !!selectedBackground,
+      });
+      
+      if (backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent) {
+        const bg = backgroundSelectionState.reactBitsComponent;
+        console.log(`[Prompt Gen] ${bgTimestamp} - Using React-Bits background from backgroundSelection:`, {
+          title: bg.title,
+          id: bg.id,
+          dependencies: bg.dependencies,
+          cliCommand: bg.cliCommand,
+        });
+        return `## 7. Background Effect
+- **Selected Background:** ${bg.title}
+- **Description:** ${bg.description}
+- **Dependencies:** ${bg.dependencies.join(', ')}
+- **Installation:** \`${bg.cliCommand}\`
+`;
+      }
+      
+      // Priority 2: Check other background types
+      if (backgroundSelectionState?.type === 'solid' && backgroundSelectionState.solidColor) {
+        console.log(`[Prompt Gen] ${bgTimestamp} - Using solid color background:`, {
+          color: backgroundSelectionState.solidColor,
+        });
+        return `## 7. Background Effect
+- **Type:** Solid Color
+- **Color:** ${backgroundSelectionState.solidColor}
+`;
+      }
+      
+      if (backgroundSelectionState?.type === 'gradient' && backgroundSelectionState.gradientColors) {
+        console.log(`[Prompt Gen] ${bgTimestamp} - Using gradient background:`, {
+          colors: backgroundSelectionState.gradientColors,
+          direction: backgroundSelectionState.gradientDirection || 'to right',
+        });
+        return `## 7. Background Effect
+- **Type:** Gradient
+- **Colors:** ${backgroundSelectionState.gradientColors.join(' → ')}
+- **Direction:** ${backgroundSelectionState.gradientDirection || 'to right'}
+`;
+      }
+      
+      if (backgroundSelectionState?.type === 'pattern' && backgroundSelectionState.pattern) {
+        console.log(`[Prompt Gen] ${bgTimestamp} - Using pattern background:`, {
+          pattern: backgroundSelectionState.pattern,
+        });
+        return `## 7. Background Effect
+- **Type:** Pattern
+- **Pattern:** ${backgroundSelectionState.pattern}
+`;
+      }
+      
+      // Fallback: Check legacy selectedBackground field
+      if (selectedBackground) {
+        console.warn(`[Prompt Gen] ${bgTimestamp} - Using legacy selectedBackground field (should use backgroundSelection):`, {
+          title: selectedBackground.title,
+          id: selectedBackground.id,
+          dependencies: selectedBackground.dependencies,
+        });
+        return `## 7. Background Effect
 - **Selected Background:** ${selectedBackground.title}
 - **Description:** ${selectedBackground.description}
 - **Dependencies:** ${selectedBackground.dependencies.join(', ')}
 - **Installation:** \`${selectedBackground.cliCommand}\`
-`
-      : `## 7. Background Effect
+`;
+      }
+      
+      // No background selected
+      console.log(`[Prompt Gen] ${bgTimestamp} - No background selected`);
+      return `## 7. Background Effect
 - **Selected Background:** None
 `;
+    })();
 
     // UI Components section (Section 8)
+    const compTimestamp = new Date().toISOString();
+    console.log(`[Prompt Gen] ${compTimestamp} - Processing UI components:`, {
+      count: selectedComponents.length,
+      components: selectedComponents.map(c => ({
+        title: c.title,
+        id: c.id,
+        dependencies: c.dependencies,
+      })),
+    });
+    
     const componentsSection =
       selectedComponents.length > 0
         ? `## 8. UI Components
@@ -303,6 +492,16 @@ ${comp.codeSnippet}
 `;
 
     // UI/UX Animations section (Section 9)
+    const animTimestamp = new Date().toISOString();
+    console.log(`[Prompt Gen] ${animTimestamp} - Processing animations:`, {
+      count: selectedAnimations.length,
+      animations: selectedAnimations.map(a => ({
+        title: a.title,
+        id: a.id,
+        dependencies: a.dependencies,
+      })),
+    });
+    
     const animationsSection =
       selectedAnimations.length > 0
         ? `## 9. UI/UX Animations
@@ -324,19 +523,43 @@ ${selectedAnimations
 `;
 
     // React-Bits Installation section (Section 12)
+    // Calculate dependencies based on backgroundSelection (primary) or selectedBackground (fallback)
+    const depsTimestamp = new Date().toISOString();
+    const backgroundDeps = backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent
+      ? backgroundSelectionState.reactBitsComponent.dependencies
+      : (selectedBackground?.dependencies || []);
+    
+    const backgroundCliCommand = backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent
+      ? backgroundSelectionState.reactBitsComponent.cliCommand
+      : selectedBackground?.cliCommand;
+    
+    console.log(`[Prompt Gen] ${depsTimestamp} - Calculating dependencies:`, {
+      backgroundDeps,
+      backgroundCliCommand,
+      componentDeps: selectedComponents.flatMap((c) => c.dependencies),
+      animationDeps: selectedAnimations.flatMap((a) => a.dependencies),
+    });
+    
     const allDependencies = [
       ...new Set([
-        ...(selectedBackground?.dependencies || []),
+        ...backgroundDeps,
         ...selectedComponents.flatMap((c) => c.dependencies),
         ...selectedAnimations.flatMap((a) => a.dependencies),
       ]),
     ];
 
     const allCliCommands = [
-      selectedBackground?.cliCommand,
+      backgroundCliCommand,
       ...selectedComponents.map((c) => c.cliCommand),
       ...selectedAnimations.map((a) => a.cliCommand),
     ].filter(Boolean);
+    
+    console.log(`[Prompt Gen] ${depsTimestamp} - Dependency calculation results:`, {
+      totalDependencies: allDependencies.length,
+      dependencies: allDependencies,
+      totalCliCommands: allCliCommands.length,
+      cliCommands: allCliCommands,
+    });
 
     const installationSection =
       allCliCommands.length > 0
@@ -359,7 +582,7 @@ Refer to the component-specific usage examples above for implementation details.
 `
         : '';
 
-    return `Create a ${projectInfo.type.toLowerCase()} with the following specifications:
+    const promptResult = `Create a ${projectInfo.type.toLowerCase()} with the following specifications:
 
 **Project Name:** "${projectInfo.name}"
 
@@ -442,7 +665,21 @@ ${installationSection}
 - **Cross-browser Compatibility:** Support for modern browsers
 - **Mobile Optimization:** Touch-friendly interface and responsive layouts
 
-Please implement this design with pixel-perfect attention to detail, ensuring all elements work harmoniously together to create an exceptional user experience.`.trim();
+Please implement this design with pixel-perfect attention to detail, ensuring all elements work harmoniously together to create an exceptional user experience.`;
+    
+    const result = promptResult.trim();
+    const endTimestamp = new Date().toISOString();
+    console.log(`[Prompt Gen] ${endTimestamp} - Prompt generation completed successfully`, {
+      promptLength: result.length,
+      sections: {
+        hasBackground: backgroundSection.includes('Selected Background'),
+        hasComponents: selectedComponents.length > 0,
+        hasAnimations: selectedAnimations.length > 0,
+        hasInstallation: installationSection.length > 0,
+      },
+    });
+    
+    return result;
   };
 
   /**
@@ -538,7 +775,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
       selectedFunctionality,
       selectedVisuals,
       selectedBackground,
-      backgroundSelection,
+      backgroundSelection: backgroundSelectionState,
       selectedComponents,
       selectedAnimations,
       currentStep,
@@ -546,20 +783,63 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     };
 
     try {
-      localStorage.setItem('lovabolt-project', JSON.stringify(projectData));
+      const serialized = JSON.stringify(projectData);
+      localStorage.setItem('lovabolt-project', serialized);
+      console.log('[LocalStorage] Project saved successfully:', {
+        size: serialized.length,
+        timestamp: new Date().toISOString(),
+      });
     } catch (error) {
-      console.error('Failed to save project to localStorage:', error);
-      if (error instanceof Error) {
-        console.error('Error details:', {
+      console.error('[LocalStorage] Save failed:', error);
+      
+      if (error instanceof DOMException) {
+        if (error.name === 'QuotaExceededError') {
+          const serialized = JSON.stringify(projectData);
+          console.error('[LocalStorage] Quota exceeded. Project size:', serialized.length, 'bytes');
+          
+          // Show user notification for quota exceeded
+          toast({
+            variant: 'destructive',
+            title: 'Storage Full',
+            description: 'Unable to save project. Your browser storage is full. Please clear some browser data or use a different browser.',
+            duration: 10000,
+          });
+        } else {
+          // Other DOMException errors
+          console.error('[LocalStorage] DOMException:', {
+            name: error.name,
+            message: error.message,
+          });
+          
+          toast({
+            variant: 'destructive',
+            title: 'Save Failed',
+            description: 'Unable to save project to browser storage. Your work will be preserved in memory during this session.',
+            duration: 10000,
+          });
+        }
+      } else if (error instanceof Error) {
+        console.error('[LocalStorage] Error details:', {
           name: error.name,
           message: error.message,
           stack: error.stack,
         });
+        
+        toast({
+          variant: 'destructive',
+          title: 'Save Failed',
+          description: 'An unexpected error occurred while saving. Your work will be preserved in memory during this session.',
+          duration: 10000,
+        });
       }
+      
       // Check if localStorage is available
       if (typeof localStorage === 'undefined') {
-        console.error('localStorage is not available in this environment');
+        console.error('[LocalStorage] localStorage is not available in this environment');
       }
+      
+      // Continue with in-memory state only
+      console.log('[LocalStorage] Continuing with in-memory state only');
     }
   }, [
     projectInfo,
@@ -571,6 +851,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedFunctionality,
     selectedVisuals,
     selectedBackground,
+    backgroundSelectionState,
     selectedComponents,
     selectedAnimations,
     currentStep,
@@ -615,25 +896,67 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
    */
   const loadProject = React.useCallback((projectData: ProjectData) => {
     try {
-      if (projectData.projectInfo) setProjectInfo(projectData.projectInfo);
-      if (projectData.selectedLayout) setSelectedLayout(projectData.selectedLayout);
-      if (projectData.selectedSpecialLayouts)
-        setSelectedSpecialLayouts(projectData.selectedSpecialLayouts);
-      if (projectData.selectedDesignStyle) setSelectedDesignStyle(projectData.selectedDesignStyle);
-      if (projectData.selectedColorTheme) setSelectedColorTheme(projectData.selectedColorTheme);
-      if (projectData.selectedTypography) setSelectedTypography(projectData.selectedTypography);
-      if (projectData.selectedFunctionality)
-        setSelectedFunctionality(projectData.selectedFunctionality);
-      if (projectData.selectedVisuals) setSelectedVisuals(projectData.selectedVisuals);
-      if (projectData.selectedBackground) setSelectedBackground(projectData.selectedBackground);
-      if (projectData.backgroundSelection) setBackgroundSelection(projectData.backgroundSelection);
-      if (projectData.selectedComponents) setSelectedComponents(projectData.selectedComponents);
-      if (projectData.selectedAnimations) setSelectedAnimations(projectData.selectedAnimations);
-      if (projectData.currentStep) setCurrentStep(projectData.currentStep);
+      // Validate data structure before loading
+      console.log('[Load Project] Starting project load with validation');
+      
+      // Check for background mismatches in loaded data
+      if (projectData.backgroundSelection && projectData.selectedBackground) {
+        if (projectData.backgroundSelection.type === 'react-bits') {
+          const reactBitsId = projectData.backgroundSelection.reactBitsComponent?.id;
+          const legacyId = projectData.selectedBackground.id;
+          
+          if (reactBitsId && legacyId && reactBitsId !== legacyId) {
+            console.warn('[Load Project] Background mismatch detected in saved data:', {
+              backgroundSelection: reactBitsId,
+              selectedBackground: legacyId,
+            });
+            // Prefer backgroundSelection as source of truth
+            console.log('[Load Project] Using backgroundSelection as source of truth');
+          }
+        }
+      }
+      
+      // Wrap state updates in try-catch for safety
+      try {
+        if (projectData.projectInfo) setProjectInfo(projectData.projectInfo);
+        if (projectData.selectedLayout) setSelectedLayout(projectData.selectedLayout);
+        if (projectData.selectedSpecialLayouts)
+          setSelectedSpecialLayouts(projectData.selectedSpecialLayouts);
+        if (projectData.selectedDesignStyle) setSelectedDesignStyle(projectData.selectedDesignStyle);
+        if (projectData.selectedColorTheme) setSelectedColorTheme(projectData.selectedColorTheme);
+        if (projectData.selectedTypography) setSelectedTypography(projectData.selectedTypography);
+        if (projectData.selectedFunctionality)
+          setSelectedFunctionality(projectData.selectedFunctionality);
+        if (projectData.selectedVisuals) setSelectedVisuals(projectData.selectedVisuals);
+        
+        // Load backgroundSelection first (source of truth)
+        if (projectData.backgroundSelection) {
+          setBackgroundSelectionState(projectData.backgroundSelection);
+          console.log('[Load Project] Loaded backgroundSelection:', {
+            type: projectData.backgroundSelection.type,
+            component: projectData.backgroundSelection.reactBitsComponent?.title,
+          });
+        }
+        
+        // Load selectedBackground (will be synced by useEffect if needed)
+        if (projectData.selectedBackground) {
+          setSelectedBackground(projectData.selectedBackground);
+          console.log('[Load Project] Loaded selectedBackground:', projectData.selectedBackground.title);
+        }
+        
+        if (projectData.selectedComponents) setSelectedComponents(projectData.selectedComponents);
+        if (projectData.selectedAnimations) setSelectedAnimations(projectData.selectedAnimations);
+        if (projectData.currentStep) setCurrentStep(projectData.currentStep);
+        
+        console.log('[Load Project] Project loaded successfully');
+      } catch (stateError) {
+        console.error('[Load Project] Error updating state:', stateError);
+        throw stateError;
+      }
     } catch (error) {
-      console.error('Error loading project data into state:', error);
+      console.error('[Load Project] Failed to load project:', error);
       if (error instanceof Error) {
-        console.error('Error details:', {
+        console.error('[Load Project] Error details:', {
           name: error.name,
           message: error.message,
           stack: error.stack,
@@ -686,7 +1009,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     setSelectedFunctionality([]);
     setSelectedVisuals([]);
     setSelectedBackground(null);
-    setBackgroundSelection(null);
+    setBackgroundSelectionState(null);
     setSelectedComponents([]);
     setSelectedAnimations([]);
     setCurrentStep('project-setup');
@@ -711,7 +1034,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
         selectedFunctionality,
         selectedVisuals,
         selectedBackground,
-        backgroundSelection,
+        backgroundSelection: backgroundSelectionState,
         selectedComponents,
         selectedAnimations,
       };
@@ -729,7 +1052,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedFunctionality,
     selectedVisuals,
     selectedBackground,
-    backgroundSelection,
+    backgroundSelectionState,
     selectedComponents,
     selectedAnimations,
     pushState,
@@ -746,7 +1069,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
       setSelectedFunctionality(historyState.selectedFunctionality);
       setSelectedVisuals(historyState.selectedVisuals);
       setSelectedBackground(historyState.selectedBackground);
-      setBackgroundSelection(historyState.backgroundSelection);
+      setBackgroundSelectionState(historyState.backgroundSelection);
       setSelectedComponents(historyState.selectedComponents);
       setSelectedAnimations(historyState.selectedAnimations);
 
@@ -765,6 +1088,30 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     isRestoringRef.current = true;
     historyRedo();
   }, [historyRedo]);
+
+  // State synchronization: Sync selectedBackground from backgroundSelection
+  // This ensures both fields stay in sync when backgroundSelection changes
+  React.useEffect(() => {
+    // Only sync when backgroundSelection.type is 'react-bits'
+    if (backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent) {
+      // Check if sync is needed (avoid unnecessary updates)
+      if (selectedBackground?.id !== backgroundSelectionState.reactBitsComponent.id) {
+        console.log('[State Sync] Updating selectedBackground from backgroundSelection:', {
+          from: selectedBackground?.title || 'null',
+          to: backgroundSelectionState.reactBitsComponent.title,
+          timestamp: new Date().toISOString(),
+        });
+        setSelectedBackground(backgroundSelectionState.reactBitsComponent);
+      }
+    } else if (backgroundSelectionState?.type !== 'react-bits' && selectedBackground !== null) {
+      // Clear selectedBackground if not using React-Bits
+      console.log('[State Sync] Clearing selectedBackground (non-React-Bits type):', {
+        type: backgroundSelectionState?.type || 'null',
+        timestamp: new Date().toISOString(),
+      });
+      setSelectedBackground(null);
+    }
+  }, [backgroundSelectionState, selectedBackground]);
 
   // Auto-save functionality with debouncing (1 second delay)
   // This prevents excessive localStorage writes during rapid state changes
@@ -785,41 +1132,113 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedFunctionality,
     selectedVisuals,
     selectedBackground,
-    backgroundSelection,
+    backgroundSelectionState,
     selectedComponents,
     selectedAnimations,
     currentStep,
     saveProject,
   ]);
 
-  // Load project on mount
+  // Load project on mount and start metrics tracking
   React.useEffect(() => {
+    const timestamp = new Date().toISOString();
+    console.log(`[Load Project] ${timestamp} - Initializing context and checking for saved project`);
+    
+    // Start wizard session tracking
+    if (!sessionStartedRef.current) {
+      console.log(`[Load Project] ${timestamp} - Starting new wizard session`);
+      startWizardSession();
+      sessionStartedRef.current = true;
+    }
+    
     try {
       const saved = localStorage.getItem('lovabolt-project');
       if (saved) {
-        const projectData = JSON.parse(saved);
-        loadProject(projectData);
-        console.log('Project loaded successfully from localStorage');
+        console.log(`[Load Project] ${timestamp} - Found saved project in localStorage`, {
+          dataSize: saved.length,
+          timestamp,
+        });
+        
+        try {
+          const projectData = JSON.parse(saved);
+          console.log(`[Load Project] ${timestamp} - Successfully parsed project data`, {
+            hasProjectInfo: !!projectData.projectInfo,
+            hasLayout: !!projectData.selectedLayout,
+            hasDesignStyle: !!projectData.selectedDesignStyle,
+            hasColorTheme: !!projectData.selectedColorTheme,
+            hasBackground: !!projectData.selectedBackground,
+            hasBackgroundSelection: !!projectData.backgroundSelection,
+            hasComponents: !!projectData.selectedComponents,
+            hasAnimations: !!projectData.selectedAnimations,
+            currentStep: projectData.currentStep,
+            savedAt: projectData.savedAt,
+          });
+          
+          loadProject(projectData);
+          console.log(`[Load Project] ${timestamp} - Project loaded successfully from localStorage`);
+        } catch (parseError) {
+          console.error(`[Load Project] ${timestamp} - Failed to parse saved project data:`, parseError);
+          if (parseError instanceof Error) {
+            console.error(`[Load Project] ${timestamp} - Parse error details:`, {
+              name: parseError.name,
+              message: parseError.message,
+              stack: parseError.stack,
+            });
+          }
+          
+          // Clear corrupted data
+          try {
+            localStorage.removeItem('lovabolt-project');
+            console.log(`[Load Project] ${timestamp} - Corrupted project data cleared from localStorage`);
+          } catch (clearError) {
+            console.error(`[Load Project] ${timestamp} - Failed to clear corrupted project data:`, clearError);
+          }
+        }
+      } else {
+        console.log(`[Load Project] ${timestamp} - No saved project found in localStorage, starting fresh`);
       }
     } catch (error) {
-      console.error('Failed to load saved project from localStorage:', error);
+      console.error(`[Load Project] ${timestamp} - Failed to access localStorage:`, error);
       if (error instanceof Error) {
-        console.error('Error details:', {
+        console.error(`[Load Project] ${timestamp} - localStorage access error details:`, {
           name: error.name,
           message: error.message,
           stack: error.stack,
         });
       }
-      // Clear corrupted data
-      try {
-        localStorage.removeItem('lovabolt-project');
-        console.log('Corrupted project data cleared from localStorage');
-      } catch (e) {
-        console.error('Failed to clear corrupted project data:', e);
+      
+      // Check if localStorage is available
+      if (typeof localStorage === 'undefined') {
+        console.error(`[Load Project] ${timestamp} - localStorage is not available in this environment`);
       }
+      
+      console.log(`[Load Project] ${timestamp} - Continuing with default empty state`);
     }
   }, [loadProject]);
+  
+  // Track step changes
+  React.useEffect(() => {
+    updateWizardStep(currentStep);
+  }, [currentStep]);
 
+  // Wrapper to track prompt generation completion
+  const generatePromptWithTracking = React.useCallback((): string => {
+    const prompt = generatePrompt();
+    
+    // If prompt was successfully generated, mark wizard as complete
+    if (prompt && !prompt.includes('Please complete all required sections')) {
+      // Calculate prompt quality score (simplified - would use actual analyzer)
+      const promptLength = prompt.length;
+      const hasAllSections = prompt.includes('## 1.') && prompt.includes('## 2.') && 
+                            prompt.includes('## 3.') && prompt.includes('## 4.');
+      const qualityScore = hasAllSections ? Math.min(85 + (promptLength / 100), 100) : 70;
+      
+      completeWizardSession(qualityScore);
+    }
+    
+    return prompt;
+  }, [generatePrompt]);
+  
   const contextValue: BoltBuilderContextType = {
     currentStep,
     setCurrentStep,
@@ -848,7 +1267,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedAnimations,
     setSelectedAnimations,
     progress,
-    generatePrompt,
+    generatePrompt: generatePromptWithTracking,
     generateBasicPrompt,
     promptText,
     setPromptText,
@@ -873,3 +1292,10 @@ export const useBoltBuilder = () => {
   }
   return context;
 };
+
+// Export metrics tracking functions for use in components
+export {
+  trackSmartDefaultsAcceptance,
+  trackSuggestionShown,
+  trackSuggestionApplication,
+} from '../utils/metricsTracking';

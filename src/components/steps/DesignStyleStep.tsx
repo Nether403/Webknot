@@ -3,9 +3,28 @@ import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { designStyles } from '../../data/wizardData';
 import { Button } from '../ui/button';
 import DesignStyleCard from '../cards/DesignStyleCard';
+import { DesignSuggestions } from '../ai/DesignSuggestions';
+import { useDesignSuggestions } from '../../hooks/useDesignSuggestions';
+import type { DesignSuggestion } from '../../types/gemini';
+import { AIErrorFeedback } from '../ai/AIErrorFeedback';
 
 const DesignStyleStep: React.FC = () => {
   const { selectedDesignStyle, setSelectedDesignStyle, setCurrentStep } = useBoltBuilder();
+  
+  // Design suggestions integration
+  const {
+    suggestions,
+    isLoading: suggestionsLoading,
+    error: suggestionsError,
+    isVisible: suggestionsVisible,
+    showSuggestions,
+    hideSuggestions,
+    analyzeSuggestions,
+  } = useDesignSuggestions({
+    autoAnalyze: true,
+    minSelections: 2,
+    debounceMs: 1000,
+  });
 
   const handleStyleSelect = (styleId: string) => {
     const style = designStyles.find(s => s.id === styleId);
@@ -16,6 +35,13 @@ const DesignStyleStep: React.FC = () => {
     if (selectedDesignStyle) {
       setCurrentStep('color-theme');
     }
+  };
+  
+  // Handle applying auto-fixable suggestions
+  const handleApplyFixes = (fixableSuggestions: DesignSuggestion[]) => {
+    console.log('[DesignStyleStep] Applying fixes:', fixableSuggestions);
+    // TODO: Implement auto-fix logic based on suggestion types
+    // This would involve updating wizard state based on suggestions
   };
 
   return (
@@ -37,6 +63,25 @@ const DesignStyleStep: React.FC = () => {
           />
         ))}
       </div>
+      
+      {/* AI Error Feedback */}
+      {suggestionsError && (
+        <AIErrorFeedback
+          error={suggestionsError}
+          onRetry={analyzeSuggestions}
+          isRetrying={suggestionsLoading}
+        />
+      )}
+      
+      {/* AI Design Suggestions */}
+      {suggestionsVisible && (suggestions.length > 0 || suggestionsLoading) && !suggestionsError && (
+        <DesignSuggestions
+          suggestions={suggestions}
+          isLoading={suggestionsLoading}
+          onApplyFixes={handleApplyFixes}
+          onDismiss={hideSuggestions}
+        />
+      )}
 
       {/* Navigation */}
       <div className="flex justify-between pt-8">
@@ -47,13 +92,25 @@ const DesignStyleStep: React.FC = () => {
           Back to Layout
         </Button>
         
-        <Button 
-          onClick={handleContinue}
-          disabled={!selectedDesignStyle}
-          className={selectedDesignStyle ? 'bg-teal-600 hover:bg-teal-700 text-white' : ''}
-        >
-          Continue to Color Theme
-        </Button>
+        <div className="flex gap-2">
+          {suggestions.length > 0 && !suggestionsVisible && (
+            <Button
+              onClick={showSuggestions}
+              variant="outline"
+              className="border-teal-500/30 hover:bg-teal-500/10 text-teal-300"
+            >
+              View {suggestions.length} Suggestion{suggestions.length !== 1 ? 's' : ''}
+            </Button>
+          )}
+          
+          <Button 
+            onClick={handleContinue}
+            disabled={!selectedDesignStyle}
+            className={selectedDesignStyle ? 'bg-teal-600 hover:bg-teal-700 text-white' : ''}
+          >
+            Continue to Color Theme
+          </Button>
+        </div>
       </div>
     </div>
   );

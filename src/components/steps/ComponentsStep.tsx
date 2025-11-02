@@ -31,6 +31,21 @@ const ComponentsStepContent: React.FC = () => {
     option: null,
   });
   const [dataLoadError, setDataLoadError] = useState<boolean>(false);
+  
+  // Get auto-selected component IDs from sessionStorage
+  const [autoSelectedIds, setAutoSelectedIds] = useState<string[]>([]);
+  
+  React.useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('autoSelectedComponents');
+      if (stored) {
+        const ids = JSON.parse(stored);
+        setAutoSelectedIds(ids);
+      }
+    } catch (error) {
+      console.error('Failed to load auto-selected components:', error);
+    }
+  }, []);
 
   // Get AI suggestions
   const suggestions = useSmartSuggestions({
@@ -157,7 +172,7 @@ const ComponentsStepContent: React.FC = () => {
         <div className="animate-slide-up">
           <SmartSuggestionPanel
             suggestions={suggestions}
-            onApplySuggestion={(suggestion, item) => {
+            onApplySuggestion={(_suggestion, item) => {
               handleToggle(item);
             }}
           />
@@ -205,6 +220,7 @@ const ComponentsStepContent: React.FC = () => {
             onSelect={() => handleToggle(option)}
             onViewDetails={(e) => handleViewDetails(e, option)}
             showPreview={true}
+            isAutoSelected={autoSelectedIds.includes(option.id)}
           />
         ))}
       </div>

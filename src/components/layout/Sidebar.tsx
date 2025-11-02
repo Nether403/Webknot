@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Settings,
   LayoutGrid,
@@ -11,10 +11,12 @@ import {
   X,
   Undo2,
   Redo2,
+  RotateCcw,
 } from 'lucide-react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { CompatibilityIndicator } from '../ai/CompatibilityIndicator';
 import { useCompatibilityCheck } from '../../hooks/useCompatibilityCheck';
+import { ResetConfirmationModal } from '../modals/ResetConfirmationModal';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -22,8 +24,9 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  const { currentStep, setCurrentStep, canUndo, canRedo, undo, redo } = useBoltBuilder();
+  const { currentStep, setCurrentStep, canUndo, canRedo, undo, redo, clearProject } = useBoltBuilder();
   const compatibility = useCompatibilityCheck();
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
   const handleStepChange = (step: string) => {
     setCurrentStep(step);
@@ -33,6 +36,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const handleAutoFix = () => {
     // TODO: Implement auto-fix logic based on issue type
     // This will be implemented in a future task
+  };
+
+  const handleResetClick = () => {
+    setIsResetModalOpen(true);
+  };
+
+  const handleResetConfirm = () => {
+    clearProject();
+    setIsResetModalOpen(false);
+    if (isOpen) onClose();
+  };
+
+  const handleResetCancel = () => {
+    setIsResetModalOpen(false);
   };
 
   const navigationItems = [
@@ -86,8 +103,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Undo/Redo Controls */}
+        {/* Reset, Undo/Redo Controls */}
         <div className="p-4 border-b border-white/10">
+          {/* Reset Button */}
+          <button
+            onClick={handleResetClick}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg mb-3
+              bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-white
+              hover:shadow-[0_0_10px_rgba(239,68,68,0.3)]
+              transition-all duration-300 backdrop-blur-sm
+              focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+            aria-label="Reset project"
+          >
+            <RotateCcw size={16} aria-hidden="true" />
+            <span className="text-sm font-medium">Reset Project</span>
+          </button>
+
+          {/* Undo/Redo */}
           <div className="flex gap-2" role="group" aria-label="History controls">
             <button
               onClick={undo}
@@ -173,6 +205,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <CompatibilityIndicator compatibility={compatibility} onAutoFix={handleAutoFix} />
         </div>
       </aside>
+
+      {/* Reset Confirmation Modal */}
+      <ResetConfirmationModal
+        isOpen={isResetModalOpen}
+        onConfirm={handleResetConfirm}
+        onCancel={handleResetCancel}
+      />
     </>
   );
 };

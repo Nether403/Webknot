@@ -493,13 +493,33 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📚 Documentation
 
-- **[React-Bits Integration Guide](REACT_BITS_INTEGRATION.md)** - Complete documentation for the 93-component integration
+### �  For Users
+- **[📖 Complete User Guide](docs/guides/USER_GUIDE.md)** - ⭐ **NEW!** Step-by-step guide for creating amazing prompts
+- **[❓ FAQ](docs/guides/FAQ.md)** - Quick answers to common questions
+- **[Quick Start](QUICKSTART.md)** - Get started in 5 minutes
+- **[Troubleshooting](docs/guides/TROUBLESHOOTING.md)** - Common issues and solutions
+
+### 🔧 For Developers
+- **[Documentation Index](docs/INDEX.md)** - Complete documentation hub
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
+- **[Architecture](docs/ARCHITECTURE.md)** - Technical overview
 - **[Roadmap](ROADMAP.md)** - Planned features and improvements
-- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
 
-### React-Bits Integration
+### 🤖 AI Features
+LovaBolt includes 6 intelligent features to enhance your workflow:
 
-LovaBolt now includes 93 production-ready React components from [React-Bits](https://reactbits.dev):
+1. **Smart Defaults** - Automatic pre-selections based on project type (85% confidence)
+2. **Prompt Quality Analysis** - Real-time scoring with auto-fix suggestions (target: 85+ score)
+3. **Context-Aware Suggestions** - Compatible options based on your selections (80% confidence)
+4. **Natural Language Input** - Describe your project in plain English
+5. **Design Compatibility Checking** - Harmony score and conflict detection (0-100 scale)
+6. **Prompt Templates** - Optimized formats for Bolt.new, Lovable.dev, and Claude
+
+**Learn more**: [AI Features Guide](docs/AI_FEATURES_GUIDE.md) | [AI Algorithms](docs/AI_ALGORITHMS.md)
+
+### 🎨 React-Bits Integration
+
+LovaBolt includes 93 production-ready React components from [React-Bits](https://reactbits.dev):
 
 - **31 Backgrounds**: Aurora, Particles, Meteors, Globe, and more
 - **37 UI Components**: Carousel, Cards, Timeline, Modals, and more  
@@ -511,7 +531,7 @@ Each component includes:
 - ✅ Usage examples
 - ✅ Detailed descriptions
 
-See [REACT_BITS_INTEGRATION.md](REACT_BITS_INTEGRATION.md) for complete documentation.
+**Learn more**: [React-Bits Integration Guide](docs/guides/REACT_BITS_INTEGRATION.md) | [Quick Reference](docs/guides/REACT_BITS_QUICK_REFERENCE.md)
 
 ## 🗺️ Roadmap
 

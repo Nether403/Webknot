@@ -1,28 +1,98 @@
-import * as React from 'react';
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+/**
+ * Tooltip Component
+ * 
+ * Displays contextual help text when hovering over or focusing on an element.
+ * Accessible and keyboard-friendly.
+ */
 
-import { cn } from '@/lib/utils';
+import React, { useState, useRef, useEffect } from 'react';
 
-const TooltipProvider = TooltipPrimitive.Provider;
+export interface TooltipProps {
+  content: string;
+  children: React.ReactNode;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  className?: string;
+}
 
-const Tooltip = TooltipPrimitive.Root;
+export const Tooltip: React.FC<TooltipProps> = ({
+  content,
+  children,
+  position = 'top',
+  className = '',
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
-const TooltipTrigger = TooltipPrimitive.Trigger;
+  useEffect(() => {
+    if (isVisible && triggerRef.current && tooltipRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const tooltipRect = tooltipRef.current.getBoundingClientRect();
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      'z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-      className
-    )}
-    {...props}
-  />
-));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+      let top = 0;
+      let left = 0;
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+      switch (position) {
+        case 'top':
+          top = triggerRect.top - tooltipRect.height - 8;
+          left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
+          break;
+        case 'bottom':
+          top = triggerRect.bottom + 8;
+          left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
+          break;
+        case 'left':
+          top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
+          left = triggerRect.left - tooltipRect.width - 8;
+          break;
+        case 'right':
+          top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
+          left = triggerRect.right + 8;
+          break;
+      }
+
+      setTooltipPosition({ top, left });
+    }
+  }, [isVisible, position]);
+
+  return (
+    <div
+      ref={triggerRef}
+      className={`relative inline-block ${className}`}
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+      onFocus={() => setIsVisible(true)}
+      onBlur={() => setIsVisible(false)}
+    >
+      {children}
+
+      {isVisible && (
+        <div
+          ref={tooltipRef}
+          role="tooltip"
+          className="fixed z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg max-w-xs"
+          style={{
+            top: `${tooltipPosition.top}px`,
+            left: `${tooltipPosition.left}px`,
+          }}
+        >
+          {content}
+          <div
+            className={`absolute w-2 h-2 bg-gray-900 transform rotate-45 ${
+              position === 'top'
+                ? 'bottom-[-4px] left-1/2 -translate-x-1/2'
+                : position === 'bottom'
+                ? 'top-[-4px] left-1/2 -translate-x-1/2'
+                : position === 'left'
+                ? 'right-[-4px] top-1/2 -translate-y-1/2'
+                : 'left-[-4px] top-1/2 -translate-y-1/2'
+            }`}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Tooltip;

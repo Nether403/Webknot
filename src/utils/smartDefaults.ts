@@ -343,3 +343,66 @@ export const applySmartDefaults = (
 
   return result;
 };
+
+/**
+ * Safe wrapper for getSmartDefaults that handles errors gracefully
+ * 
+ * @param projectType - The type of project
+ * @param purpose - The purpose/goal of the project
+ * @returns SmartDefaultsResult or default empty result on error
+ */
+export const safeGetSmartDefaults = (
+  projectType: string,
+  purpose: string = ''
+): SmartDefaultsResult => {
+  try {
+    return getSmartDefaults(projectType, purpose);
+  } catch (error) {
+    console.error('Smart defaults retrieval failed:', error);
+    return {
+      applied: false,
+      defaults: {},
+      confidence: 0,
+      reasoning: 'Unable to load smart defaults at this time',
+    };
+  }
+};
+
+/**
+ * Safe wrapper for applySmartDefaults that handles errors gracefully
+ * 
+ * @param projectType - The type of project
+ * @param purpose - The purpose/goal of the project
+ * @param currentState - The current wizard state
+ * @returns Updated state or empty object on error
+ */
+export const safeApplySmartDefaults = (
+  projectType: string,
+  purpose: string,
+  currentState: {
+    selectedLayout?: any;
+    selectedDesignStyle?: any;
+    selectedColorTheme?: any;
+    selectedTypography?: Typography;
+    selectedFunctionality?: any[];
+    selectedBackground?: any;
+    selectedComponents?: any[];
+    selectedAnimations?: any[];
+  }
+): {
+  layout?: string;
+  designStyle?: string;
+  colorTheme?: string;
+  typography?: Partial<Typography>;
+  functionality?: string[];
+  background?: string;
+  components?: string[];
+  animations?: string[];
+} => {
+  try {
+    return applySmartDefaults(projectType, purpose, currentState);
+  } catch (error) {
+    console.error('Smart defaults application failed:', error);
+    return {};
+  }
+};

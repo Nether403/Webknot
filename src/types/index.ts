@@ -102,3 +102,19 @@ export interface ComponentOption extends ReactBitsComponent {
 export interface AnimationOption extends ReactBitsComponent {
   category: 'animations';
 }
+
+// Complete builder state for template rendering
+export interface BoltBuilderState {
+  projectInfo: ProjectInfo;
+  selectedLayout: LayoutOption | null;
+  selectedSpecialLayouts: LayoutOption[];
+  selectedDesignStyle: DesignStyle | null;
+  selectedColorTheme: ColorTheme | null;
+  selectedTypography: Typography;
+  selectedFunctionality: FunctionalityOption[];
+  selectedVisuals: VisualElement[];
+  selectedBackground: BackgroundOption | null;
+  backgroundSelection: BackgroundSelection | null;
+  selectedComponents: ComponentOption[];
+  selectedAnimations: AnimationOption[];
+}

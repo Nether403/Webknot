@@ -290,3 +290,76 @@ export const getBasicComponents = (): ComponentOption[] => {
 export const getAllComponents = (): ComponentOption[] => {
   return componentOptions;
 };
+
+/**
+ * Safe wrapper for getCompatibleThemes that handles errors gracefully
+ * 
+ * @param designStyle - The selected design style
+ * @returns Array of compatible color themes or empty array on error
+ */
+export const safeGetCompatibleThemes = (designStyle: DesignStyle): ColorTheme[] => {
+  try {
+    return getCompatibleThemes(designStyle);
+  } catch (error) {
+    console.error('Failed to get compatible themes:', error);
+    return [];
+  }
+};
+
+/**
+ * Safe wrapper for getCompatibleAnimations that handles errors gracefully
+ * 
+ * @param designStyle - The selected design style
+ * @returns Array of compatible animations or empty array on error
+ */
+export const safeGetCompatibleAnimations = (designStyle: DesignStyle): AnimationOption[] => {
+  try {
+    return getCompatibleAnimations(designStyle);
+  } catch (error) {
+    console.error('Failed to get compatible animations:', error);
+    return [];
+  }
+};
+
+/**
+ * Safe wrapper for getCompatibleBackgrounds that handles errors gracefully
+ * 
+ * @param colorTheme - The selected color theme
+ * @returns Array of compatible backgrounds or empty array on error
+ */
+export const safeGetCompatibleBackgrounds = (colorTheme: ColorTheme): BackgroundOption[] => {
+  try {
+    return getCompatibleBackgrounds(colorTheme);
+  } catch (error) {
+    console.error('Failed to get compatible backgrounds:', error);
+    return [];
+  }
+};
+
+/**
+ * Safe wrapper for getAdvancedComponents that handles errors gracefully
+ * 
+ * @returns Array of advanced components or empty array on error
+ */
+export const safeGetAdvancedComponents = (): ComponentOption[] => {
+  try {
+    return getAdvancedComponents();
+  } catch (error) {
+    console.error('Failed to get advanced components:', error);
+    return [];
+  }
+};
+
+/**
+ * Safe wrapper for getBasicComponents that handles errors gracefully
+ * 
+ * @returns Array of basic components or empty array on error
+ */
+export const safeGetBasicComponents = (): ComponentOption[] => {
+  try {
+    return getBasicComponents();
+  } catch (error) {
+    console.error('Failed to get basic components:', error);
+    return [];
+  }
+};

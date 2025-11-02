@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, CheckCircle, AlertCircle } from 'lucide-react';
+import { Sparkles, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import { parseProjectDescription, NLPParseResult } from '../../utils/nlpParser';
 import { ProjectInfo, DesignStyle, ColorTheme } from '../../types';
+import { Tooltip } from '../ui/tooltip';
 
 interface NLPInputProps {
   onApplyDetections: (result: NLPParseResult) => void;
   currentProjectInfo?: ProjectInfo; // eslint-disable-line @typescript-eslint/no-unused-vars
   currentDesignStyle?: DesignStyle; // eslint-disable-line @typescript-eslint/no-unused-vars
   currentColorTheme?: ColorTheme; // eslint-disable-line @typescript-eslint/no-unused-vars
+  initialDescription?: string;
+  onDescriptionChange?: (description: string) => void;
 }
 
 /**
@@ -18,11 +21,26 @@ export const NLPInput: React.FC<NLPInputProps> = ({
   onApplyDetections,
   currentProjectInfo,
   currentDesignStyle,
-  currentColorTheme
+  currentColorTheme,
+  initialDescription = '',
+  onDescriptionChange
 }) => {
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(initialDescription);
   const [parseResult, setParseResult] = useState<NLPParseResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  // Update local state when initialDescription changes
+  useEffect(() => {
+    setDescription(initialDescription);
+  }, [initialDescription]);
+
+  // Notify parent of description changes
+  const handleDescriptionChange = (newDescription: string) => {
+    setDescription(newDescription);
+    if (onDescriptionChange) {
+      onDescriptionChange(newDescription);
+    }
+  };
 
   // Debounced parsing
   useEffect(() => {
@@ -72,13 +90,24 @@ export const NLPInput: React.FC<NLPInputProps> = ({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" role="region" aria-label="Natural language project description">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-teal-400" />
+        <Sparkles className="w-5 h-5 text-teal-400" aria-hidden="true" />
         <h3 className="text-lg font-semibold text-white">
           Describe Your Project
         </h3>
+        <Tooltip content="Describe your project in natural language and we'll automatically detect your project type, design style, and color preferences.">
+          <a
+            href="/docs/AI_FEATURES_GUIDE.md#natural-language-input"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Learn more about natural language input"
+          >
+            <HelpCircle className="w-4 h-4 text-gray-400 hover:text-teal-400" />
+          </a>
+        </Tooltip>
       </div>
 
       <p className="text-sm text-gray-400">
@@ -89,7 +118,7 @@ export const NLPInput: React.FC<NLPInputProps> = ({
       <div className="relative">
         <textarea
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => handleDescriptionChange(e.target.value)}
           placeholder="Example: I want to build a minimalist portfolio website with clean blue colors to showcase my design work..."
           className="w-full h-32 px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
           aria-label="Project description"
@@ -105,9 +134,14 @@ export const NLPInput: React.FC<NLPInputProps> = ({
 
       {/* Detected Selections */}
       {hasDetections && !isAnalyzing && (
-        <div className="glass-card p-4 rounded-xl space-y-3">
+        <div 
+          className="glass-card p-4 rounded-xl space-y-3"
+          role="status"
+          aria-live="polite"
+          aria-label="Detected project preferences"
+        >
           <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="w-4 h-4 text-teal-400" />
+            <CheckCircle className="w-4 h-4 text-teal-400" aria-hidden="true" />
             <h4 className="text-sm font-semibold text-white">
               Detected Preferences
             </h4>
@@ -192,10 +226,16 @@ export const NLPInput: React.FC<NLPInputProps> = ({
           {hasHighConfidenceDetections && (
             <button
               onClick={handleApply}
-              className="w-full mt-3 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              aria-label="Apply detected settings"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleApply();
+                }
+              }}
+              className="w-full mt-3 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+              aria-label={`Apply detected settings: ${parseResult.projectType ? parseResult.projectType + ' project' : ''}${parseResult.designStyle ? ', ' + parseResult.designStyle + ' style' : ''}${parseResult.colorTheme ? ', ' + parseResult.colorTheme + ' colors' : ''}`}
             >
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-4 h-4" aria-hidden="true" />
               <span className="font-medium">Start with these settings</span>
             </button>
           )}

@@ -5,10 +5,11 @@
  * Allows users to apply auto-fixable recommendations to improve their prompt.
  */
 
-import React from 'react';
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useCallback } from 'react';
+import { CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import type { PromptAnalysisResult } from '../../utils/promptAnalyzer';
 import { Button } from '../ui/button';
+import { Tooltip } from '../ui/tooltip';
 
 export interface PromptQualityScoreProps {
   analysis: PromptAnalysisResult;
@@ -62,17 +63,45 @@ const getSeverityColor = (severity: string): string => {
   return 'text-blue-500';
 };
 
-export const PromptQualityScore: React.FC<PromptQualityScoreProps> = ({
+const PromptQualityScoreComponent: React.FC<PromptQualityScoreProps> = ({
   analysis,
   onApplyFixes,
   className = '',
 }) => {
+  // Memoize event handler to prevent unnecessary re-renders
+  const handleApplyFixes = useCallback(() => {
+    onApplyFixes();
+  }, [onApplyFixes]);
+
   return (
-    <div className={`glass-card p-6 rounded-xl ${className}`}>
+    <div 
+      className={`glass-card p-6 rounded-xl ${className}`} 
+      data-tour="prompt-quality"
+      role="region"
+      aria-label="Prompt quality analysis"
+    >
       {/* Header with Score */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">Prompt Quality</h3>
         <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-white">Prompt Quality</h3>
+          <Tooltip content="We analyze your prompt for completeness, best practices, and potential issues. Higher scores mean better prompts.">
+            <a
+              href="/docs/AI_FEATURES_GUIDE.md#prompt-quality-scoring"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+              aria-label="Learn more about prompt quality scoring"
+            >
+              <HelpCircle className="w-4 h-4 text-gray-400 hover:text-teal-400" />
+            </a>
+          </Tooltip>
+        </div>
+        <div 
+          className="flex items-center gap-2"
+          role="status"
+          aria-live="polite"
+          aria-label={`Prompt quality score: ${analysis.score} out of 100. ${getScoreLabel(analysis.score)}`}
+        >
           <span className={`text-3xl font-bold ${getScoreColor(analysis.score)}`}>
             {analysis.score}
           </span>
@@ -139,8 +168,15 @@ export const PromptQualityScore: React.FC<PromptQualityScoreProps> = ({
           {/* Apply Recommendations Button */}
           {analysis.optimizedPrompt && (
             <Button
-              onClick={onApplyFixes}
-              className="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white"
+              onClick={handleApplyFixes}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleApplyFixes();
+                }
+              }}
+              className="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+              aria-label={`Apply ${analysis.suggestions.filter(s => s.autoFixable).length} automatic recommendations to improve prompt quality`}
             >
               Apply Recommendations
             </Button>
@@ -159,3 +195,6 @@ export const PromptQualityScore: React.FC<PromptQualityScoreProps> = ({
     </div>
   );
 };
+
+// Wrap component in React.memo to prevent unnecessary re-renders
+export const PromptQualityScore = React.memo(PromptQualityScoreComponent);

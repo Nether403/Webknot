@@ -10,6 +10,7 @@ interface ReactBitsCardProps {
   onSelect: () => void;
   onViewDetails: (e: React.MouseEvent) => void;
   showPreview?: boolean;
+  isAutoSelected?: boolean;
 }
 
 /**
@@ -27,6 +28,7 @@ const ReactBitsCardComponent: React.FC<ReactBitsCardProps> = ({
   onSelect,
   onViewDetails,
   showPreview = false,
+  isAutoSelected = false,
 }) => {
   return (
     <div
@@ -69,12 +71,22 @@ const ReactBitsCardComponent: React.FC<ReactBitsCardProps> = ({
         )}
         {/* Header with title and selection indicator */}
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-lg font-bold text-white transition-colors duration-200 group-hover:text-teal-400" id={`${option.id}-title`}>
-            {option.title}
-          </h4>
+          <div className="flex-1">
+            <h4 className="text-lg font-bold text-white transition-colors duration-200 group-hover:text-teal-400" id={`${option.id}-title`}>
+              {option.title}
+            </h4>
+            {isAutoSelected && isSelected && (
+              <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 mt-1 bg-teal-500/20 text-teal-400 rounded-full border border-teal-500/30 animate-fade-in">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Auto-selected by Smart Defaults
+              </span>
+            )}
+          </div>
           {isSelected && (
             <div 
-              className="bg-teal-500/20 p-1 rounded-full animate-fade-in" 
+              className="bg-teal-500/20 p-1 rounded-full animate-fade-in ml-2" 
               role="img"
               aria-label="Selected indicator"
             >

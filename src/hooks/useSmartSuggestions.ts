@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   DesignStyle,
   ColorTheme,
   FunctionalityOption,
-  BackgroundOption,
-  ComponentOption,
-  AnimationOption,
 } from '../types';
 import {
   getCompatibleThemes,
@@ -64,10 +61,10 @@ export const useSmartSuggestions = (
     return () => clearTimeout(timer);
   }, [selections]);
 
-  useEffect(() => {
+  // Memoize suggestion generation to avoid unnecessary recalculations
+  const memoizedSuggestions = useMemo(() => {
     if (!enabled) {
-      setSuggestions([]);
-      return;
+      return [];
     }
 
     const newSuggestions: Suggestion[] = [];
@@ -142,8 +139,13 @@ export const useSmartSuggestions = (
       }
     }
 
-    setSuggestions(newSuggestions);
+    return newSuggestions;
   }, [currentStep, debouncedSelections, enabled]);
+
+  // Update state when memoized suggestions change
+  useEffect(() => {
+    setSuggestions(memoizedSuggestions);
+  }, [memoizedSuggestions]);
 
   return suggestions;
 };

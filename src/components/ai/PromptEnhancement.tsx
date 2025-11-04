@@ -6,9 +6,11 @@
  */
 
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { Sparkles, Check, X, Edit, Copy, ChevronDown, ChevronUp } from 'lucide-react';
 import type { PromptEnhancement as PromptEnhancementType } from '../../types/gemini';
+import { FeedbackButtons } from './FeedbackButtons';
+import { getFeedbackService } from '../../services/feedbackService';
 
 interface PromptEnhancementProps {
   enhancement: PromptEnhancementType;
@@ -16,6 +18,7 @@ interface PromptEnhancementProps {
   onAccept: () => void;
   onReject: () => void;
   onEdit: (editedPrompt: string) => void;
+  enhancementId?: string;
 }
 
 export const PromptEnhancement: React.FC<PromptEnhancementProps> = ({
@@ -24,6 +27,7 @@ export const PromptEnhancement: React.FC<PromptEnhancementProps> = ({
   onAccept,
   onReject,
   onEdit,
+  enhancementId = `enhancement_${Date.now()}`,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPrompt, setEditedPrompt] = useState(enhancement.enhancedPrompt);
@@ -31,6 +35,7 @@ export const PromptEnhancement: React.FC<PromptEnhancementProps> = ({
   const [copiedEnhanced, setCopiedEnhanced] = useState(false);
   const [showOriginal, setShowOriginal] = useState(true);
   const [showEnhanced, setShowEnhanced] = useState(true);
+  const [feedbackGiven, setFeedbackGiven] = useState(false);
 
   const handleCopyOriginal = async () => {
     try {
@@ -60,6 +65,22 @@ export const PromptEnhancement: React.FC<PromptEnhancementProps> = ({
   const handleCancelEdit = () => {
     setEditedPrompt(enhancement.enhancedPrompt);
     setIsEditing(false);
+  };
+  
+  const handleAccept = () => {
+    // Record acceptance feedback
+    const feedbackService = getFeedbackService();
+    feedbackService.recordEnhancementAction(enhancementId, true);
+    setFeedbackGiven(true);
+    onAccept();
+  };
+  
+  const handleReject = () => {
+    // Record rejection feedback
+    const feedbackService = getFeedbackService();
+    feedbackService.recordEnhancementAction(enhancementId, false);
+    setFeedbackGiven(true);
+    onReject();
   };
 
   // Highlight new sections in the enhanced prompt
@@ -225,51 +246,65 @@ export const PromptEnhancement: React.FC<PromptEnhancementProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-4">
-        {isEditing ? (
-          <>
-            <Button
-              onClick={handleSaveEdit}
-              className="bg-teal-600 hover:bg-teal-700 text-white"
-            >
-              <Check className="w-4 h-4 mr-2" />
-              Save Changes
-            </Button>
-            <Button
-              onClick={handleCancelEdit}
-              variant="outline"
-              className="text-gray-300"
-            >
-              <X className="w-4 h-4 mr-2" />
-              Cancel
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              onClick={onAccept}
-              className="bg-teal-600 hover:bg-teal-700 text-white"
-            >
-              <Check className="w-4 h-4 mr-2" />
-              Accept Enhancement
-            </Button>
-            <Button
-              onClick={() => setIsEditing(true)}
-              variant="outline"
-              className="text-gray-300"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
-            <Button
-              onClick={onReject}
-              variant="outline"
-              className="text-gray-300"
-            >
-              <X className="w-4 h-4 mr-2" />
-              Use Original
-            </Button>
-          </>
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center justify-center gap-4">
+          {isEditing ? (
+            <>
+              <Button
+                onClick={handleSaveEdit}
+                className="bg-teal-600 hover:bg-teal-700 text-white"
+              >
+                <Check className="w-4 h-4 mr-2" />
+                Save Changes
+              </Button>
+              <Button
+                onClick={handleCancelEdit}
+                variant="outline"
+                className="text-gray-300"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={handleAccept}
+                className="bg-teal-600 hover:bg-teal-700 text-white"
+              >
+                <Check className="w-4 h-4 mr-2" />
+                Accept Enhancement
+              </Button>
+              <Button
+                onClick={() => setIsEditing(true)}
+                variant="outline"
+                className="text-gray-300"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+              <Button
+                onClick={handleReject}
+                variant="outline"
+                className="text-gray-300"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Use Original
+              </Button>
+            </>
+          )}
+        </div>
+        
+        {/* Feedback Buttons */}
+        {!feedbackGiven && !isEditing && (
+          <FeedbackButtons
+            target="enhancement"
+            targetId={enhancementId}
+            metadata={{
+              improvementsCount: enhancement.improvements.length,
+              addedSectionsCount: enhancement.addedSections.length,
+            }}
+          />
         )}
       </div>
 

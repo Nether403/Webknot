@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Info, Sparkles, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import InfoModal from '../modals/InfoModal';
 import DescriptionHelpModal from '../modals/DescriptionHelpModal';
 import { projectInfoSchema } from '../../types/validation';

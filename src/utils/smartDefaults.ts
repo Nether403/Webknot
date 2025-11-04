@@ -65,7 +65,7 @@ export const SMART_DEFAULTS: SmartDefaultsConfig = {
   'Portfolio': {
     layout: 'single-column',
     designStyle: 'minimalist',
-    colorTheme: 'monochrome-modern',
+    colorTheme: 'minimal-beige',
     typography: {
       fontFamily: "'Inter', sans-serif",
       headingWeight: 'Semibold',
@@ -83,7 +83,7 @@ export const SMART_DEFAULTS: SmartDefaultsConfig = {
   'E-commerce': {
     layout: 'grid-layout',
     designStyle: 'material-design',
-    colorTheme: 'tech-neon',
+    colorTheme: 'material-blue',
     typography: {
       fontFamily: "'Roboto', sans-serif",
       headingWeight: 'Bold',
@@ -100,8 +100,8 @@ export const SMART_DEFAULTS: SmartDefaultsConfig = {
   },
   'Dashboard': {
     layout: 'sidebar-layout',
-    designStyle: 'modern-corporate',
-    colorTheme: 'professional-blue',
+    designStyle: 'fluent-design',
+    colorTheme: 'fluent-azure',
     typography: {
       fontFamily: "'Inter', sans-serif",
       headingWeight: 'Semibold',
@@ -119,7 +119,7 @@ export const SMART_DEFAULTS: SmartDefaultsConfig = {
   'Web App': {
     layout: 'app-layout',
     designStyle: 'glassmorphism',
-    colorTheme: 'tech-neon',
+    colorTheme: 'frosted-blue',
     typography: {
       fontFamily: "'Inter', sans-serif",
       headingWeight: 'Semibold',
@@ -136,8 +136,8 @@ export const SMART_DEFAULTS: SmartDefaultsConfig = {
   },
   'Mobile App': {
     layout: 'mobile-first',
-    designStyle: 'minimalist',
-    colorTheme: 'vibrant-modern',
+    designStyle: 'apple-hig',
+    colorTheme: 'apple-sky',
     typography: {
       fontFamily: "'Inter', sans-serif",
       headingWeight: 'Semibold',
@@ -154,8 +154,8 @@ export const SMART_DEFAULTS: SmartDefaultsConfig = {
   },
   'Website': {
     layout: 'single-column',
-    designStyle: 'modern-corporate',
-    colorTheme: 'professional-blue',
+    designStyle: 'material-design',
+    colorTheme: 'ocean-breeze',
     typography: {
       fontFamily: "'Inter', sans-serif",
       headingWeight: 'Semibold',

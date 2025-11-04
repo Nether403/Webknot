@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -25,30 +25,30 @@ const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               <X size={20} />
             </button>
             
-            <h3 className="text-xl font-semibold text-white mb-4">About LovaBolt</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">About WebKnot</h3>
             
             <div className="space-y-4 text-gray-300">
               <p>
-                LovaBolt is an advanced prompt generator designed specifically for AI development tools 
-                like Bolt.new and Lovable.dev. Our intelligent wizard guides you through every aspect 
-                of website design specification.
+                WebKnot is an advanced prompt generator designed specifically for AI development tools 
+                like Bolt.new and other AI-powered platforms. Our intelligent wizard guides you through every aspect 
+                of website design specification, tying all the pieces together.
               </p>
               
               <p>
                 From layout selection to visual styling, typography choices to functionality requirements, 
-                LovaBolt ensures no detail is overlooked. The generated prompts are optimized for AI 
+                WebKnot ensures no detail is overlooked. The generated prompts are optimized for AI 
                 understanding, leading to better results and faster development.
               </p>
               
               <p>
                 Whether you're building a portfolio, business website, or complex web application, 
-                LovaBolt helps you communicate your vision effectively, bridging the gap between 
+                WebKnot helps you communicate your vision effectively, bridging the gap between 
                 creative ideas and technical implementation.
               </p>
               
               <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
                 <p className="text-sm text-gray-400 italic">
-                  LovaBolt is an independent platform designed to enhance your experience with 
+                  WebKnot is an independent platform designed to enhance your experience with 
                   AI-powered development tools.
                 </p>
               </div>

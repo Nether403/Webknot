@@ -11,14 +11,14 @@ const Footer: React.FC = () => {
       <footer className="bg-black/50 backdrop-blur-md border-t border-white/10 p-4 text-center">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
           <p className="mb-2 md:mb-0 text-gray-300">
-            © 2025 LovaBolt - Advanced Prompt Generator
+            © 2025 WebKnot - Tying things together
           </p>
           <div className="space-x-4">
             <button 
               onClick={() => setShowAbout(true)}
               className="text-gray-300 hover:text-teal-400 transition-colors"
             >
-              About LovaBolt
+              About WebKnot
             </button>
             <button 
               onClick={() => setShowHelp(true)}
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
               Help
             </button>
             <a 
-              href="mailto:hello@lovabolt.com" 
+              href="mailto:hello@webknot.ai" 
               className="text-gray-300 hover:text-teal-400 transition-colors"
             >
               Contact

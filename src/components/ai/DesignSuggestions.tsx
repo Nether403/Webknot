@@ -8,6 +8,8 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle, Lightbulb, Sparkles, X } from 'lucide-react';
 import type { DesignSuggestion } from '../../types/gemini';
+import { FeedbackButtons } from './FeedbackButtons';
+import { getFeedbackService } from '../../services/feedbackService';
 
 export interface DesignSuggestionsProps {
   suggestions: DesignSuggestion[];
@@ -50,6 +52,17 @@ export const DesignSuggestions: React.FC<DesignSuggestionsProps> = ({
   const handleApplyFixes = () => {
     if (onApplyFixes && autoFixableSuggestions.length > 0) {
       onApplyFixes(autoFixableSuggestions);
+      
+      // Record acceptance feedback for all auto-fixed suggestions
+      const feedbackService = getFeedbackService();
+      autoFixableSuggestions.forEach((suggestion, index) => {
+        feedbackService.recordSuggestionAction(
+          `suggestion_${Date.now()}_${index}`,
+          true,
+          suggestion.type,
+          suggestion.severity
+        );
+      });
     }
   };
   
@@ -261,16 +274,29 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
               {suggestion.reasoning}
             </p>
             
-            {/* Badges */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className={`px-2 py-0.5 text-xs font-medium rounded border ${getSeverityColor(suggestion.severity)}`}>
-                {suggestion.severity}
-              </span>
-              {suggestion.autoFixable && (
-                <span className="px-2 py-0.5 text-xs font-medium rounded border bg-teal-500/20 text-teal-300 border-teal-500/30">
-                  Auto-fixable
+            {/* Badges and Feedback */}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`px-2 py-0.5 text-xs font-medium rounded border ${getSeverityColor(suggestion.severity)}`}>
+                  {suggestion.severity}
                 </span>
-              )}
+                {suggestion.autoFixable && (
+                  <span className="px-2 py-0.5 text-xs font-medium rounded border bg-teal-500/20 text-teal-300 border-teal-500/30">
+                    Auto-fixable
+                  </span>
+                )}
+              </div>
+              
+              {/* Feedback Buttons */}
+              <FeedbackButtons
+                target="suggestion"
+                targetId={`suggestion_${index}`}
+                metadata={{
+                  suggestionType: suggestion.type,
+                  suggestionSeverity: suggestion.severity,
+                  autoFixable: suggestion.autoFixable,
+                }}
+              />
             </div>
           </div>
         </div>

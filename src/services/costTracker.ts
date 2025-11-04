@@ -26,7 +26,7 @@ interface CostTrackerStorage {
 }
 
 export class CostTracker {
-  private storageKey = 'lovabolt-cost-tracker';
+  private storageKey = 'webknot-cost-tracker';
   private alerts: CostAlert[] = [];
   private monthlyBudget = 500; // $500 default threshold
   private lastAlertCheck = 0;

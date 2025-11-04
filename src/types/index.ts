@@ -117,4 +117,5 @@ export interface BoltBuilderState {
   backgroundSelection: BackgroundSelection | null;
   selectedComponents: ComponentOption[];
   selectedAnimations: AnimationOption[];
+  isPremium?: boolean; // Premium tier flag for unlimited AI features
 }

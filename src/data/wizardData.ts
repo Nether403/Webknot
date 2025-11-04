@@ -120,6 +120,147 @@ export const colorThemes: ColorTheme[] = [
     distribution: [40, 40, 20],
     isCustom: true
   },
+  // Material Design inspired
+  {
+    id: 'material-blue',
+    title: 'Material Blue',
+    description: 'Google\'s signature blue with vibrant accents',
+    colors: ['#1976D2', '#2196F3', '#BBDEFB'],
+    distribution: [45, 35, 20]
+  },
+  {
+    id: 'material-red',
+    title: 'Material Red',
+    description: 'Bold red with energetic highlights',
+    colors: ['#D32F2F', '#F44336', '#FFCDD2'],
+    distribution: [40, 40, 20]
+  },
+  // Fluent Design inspired
+  {
+    id: 'fluent-azure',
+    title: 'Fluent Azure',
+    description: 'Microsoft\'s modern blue with soft gradients',
+    colors: ['#0078D4', '#50E6FF', '#F3F2F1'],
+    distribution: [50, 25, 25]
+  },
+  {
+    id: 'fluent-orchid',
+    title: 'Fluent Orchid',
+    description: 'Elegant purple with light accents',
+    colors: ['#8764B8', '#C239B3', '#FAF9F8'],
+    distribution: [45, 30, 25]
+  },
+  // Apple HIG inspired
+  {
+    id: 'apple-sky',
+    title: 'Apple Sky',
+    description: 'Clean iOS blue with subtle grays',
+    colors: ['#007AFF', '#5AC8FA', '#F2F2F7'],
+    distribution: [40, 30, 30]
+  },
+  {
+    id: 'apple-graphite',
+    title: 'Apple Graphite',
+    description: 'Sophisticated dark gray with blue hints',
+    colors: ['#1C1C1E', '#48484A', '#0A84FF'],
+    distribution: [50, 30, 20]
+  },
+  // Minimalist palettes
+  {
+    id: 'monochrome-modern',
+    title: 'Monochrome Modern',
+    description: 'Sophisticated grayscale with blue accents',
+    colors: ['#374151', '#9CA3AF', '#3B82F6'],
+    distribution: [50, 30, 20]
+  },
+  {
+    id: 'minimal-beige',
+    title: 'Minimal Beige',
+    description: 'Warm neutrals with subtle contrast',
+    colors: ['#F5F5DC', '#D4C5B9', '#8B7355'],
+    distribution: [50, 30, 20]
+  },
+  {
+    id: 'pure-contrast',
+    title: 'Pure Contrast',
+    description: 'Classic black and white with gray tones',
+    colors: ['#000000', '#FFFFFF', '#6B7280'],
+    distribution: [40, 40, 20]
+  },
+  // Neumorphism palettes
+  {
+    id: 'soft-gray',
+    title: 'Soft Gray',
+    description: 'Gentle grays perfect for soft shadows',
+    colors: ['#E0E5EC', '#A0AEC0', '#2D3748'],
+    distribution: [60, 25, 15]
+  },
+  {
+    id: 'cream-shadow',
+    title: 'Cream Shadow',
+    description: 'Warm cream tones with subtle depth',
+    colors: ['#F7F3E9', '#D4C5B9', '#8B7355'],
+    distribution: [55, 30, 15]
+  },
+  // Glassmorphism palettes
+  {
+    id: 'frosted-blue',
+    title: 'Frosted Blue',
+    description: 'Translucent blues with glass-like clarity',
+    colors: ['#4A90E2', '#7CB9E8', '#E8F4F8'],
+    distribution: [40, 35, 25]
+  },
+  {
+    id: 'aurora-glass',
+    title: 'Aurora Glass',
+    description: 'Iridescent colors with ethereal glow',
+    colors: ['#667EEA', '#764BA2', '#F093FB'],
+    distribution: [35, 35, 30]
+  },
+  // Digital Brutalism palettes
+  {
+    id: 'brutal-contrast',
+    title: 'Brutal Contrast',
+    description: 'Stark black and white with neon punch',
+    colors: ['#000000', '#FFFFFF', '#FF00FF'],
+    distribution: [45, 40, 15]
+  },
+  {
+    id: 'cyber-yellow',
+    title: 'Cyber Yellow',
+    description: 'Bold yellow with dark industrial tones',
+    colors: ['#FFFF00', '#000000', '#FF0000'],
+    distribution: [40, 45, 15]
+  },
+  {
+    id: 'tech-neon',
+    title: 'Tech Neon',
+    description: 'Futuristic dark theme with neon highlights',
+    colors: ['#1F2937', '#6366F1', '#00F5FF'],
+    distribution: [60, 25, 15]
+  },
+  // Organic Design palettes
+  {
+    id: 'forest-green',
+    title: 'Forest Green',
+    description: 'Natural greens with earth tone accents',
+    colors: ['#10B981', '#059669', '#D1FAE5'],
+    distribution: [45, 35, 20]
+  },
+  {
+    id: 'earth-tones',
+    title: 'Earth Tones',
+    description: 'Warm browns and natural beiges',
+    colors: ['#8B4513', '#D2691E', '#F5DEB3'],
+    distribution: [40, 35, 25]
+  },
+  {
+    id: 'botanical-sage',
+    title: 'Botanical Sage',
+    description: 'Soft sage greens with natural accents',
+    colors: ['#87AE73', '#B5C99A', '#F1F8E8'],
+    distribution: [45, 30, 25]
+  },
   {
     id: 'ocean-breeze',
     title: 'Ocean Breeze',
@@ -127,19 +268,35 @@ export const colorThemes: ColorTheme[] = [
     colors: ['#0EA5E9', '#0891B2', '#F0F9FF'],
     distribution: [50, 30, 20]
   },
+  // Retro Futurism palettes
+  {
+    id: 'retro-sunset',
+    title: 'Retro Sunset',
+    description: 'Vintage 80s sunset gradient',
+    colors: ['#FF6B9D', '#FEC84D', '#C2FFF9'],
+    distribution: [35, 35, 30]
+  },
+  {
+    id: 'neon-nights',
+    title: 'Neon Nights',
+    description: 'Electric pinks and purples with dark base',
+    colors: ['#0D0221', '#FF006E', '#8338EC'],
+    distribution: [50, 25, 25]
+  },
+  {
+    id: 'space-age',
+    title: 'Space Age',
+    description: 'Cosmic blues with metallic silver',
+    colors: ['#1A1A2E', '#16213E', '#0F3460'],
+    distribution: [40, 35, 25]
+  },
+  // Universal favorites
   {
     id: 'sunset-warmth',
     title: 'Sunset Warmth',
     description: 'Warm oranges and yellows with soft accents',
     colors: ['#F97316', '#FCD34D', '#FEF3C7'],
     distribution: [40, 35, 25]
-  },
-  {
-    id: 'forest-green',
-    title: 'Forest Green',
-    description: 'Natural greens with earth tone accents',
-    colors: ['#10B981', '#059669', '#D1FAE5'],
-    distribution: [45, 35, 20]
   },
   {
     id: 'royal-purple',
@@ -149,18 +306,18 @@ export const colorThemes: ColorTheme[] = [
     distribution: [40, 40, 20]
   },
   {
-    id: 'monochrome-modern',
-    title: 'Monochrome Modern',
-    description: 'Sophisticated grayscale with blue accents',
-    colors: ['#374151', '#9CA3AF', '#3B82F6'],
-    distribution: [50, 30, 20]
+    id: 'coral-reef',
+    title: 'Coral Reef',
+    description: 'Vibrant coral with aqua accents',
+    colors: ['#FF6B6B', '#4ECDC4', '#FFE66D'],
+    distribution: [40, 35, 25]
   },
   {
-    id: 'tech-neon',
-    title: 'Tech Neon',
-    description: 'Futuristic dark theme with neon highlights',
-    colors: ['#1F2937', '#6366F1', '#00F5FF'],
-    distribution: [60, 25, 15]
+    id: 'midnight-blue',
+    title: 'Midnight Blue',
+    description: 'Deep navy with silver and teal highlights',
+    colors: ['#1E3A8A', '#3B82F6', '#E0F2FE'],
+    distribution: [50, 30, 20]
   }
 ];
 
@@ -342,10 +499,10 @@ export const visualTypes = [
     title: 'Icons',
     description: 'Choose your icon style',
     options: [
-      { id: 'line', title: 'Line Icons', description: 'Clean and minimal line-based icons' },
-      { id: 'solid', title: 'Solid Icons', description: 'Bold and filled icon style' },
-      { id: 'duotone', title: 'Duotone Icons', description: 'Two-toned iconic style' },
-      { id: 'gradient', title: 'Gradient Icons', description: 'Modern icons with color gradients' }
+      { id: 'line', title: 'Line Icons', description: 'Clean and minimal line-based icons', icon: 'circle' },
+      { id: 'solid', title: 'Solid Icons', description: 'Bold and filled icon style', icon: 'circle-dot' },
+      { id: 'duotone', title: 'Duotone Icons', description: 'Two-toned iconic style', icon: 'circle-dashed' },
+      { id: 'gradient', title: 'Gradient Icons', description: 'Modern icons with color gradients', icon: 'sparkles' }
     ]
   },
   {
@@ -353,10 +510,10 @@ export const visualTypes = [
     title: 'Illustrations',
     description: 'Select illustration style',
     options: [
-      { id: 'flat', title: 'Flat Illustrations', description: '2D illustrations with solid colors' },
-      { id: 'isometric', title: 'Isometric', description: '3D isometric illustration style' },
-      { id: '3d', title: '3D Illustrations', description: 'Realistic 3D rendered illustrations' },
-      { id: 'minimal', title: 'Minimal', description: 'Simple and clean illustrations' }
+      { id: 'flat', title: 'Flat Illustrations', description: '2D illustrations with solid colors', icon: 'square' },
+      { id: 'isometric', title: 'Isometric', description: '3D isometric illustration style', icon: 'box' },
+      { id: '3d', title: '3D Illustrations', description: 'Realistic 3D rendered illustrations', icon: 'box' },
+      { id: 'minimal', title: 'Minimal', description: 'Simple and clean illustrations', icon: 'minimize-2' }
     ]
   },
   {
@@ -364,10 +521,10 @@ export const visualTypes = [
     title: 'Images',
     description: 'Pick your image style',
     options: [
-      { id: 'photography', title: 'Photography', description: 'High-quality photographic content' },
-      { id: 'abstract', title: 'Abstract', description: 'Artistic and abstract imagery' },
-      { id: 'nature', title: 'Nature', description: 'Natural landscapes and organic elements' },
-      { id: 'lifestyle', title: 'Lifestyle', description: 'People and lifestyle photography' }
+      { id: 'photography', title: 'Photography', description: 'High-quality photographic content', icon: 'camera' },
+      { id: 'abstract', title: 'Abstract', description: 'Artistic and abstract imagery', icon: 'palette' },
+      { id: 'nature', title: 'Nature', description: 'Natural landscapes and organic elements', icon: 'trees' },
+      { id: 'lifestyle', title: 'Lifestyle', description: 'People and lifestyle photography', icon: 'users' }
     ]
   }
 ];

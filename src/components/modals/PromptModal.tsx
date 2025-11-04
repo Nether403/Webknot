@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Copy, ExternalLink, Check, X } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 
 interface PromptModalProps {
   isOpen: boolean;
@@ -104,11 +104,11 @@ const PromptModal: React.FC<PromptModalProps> = ({
                 </Button>
                 
                 <Button
-                  onClick={() => handleCopyAndGo('https://lovable.dev')}
+                  onClick={() => handleCopyAndGo('https://webknot.ai')}
                   className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
                 >
                   <ExternalLink size={18} className="mr-2" />
-                  Copy & Go to Lovable
+                  Copy & Go to WebKnot
                 </Button>
               </div>
             </div>

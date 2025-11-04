@@ -8,7 +8,7 @@
 import React, { useCallback } from 'react';
 import { CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import type { PromptAnalysisResult } from '../../utils/promptAnalyzer';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { Tooltip } from '../ui/tooltip';
 
 export interface PromptQualityScoreProps {

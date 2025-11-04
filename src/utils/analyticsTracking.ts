@@ -5,7 +5,7 @@
  * All events are stored in LocalStorage for privacy and can be exported for analysis.
  */
 
-const ANALYTICS_STORAGE_KEY = 'lovabolt-ai-analytics';
+const ANALYTICS_STORAGE_KEY = 'webknot-ai-analytics';
 
 export interface AIEvent {
   event: string;
@@ -30,10 +30,10 @@ const generateSessionId = (): string => {
  * Get or create session ID
  */
 const getSessionId = (): string => {
-  let sessionId = sessionStorage.getItem('lovabolt-session-id');
+  let sessionId = sessionStorage.getItem('webknot-session-id');
   if (!sessionId) {
     sessionId = generateSessionId();
-    sessionStorage.setItem('lovabolt-session-id', sessionId);
+    sessionStorage.setItem('webknot-session-id', sessionId);
   }
   return sessionId;
 };
@@ -274,7 +274,7 @@ export const exportAnalyticsData = (): string => {
 export const clearAnalyticsData = (): void => {
   try {
     localStorage.removeItem(ANALYTICS_STORAGE_KEY);
-    sessionStorage.removeItem('lovabolt-session-id');
+    sessionStorage.removeItem('webknot-session-id');
   } catch (error) {
     console.error('Failed to clear analytics data:', error);
   }

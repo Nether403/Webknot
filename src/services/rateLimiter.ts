@@ -7,12 +7,16 @@
  * Requirements:
  * - 7.1: Limit each user to 20 AI requests per hour
  * - 7.3: Track API usage per user using localStorage
+ * - 7.5: Premium tier option that removes rate limits for paid users
  */
+
+import { isPremiumUser } from '../utils/premiumTier';
 
 export interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
   storageKey: string;
+  bypassForPremium?: boolean; // Whether to bypass rate limits for premium users
 }
 
 export interface RateLimitStatus {
@@ -34,7 +38,8 @@ export class RateLimiter {
     this.config = {
       maxRequests: config.maxRequests ?? 20,
       windowMs: config.windowMs ?? 3600000, // 1 hour default
-      storageKey: config.storageKey ?? 'lovabolt-rate-limit'
+      storageKey: config.storageKey ?? 'lovabolt-rate-limit',
+      bypassForPremium: config.bypassForPremium ?? true // Default to bypassing for premium
     };
     
     this.loadFromStorage();
@@ -42,9 +47,25 @@ export class RateLimiter {
   }
   
   /**
+   * Check if user is premium and should bypass rate limits
+   */
+  private shouldBypassRateLimit(): boolean {
+    return this.config.bypassForPremium === true && isPremiumUser();
+  }
+  
+  /**
    * Check current rate limit status without consuming a request
    */
   checkLimit(): RateLimitStatus {
+    // Premium users bypass rate limits
+    if (this.shouldBypassRateLimit()) {
+      return {
+        remaining: 999, // Show large number for premium users
+        resetTime: Date.now() + this.config.windowMs,
+        isLimited: false
+      };
+    }
+    
     this.cleanupOldRequests();
     
     const now = Date.now();
@@ -69,6 +90,12 @@ export class RateLimiter {
    * Returns true if request was allowed, false if limit exceeded
    */
   consumeRequest(): boolean {
+    // Premium users bypass rate limits
+    if (this.shouldBypassRateLimit()) {
+      console.log('[RateLimiter] Premium user - bypassing rate limit');
+      return true;
+    }
+    
     this.cleanupOldRequests();
     
     const status = this.checkLimit();

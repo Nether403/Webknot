@@ -240,7 +240,7 @@ describe('Metrics Tracking', () => {
       startWizardSession();
       completeWizardSession(85);
       
-      const stored = localStorage.getItem('lovabolt-ai-metrics');
+      const stored = localStorage.getItem('webknot-ai-metrics');
       expect(stored).toBeTruthy();
       
       const data = JSON.parse(stored!);

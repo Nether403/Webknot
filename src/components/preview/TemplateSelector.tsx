@@ -2,7 +2,7 @@
  * TemplateSelector Component
  * 
  * Allows users to select and preview different prompt templates optimized
- * for specific AI development tools (Bolt.new, Lovable.dev, Claude Artifacts).
+ * for specific AI development tools (Bolt.new, WebKnot.ai, Claude Artifacts).
  */
 
 import React, { useState } from 'react';
@@ -30,7 +30,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     switch (targetTool) {
       case 'bolt-new':
         return '⚡';
-      case 'lovable-dev':
+      case 'webknot-ai':
         return '💖';
       case 'claude-artifacts':
         return '🤖';
@@ -45,7 +45,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     switch (targetTool) {
       case 'bolt-new':
         return 'border-yellow-500/30 hover:border-yellow-500/50';
-      case 'lovable-dev':
+      case 'webknot-ai':
         return 'border-pink-500/30 hover:border-pink-500/50';
       case 'claude-artifacts':
         return 'border-purple-500/30 hover:border-purple-500/50';
@@ -60,8 +60,8 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     switch (template.targetTool) {
       case 'bolt-new':
         return 'Bolt.new works best with structured, section-based prompts that clearly separate requirements, design, and technical details. This template maximizes Bolt\'s understanding of your project structure.';
-      case 'lovable-dev':
-        return 'Lovable.dev excels with conversational, natural language prompts. This template uses a friendly tone and clear intent to help Lovable understand your vision naturally.';
+      case 'webknot-ai':
+        return 'WebKnot.ai excels with conversational, natural language prompts. This template uses a friendly tone and clear intent to help WebKnot understand your vision naturally.';
       case 'claude-artifacts':
         return 'Claude Artifacts prefers concise, focused prompts with clear requirements. This template provides just enough detail for Claude to generate clean, well-documented code.';
       case 'generic':
@@ -190,3 +190,4 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     </div>
   );
 };
+

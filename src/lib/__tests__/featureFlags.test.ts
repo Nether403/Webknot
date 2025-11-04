@@ -50,7 +50,7 @@ describe('Feature Flags', () => {
 
     it('should persist flags to localStorage', () => {
       featureFlags.enable('aiProjectAnalysis');
-      const stored = localStorage.getItem('lovabolt-feature-flags');
+      const stored = localStorage.getItem('webknot-feature-flags');
       expect(stored).toBeDefined();
       const parsed = JSON.parse(stored!);
       expect(parsed.aiProjectAnalysis).toBe(true);

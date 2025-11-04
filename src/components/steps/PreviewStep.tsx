@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import PromptModal from '../modals/PromptModal';
 import { PromptQualityScore } from '../ai/PromptQualityScore';
 import { PromptEnhancement } from '../ai/PromptEnhancement';

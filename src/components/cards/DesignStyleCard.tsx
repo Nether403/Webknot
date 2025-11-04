@@ -8,7 +8,36 @@ interface DesignStyleCardProps {
 }
 
 const DesignStyleCard: React.FC<DesignStyleCardProps> = ({ style, selected, onClick }) => {
+  // Map style IDs to image filenames
+  const getImagePath = (styleId: string): string | null => {
+    const imageMap: Record<string, string> = {
+      'apple-hig': '/Images/Design-Styles/Apple-human-interface.jpeg',
+      'digital-brutalism': '/Images/Design-Styles/Brutalism2.jpeg',
+      'fluent-design': '/Images/Design-Styles/Fluent.jpeg',
+      'glassmorphism': '/Images/Design-Styles/GlassMorphism.jpeg',
+      'minimalist': '/Images/Design-Styles/Minimalism.jpeg',
+      'neumorphism': '/Images/Design-Styles/neumorphism.jpeg',
+      'organic-design': '/Images/Design-Styles/Organic-design.jpeg',
+      'retro-futurism': '/Images/Design-Styles/retrofuture.jpeg',
+    };
+    return imageMap[styleId] || null;
+  };
+
   const renderPreview = (styleId: string) => {
+    const imagePath = getImagePath(styleId);
+    
+    // If we have an image, use it
+    if (imagePath) {
+      return (
+        <img 
+          src={imagePath} 
+          alt={style.title}
+          className="w-full h-full object-cover"
+        />
+      );
+    }
+    
+    // Fallback to generated previews for styles without images
     switch (styleId) {
       case 'material-design':
         return (
@@ -19,30 +48,14 @@ const DesignStyleCard: React.FC<DesignStyleCardProps> = ({ style, selected, onCl
             <div className="bg-pink-500/40 rounded-md shadow-lg transform hover:scale-105 transition-transform" />
           </div>
         );
-      case 'glassmorphism':
+      case 'retro-futurism':
         return (
-          <div className="grid grid-cols-3 gap-1 h-full">
-            <div className="col-span-2 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20" />
-            <div className="bg-white/20 backdrop-blur-lg rounded-lg border border-white/20" />
-            <div className="bg-white/15 backdrop-blur-lg rounded-lg border border-white/20" />
-            <div className="col-span-2 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20" />
-          </div>
-        );
-      case 'organic-design':
-        return (
-          <div className="relative h-full">
-            <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-teal-500/20 rounded-full" />
-            <div className="absolute top-1/3 right-1/4 w-1/3 h-1/3 bg-green-500/20 rounded-full" />
-            <div className="absolute bottom-1/4 left-1/3 w-1/3 h-1/3 bg-emerald-500/20 rounded-full" />
-          </div>
-        );
-      case 'minimalist':
-        return (
-          <div className="grid grid-cols-6 gap-1 h-full">
-            <div className="col-span-4 bg-white/5 rounded" />
-            <div className="col-span-2 bg-white/10 rounded" />
-            <div className="col-span-3 bg-white/5 rounded" />
-            <div className="col-span-3 bg-white/10 rounded" />
+          <div className="grid grid-cols-4 gap-1 h-full">
+            <div className="col-span-2 bg-cyan-500/30 rounded-md" />
+            <div className="bg-pink-500/30 rounded-md" />
+            <div className="bg-yellow-500/30 rounded-md" />
+            <div className="bg-purple-500/30 rounded-md" />
+            <div className="col-span-3 bg-teal-500/30 rounded-md" />
           </div>
         );
       default:

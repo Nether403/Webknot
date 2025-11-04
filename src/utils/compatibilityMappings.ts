@@ -36,16 +36,15 @@ import { backgroundOptions, componentOptions, animationOptions } from '../data/r
 export const getCompatibleThemes = (designStyle: DesignStyle): ColorTheme[] => {
   // Mapping of design styles to compatible color theme IDs
   const compatibility: Record<string, string[]> = {
-    'minimalist': ['monochrome-modern', 'ocean-breeze', 'forest-green'],
-    'glassmorphism': ['tech-neon', 'ocean-breeze', 'sunset-warmth'],
-    'modern-corporate': ['monochrome-modern', 'ocean-breeze', 'forest-green'],
-    'digital-brutalism': ['tech-neon', 'royal-purple', 'sunset-warmth'],
-    'material-design': ['ocean-breeze', 'forest-green', 'royal-purple'],
-    'fluent-design': ['ocean-breeze', 'monochrome-modern', 'tech-neon'],
-    'apple-hig': ['monochrome-modern', 'ocean-breeze', 'forest-green'],
-    'neumorphism': ['monochrome-modern', 'sunset-warmth', 'forest-green'],
-    'organic-design': ['forest-green', 'sunset-warmth', 'ocean-breeze'],
-    'retro-futurism': ['tech-neon', 'royal-purple', 'sunset-warmth'],
+    'minimalist': ['monochrome-modern', 'minimal-beige', 'pure-contrast', 'apple-graphite', 'ocean-breeze'],
+    'glassmorphism': ['frosted-blue', 'aurora-glass', 'tech-neon', 'ocean-breeze', 'sunset-warmth'],
+    'material-design': ['material-blue', 'material-red', 'ocean-breeze', 'forest-green', 'royal-purple'],
+    'fluent-design': ['fluent-azure', 'fluent-orchid', 'ocean-breeze', 'monochrome-modern', 'tech-neon'],
+    'apple-hig': ['apple-sky', 'apple-graphite', 'monochrome-modern', 'ocean-breeze', 'minimal-beige'],
+    'neumorphism': ['soft-gray', 'cream-shadow', 'monochrome-modern', 'sunset-warmth', 'minimal-beige'],
+    'digital-brutalism': ['brutal-contrast', 'cyber-yellow', 'tech-neon', 'royal-purple', 'neon-nights'],
+    'organic-design': ['forest-green', 'earth-tones', 'botanical-sage', 'sunset-warmth', 'ocean-breeze'],
+    'retro-futurism': ['retro-sunset', 'neon-nights', 'space-age', 'tech-neon', 'royal-purple'],
   };
 
   const compatibleIds = compatibility[designStyle.id] || [];
@@ -198,54 +197,52 @@ export const getCompatibleAnimations = (designStyle: DesignStyle): AnimationOpti
 export const getCompatibleBackgrounds = (colorTheme: ColorTheme): BackgroundOption[] => {
   // Mapping of color themes to compatible background IDs
   const compatibility: Record<string, string[]> = {
-    'tech-neon': [
-      'aurora',
-      'animated-grid-pattern',
-      'grid-pattern',
-      'retro-grid',
-      'meteors',
-      'shooting-stars',
-    ],
-    'ocean-breeze': [
-      'aurora',
-      'dot-pattern',
-      'grid-pattern',
-      'ripple',
-      'waves',
-      'particles',
-    ],
-    'monochrome-modern': [
-      'dot-pattern',
-      'grid-pattern',
-      'animated-grid-pattern',
-      'retro-grid',
-      'spotlight',
-      'beams',
-    ],
-    'sunset-warmth': [
-      'aurora',
-      'background-gradient',
-      'animated-grid-pattern',
-      'particles',
-      'sparkles',
-      'shooting-stars',
-    ],
-    'forest-green': [
-      'dot-pattern',
-      'grid-pattern',
-      'particles',
-      'waves',
-      'ripple',
-      'aurora',
-    ],
-    'royal-purple': [
-      'aurora',
-      'background-gradient',
-      'animated-grid-pattern',
-      'sparkles',
-      'meteors',
-      'shooting-stars',
-    ],
+    // Material Design themes
+    'material-blue': ['dot-pattern', 'grid-pattern', 'animated-grid-pattern', 'waves', 'ripple', 'particles'],
+    'material-red': ['dot-pattern', 'grid-pattern', 'animated-grid-pattern', 'particles', 'sparkles', 'beams'],
+    
+    // Fluent Design themes
+    'fluent-azure': ['aurora', 'dot-pattern', 'grid-pattern', 'waves', 'ripple', 'beams'],
+    'fluent-orchid': ['aurora', 'background-gradient', 'sparkles', 'particles', 'meteors', 'shooting-stars'],
+    
+    // Apple HIG themes
+    'apple-sky': ['dot-pattern', 'grid-pattern', 'waves', 'ripple', 'particles', 'beams'],
+    'apple-graphite': ['dot-pattern', 'grid-pattern', 'animated-grid-pattern', 'retro-grid', 'spotlight', 'beams'],
+    
+    // Minimalist themes
+    'monochrome-modern': ['dot-pattern', 'grid-pattern', 'animated-grid-pattern', 'retro-grid', 'spotlight', 'beams'],
+    'minimal-beige': ['dot-pattern', 'grid-pattern', 'particles', 'waves', 'ripple', 'spotlight'],
+    'pure-contrast': ['dot-pattern', 'grid-pattern', 'animated-grid-pattern', 'retro-grid', 'beams', 'spotlight'],
+    
+    // Neumorphism themes
+    'soft-gray': ['dot-pattern', 'grid-pattern', 'particles', 'waves', 'ripple', 'spotlight'],
+    'cream-shadow': ['dot-pattern', 'grid-pattern', 'particles', 'waves', 'ripple', 'background-gradient'],
+    
+    // Glassmorphism themes
+    'frosted-blue': ['aurora', 'dot-pattern', 'grid-pattern', 'waves', 'ripple', 'particles'],
+    'aurora-glass': ['aurora', 'background-gradient', 'sparkles', 'particles', 'meteors', 'shooting-stars'],
+    
+    // Digital Brutalism themes
+    'brutal-contrast': ['retro-grid', 'animated-grid-pattern', 'grid-pattern', 'dot-pattern', 'beams', 'spotlight'],
+    'cyber-yellow': ['retro-grid', 'animated-grid-pattern', 'grid-pattern', 'meteors', 'shooting-stars', 'beams'],
+    'tech-neon': ['aurora', 'animated-grid-pattern', 'grid-pattern', 'retro-grid', 'meteors', 'shooting-stars'],
+    
+    // Organic Design themes
+    'forest-green': ['dot-pattern', 'grid-pattern', 'particles', 'waves', 'ripple', 'aurora'],
+    'earth-tones': ['dot-pattern', 'grid-pattern', 'particles', 'waves', 'ripple', 'background-gradient'],
+    'botanical-sage': ['dot-pattern', 'grid-pattern', 'particles', 'waves', 'ripple', 'aurora'],
+    'ocean-breeze': ['aurora', 'dot-pattern', 'grid-pattern', 'ripple', 'waves', 'particles'],
+    
+    // Retro Futurism themes
+    'retro-sunset': ['aurora', 'background-gradient', 'retro-grid', 'sparkles', 'meteors', 'shooting-stars'],
+    'neon-nights': ['aurora', 'retro-grid', 'animated-grid-pattern', 'meteors', 'shooting-stars', 'beams'],
+    'space-age': ['retro-grid', 'animated-grid-pattern', 'grid-pattern', 'meteors', 'shooting-stars', 'aurora'],
+    
+    // Universal favorites
+    'sunset-warmth': ['aurora', 'background-gradient', 'animated-grid-pattern', 'particles', 'sparkles', 'shooting-stars'],
+    'royal-purple': ['aurora', 'background-gradient', 'animated-grid-pattern', 'sparkles', 'meteors', 'shooting-stars'],
+    'coral-reef': ['aurora', 'background-gradient', 'particles', 'waves', 'ripple', 'sparkles'],
+    'midnight-blue': ['aurora', 'dot-pattern', 'grid-pattern', 'waves', 'ripple', 'beams'],
   };
 
   const compatibleIds = compatibility[colorTheme.id] || [];

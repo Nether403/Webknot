@@ -156,11 +156,14 @@ export interface UseGeminiResult {
   analyzeProject: (description: string) => Promise<ProjectAnalysis>;
   suggestImprovements: (state: BoltBuilderState) => Promise<DesignSuggestion[]>;
   enhancePrompt: (prompt: string) => Promise<PromptEnhancement>;
-  chat: (message: string) => Promise<string>;
+  chat: (message: string, wizardState?: BoltBuilderState, currentStep?: string) => Promise<string>;
   
   // Rate limiting
   remainingRequests: number;
   resetTime: number;
+  
+  // Queue position (Phase 3, Task 20.2)
+  queuePosition?: number;
   
   // Cache control
   clearCache: () => void;
@@ -204,4 +207,45 @@ export interface GeminiLogEntry {
   cacheHit: boolean;
   success: boolean;
   error?: string;
+}
+
+// ============================================================================
+// Feedback Types (Phase 3, Task 18)
+// ============================================================================
+
+export type FeedbackType = 'thumbs-up' | 'thumbs-down';
+export type FeedbackTarget = 'suggestion' | 'enhancement' | 'analysis' | 'chat';
+
+export interface UserFeedback {
+  id: string;
+  timestamp: number;
+  type: FeedbackType;
+  target: FeedbackTarget;
+  targetId: string; // ID of the suggestion, enhancement, etc.
+  content?: string; // Optional text feedback
+  metadata?: {
+    suggestionType?: DesignSuggestion['type'];
+    suggestionSeverity?: DesignSuggestion['severity'];
+    wasAutoFixed?: boolean;
+    wasAccepted?: boolean;
+    [key: string]: unknown;
+  };
+}
+
+export interface FeedbackStats {
+  totalFeedback: number;
+  positiveCount: number;
+  negativeCount: number;
+  acceptanceRate: number;
+  feedbackByType: Record<FeedbackTarget, {
+    positive: number;
+    negative: number;
+    total: number;
+  }>;
+  suggestionAcceptanceRate: Record<string, number>; // By suggestion type
+}
+
+export interface FeedbackStorage {
+  feedback: UserFeedback[];
+  lastSync: number;
 }

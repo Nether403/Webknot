@@ -259,7 +259,7 @@ export function getCircuitBreaker(): CircuitBreaker {
       failureThreshold: 5,        // Open after 5 consecutive failures
       openDuration: 300000,       // Keep open for 5 minutes
       halfOpenAttempts: 3,        // Allow 3 test attempts in half-open state
-      storageKey: 'lovabolt-circuit-breaker',
+      storageKey: 'webknot-circuit-breaker',
     });
   }
   return circuitBreakerInstance;

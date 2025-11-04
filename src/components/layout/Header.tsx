@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Monitor } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import ProgressBar from '../ui/ProgressBar';
 
 interface HeaderProps {
@@ -25,12 +25,19 @@ const Header: React.FC<HeaderProps> = ({ onGeneratePrompt, onToggleSidebar, onTo
         >
           <Menu size={24} />
         </button>
-        <h1 
+        <div 
           onClick={() => navigate('/')}
-          className="text-2xl font-bold text-white cursor-pointer hover:text-white/80 transition-colors"
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          LovaBolt
-        </h1>
+          <img 
+            src="/Images/logo1.png" 
+            alt="WebKnot Logo" 
+            className="w-16 h-16 rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500"
+          />
+          <h1 className="text-2xl font-bold text-white">
+            WebKnot
+          </h1>
+        </div>
       </div>
 
       {/* Center Section - Progress (Desktop) */}

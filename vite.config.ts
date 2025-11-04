@@ -2,6 +2,7 @@ import path from 'path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { compression } from 'vite-plugin-compression2';
 
 export default defineConfig({
   plugins: [
@@ -11,6 +12,19 @@ export default defineConfig({
       open: false,
       gzipSize: true,
       brotliSize: true,
+    }),
+    // Gzip compression for better mobile performance
+    compression({
+      include: /\.(js|css|html|svg|json)$/,
+      threshold: 1024, // Only compress files larger than 1KB
+      deleteOriginFile: false,
+    }),
+    // Brotli compression for modern browsers
+    compression({
+      include: /\.(js|css|html|svg|json)$/,
+      algorithm: 'brotliCompress' as any,
+      threshold: 1024,
+      deleteOriginFile: false,
     }),
   ],
   resolve: {
@@ -32,11 +46,32 @@ export default defineConfig({
         // Remove console.log statements in production
         drop_console: true,
         drop_debugger: true,
+        // Additional compression options for mobile
+        passes: 2,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+      },
+      mangle: {
+        safari10: true, // Fix Safari 10 issues
+      },
+      format: {
+        comments: false, // Remove all comments
       },
     },
 
+    // Target modern browsers for smaller bundle
+    target: 'es2020',
+
+    // Optimize CSS
+    cssCodeSplit: true,
+    cssMinify: true,
+
     rollupOptions: {
       output: {
+        // Optimize chunk naming for better caching
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+        
         manualChunks: {
           // Core React libraries - stable, cacheable chunk
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
@@ -72,7 +107,7 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
           ],
 
-          // 3D libraries - used by react-bits components
+          // 3D libraries - used by react-bits components (lazy load)
           'three-vendor': [
             'three',
             '@react-three/fiber',
@@ -93,10 +128,22 @@ export default defineConfig({
           // Utility libraries
           utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
         },
+        
+        // Optimize chunk size
+        compact: true,
       },
     },
 
-    // Increase chunk size warning limit for vendor chunks
-    chunkSizeWarningLimit: 1000,
+    // Reduce chunk size warning limit for mobile optimization
+    chunkSizeWarningLimit: 500,
+    
+    // Optimize asset inlining
+    assetsInlineLimit: 4096, // Inline assets smaller than 4KB
+  },
+  
+  // Optimize server for development
+  server: {
+    port: 5173,
+    strictPort: false,
   },
 });

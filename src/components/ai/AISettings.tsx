@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Shield, Zap, Info } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Settings, Shield, Zap, Info, Sparkles } from 'lucide-react';
+import { Button } from '../ui/Button';
 import { Switch } from '../ui/switch';
+import { isPremiumUser } from '../../utils/premiumTier';
 
 export interface AISettingsProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
     aiEnabled: true,
     consentGiven: false
   });
+  const [isPremium, setIsPremium] = useState(false);
 
   useEffect(() => {
     // Load preferences from localStorage
@@ -49,10 +51,26 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
           aiEnabled: prefs.aiEnabled !== undefined ? prefs.aiEnabled : true
         }));
       }
+      
+      // Check premium status
+      setIsPremium(isPremiumUser());
     } catch (error) {
       console.error('Failed to load AI preferences:', error);
     }
   }, [isOpen]);
+  
+  // Listen for premium status changes
+  useEffect(() => {
+    const handlePremiumStatusChanged = (event: CustomEvent) => {
+      setIsPremium(event.detail.isPremium);
+    };
+    
+    window.addEventListener('premium-status-changed', handlePremiumStatusChanged as EventListener);
+    
+    return () => {
+      window.removeEventListener('premium-status-changed', handlePremiumStatusChanged as EventListener);
+    };
+  }, []);
 
   const handleToggleAI = (enabled: boolean) => {
     const newPreferences = {
@@ -93,6 +111,14 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
       console.error('Failed to reset consent:', error);
     }
   };
+  
+  const handleUpgrade = () => {
+    // Dispatch event to show upgrade modal
+    window.dispatchEvent(new CustomEvent('show-upgrade-prompt', {
+      detail: { reason: 'general', type: 'modal' }
+    }));
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -123,6 +149,51 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
             
             {/* Content */}
             <div className="space-y-6">
+              {/* Premium Status / Upgrade Button */}
+              {isPremium ? (
+                <div className="bg-gradient-to-r from-teal-500/20 to-teal-600/20 p-5 rounded-lg border border-teal-500/30">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-teal-500/30 rounded-lg">
+                      <Sparkles className="w-5 h-5 text-teal-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white mb-1">
+                        Premium Active
+                      </h3>
+                      <p className="text-sm text-gray-300">
+                        You have unlimited access to all AI features
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-5 rounded-lg border border-purple-500/20">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3 flex-1">
+                      <div className="p-2 bg-purple-500/20 rounded-lg mt-1">
+                        <Sparkles className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white mb-1">
+                          Upgrade to Premium
+                        </h3>
+                        <p className="text-sm text-gray-400 mb-3">
+                          Get unlimited AI requests, priority support, and advanced features
+                        </p>
+                        <Button
+                          onClick={handleUpgrade}
+                          className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white"
+                          size="sm"
+                        >
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Upgrade Now
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               {/* AI Toggle */}
               <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700/50">
                 <div className="flex items-start justify-between gap-4">

@@ -1,22 +1,22 @@
 # Frequently Asked Questions (FAQ)
 
-Quick answers to common questions about using LovaBolt.
+Quick answers to common questions about using WebKnot.
 
 ---
 
 ## 🚀 Getting Started
 
-### What is LovaBolt?
-LovaBolt is a wizard that helps you create detailed website descriptions (prompts) for AI development tools like Bolt.new and Lovable.dev. It guides you through every aspect of your website design so AI can build exactly what you envision.
+### What is WebKnot?
+WebKnot is a wizard that helps you create detailed website descriptions (prompts) for AI development tools like Bolt.new and WebKnot.ai. It guides you through every aspect of your website design so AI can build exactly what you envision.
 
 ### Do I need coding experience?
-No! LovaBolt is designed for everyone - designers, business owners, content creators, and anyone with a website idea. No technical knowledge required.
+No! WebKnot is designed for everyone - designers, business owners, content creators, and anyone with a website idea. No technical knowledge required.
 
-### Is LovaBolt free?
-Yes! LovaBolt is completely free to use.
+### Is WebKnot free?
+Yes! WebKnot is completely free to use.
 
-### Which browsers work with LovaBolt?
-LovaBolt works best on:
+### Which browsers work with WebKnot?
+WebKnot works best on:
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
@@ -29,14 +29,14 @@ Most users complete the wizard in 5-10 minutes. Take your time to get the best r
 
 ## 💾 Saving & Progress
 
-### Does LovaBolt save my work?
+### Does WebKnot save my work?
 Yes! Your progress is automatically saved every second to your browser's local storage. You can close the tab and come back anytime.
 
 ### Can I work on multiple projects?
-Currently, LovaBolt saves one project at a time in your browser. To start a new project, you'll need to generate and save your current prompt first.
+Currently, WebKnot saves one project at a time in your browser. To start a new project, you'll need to generate and save your current prompt first.
 
 ### What if I accidentally close the browser?
-No worries! Your work is saved automatically. Just reopen LovaBolt and you'll see your progress.
+No worries! Your work is saved automatically. Just reopen WebKnot and you'll see your progress.
 
 ### Can I export my project?
 You can copy your generated prompt and save it anywhere (Google Docs, Notion, text file). Project export/import feature is coming soon!
@@ -90,7 +90,7 @@ The Harmony Score (0-100) shows how well your design choices work together:
 - **Green checks**: You're doing great!
 
 ### How does Natural Language Input work?
-Just describe your project naturally (e.g., "I want a minimalist portfolio with blue colors") and LovaBolt detects:
+Just describe your project naturally (e.g., "I want a minimalist portfolio with blue colors") and WebKnot detects:
 - Project type
 - Design style
 - Color preferences
@@ -146,6 +146,62 @@ Try different keywords or browse by category. If you still can't find it, it mig
 
 ---
 
+## 🤖 Google Gemini AI
+
+### What is Google Gemini AI?
+WebKnot uses Google's Gemini 2.5 AI to provide intelligent assistance throughout your design process. It analyzes your project and suggests optimal choices.
+
+### Do I need to pay for AI features?
+No! AI features are free for all users with a rate limit of 20 requests per hour.
+
+### What is the AI rate limit?
+Free users get 20 AI requests per hour. This includes:
+- Project analysis
+- Smart defaults
+- Design suggestions
+- Prompt enhancement
+
+### What happens if I hit the rate limit?
+You'll see a message showing when you can use AI again (usually within an hour). The app continues working with standard analysis in the meantime.
+
+### Is my data private when using AI?
+Yes! Your data is:
+- Anonymized before being sent to Google
+- Never stored on our servers
+- Only used for analysis
+- Protected by Google's privacy policies
+
+### Do I need to give consent for AI features?
+Yes. The first time you use AI features, you'll see a consent dialog explaining how your data is used. You can disable AI anytime in settings.
+
+### What if AI features aren't working?
+Common solutions:
+1. Check your internet connection
+2. Ensure AI is enabled in settings
+3. Verify you've given consent
+4. Wait if you've hit the rate limit
+5. Refresh the page
+
+### Why did I get a "Request Timeout" error?
+This means the AI took too long to respond (usually due to network issues). The app automatically switches to standard analysis. Try again in a moment.
+
+### Can I disable AI features?
+Yes! Go to Settings and toggle "Enable AI Features" off. The app works perfectly without AI using rule-based analysis.
+
+### How fast are AI features?
+- Smart Defaults: < 50ms (instant)
+- Project Analysis: 3-5 seconds
+- Prompt Enhancement: 6-8 seconds
+- Most requests are cached for instant results
+
+### What's the difference between AI and standard analysis?
+- **AI Analysis**: Uses Google Gemini for intelligent, context-aware suggestions (85%+ confidence)
+- **Standard Analysis**: Uses rule-based algorithms (60-70% confidence)
+
+Both work well, but AI provides more accurate and personalized recommendations.
+
+---
+
 ## 📊 Quality & Results
 
 ### What makes a good prompt?
@@ -181,26 +237,26 @@ A higher score means your prompt is more complete and detailed, which typically 
 
 ### Which AI tool should I use?
 - **Bolt.new**: Great for quick prototypes and full-stack apps
-- **Lovable.dev**: Excellent for polished, production-ready sites
+- **WebKnot.ai**: Excellent for polished, production-ready sites
 - **Claude Artifacts**: Good for custom implementations
 
 ### How do I use my prompt with Bolt.new?
-1. Generate your prompt in LovaBolt
+1. Generate your prompt in WebKnot
 2. Click "Copy & Go to Bolt"
 3. Paste in Bolt.new's input
 4. Let AI build your website!
 
-### How do I use my prompt with Lovable.dev?
-1. Generate your prompt in LovaBolt
+### How do I use my prompt with WebKnot.ai?
+1. Generate your prompt in WebKnot
 2. Click "Copy & Go to Lovable"
-3. Paste in Lovable.dev's interface
+3. Paste in WebKnot.ai's interface
 4. Watch your site come to life!
 
 ### Can I edit the prompt before using it?
 Yes! Copy it to a text editor, make changes, then paste into your AI tool.
 
 ### What if the AI doesn't understand my prompt?
-LovaBolt prompts are optimized for AI tools, but if issues occur:
+WebKnot prompts are optimized for AI tools, but if issues occur:
 1. Check your quality score (aim for 85+)
 2. Make sure you used the correct template
 3. Try being more specific in descriptions
@@ -270,11 +326,11 @@ LovaBolt prompts are optimized for AI tools, but if issues occur:
 
 ## 📱 Mobile & Devices
 
-### Does LovaBolt work on mobile?
-Yes! LovaBolt is fully responsive and works on phones and tablets, though the experience is optimized for desktop.
+### Does WebKnot work on mobile?
+Yes! WebKnot is fully responsive and works on phones and tablets, though the experience is optimized for desktop.
 
-### Can I use LovaBolt on iPad?
-Yes! LovaBolt works great on iPad and other tablets.
+### Can I use WebKnot on iPad?
+Yes! WebKnot works great on iPad and other tablets.
 
 ### Will my generated website work on mobile?
 If you select "Responsive Design" in functionality (recommended), your website will work on all devices.
@@ -289,7 +345,7 @@ If you select "Responsive Design" in functionality (recommended), your website w
 - **[React-Bits Guide](REACT_BITS_INTEGRATION.md)**: Component documentation
 
 ### How do I report a bug?
-1. Check if it's a known issue in [GitHub Issues](https://github.com/yourusername/lovabolt/issues)
+1. Check if it's a known issue in [GitHub Issues](https://github.com/yourusername/WebKnot/issues)
 2. Create a new issue with:
    - What you were doing
    - What happened
@@ -297,13 +353,13 @@ If you select "Responsive Design" in functionality (recommended), your website w
    - Screenshots if possible
 
 ### How do I request a feature?
-Post your idea in [GitHub Discussions](https://github.com/yourusername/lovabolt/discussions) under "Ideas" category.
+Post your idea in [GitHub Discussions](https://github.com/yourusername/WebKnot/discussions) under "Ideas" category.
 
 ### Can I contact support directly?
-Yes! Email us at hello@lovabolt.com
+Yes! Email us at hello@WebKnot.com
 
 ### Is there a community?
-Yes! Join discussions on [GitHub Discussions](https://github.com/yourusername/lovabolt/discussions)
+Yes! Join discussions on [GitHub Discussions](https://github.com/yourusername/WebKnot/discussions)
 
 ---
 
@@ -316,12 +372,12 @@ Yes! Join discussions on [GitHub Discussions](https://github.com/yourusername/lo
 
 ### Where can I learn about React-Bits?
 - [React-Bits Official Site](https://reactbits.dev)
-- [LovaBolt React-Bits Guide](REACT_BITS_INTEGRATION.md)
+- [WebKnot React-Bits Guide](REACT_BITS_INTEGRATION.md)
 - [Component Examples](REACT_BITS_USAGE_EXAMPLES.md)
 
 ### Where can I learn about AI development tools?
 - [Bolt.new Documentation](https://bolt.new/docs)
-- [Lovable.dev Guides](https://lovable.dev/guides)
+- [WebKnot.ai Guides](https://WebKnot.ai/guides)
 - [Claude Documentation](https://docs.anthropic.com)
 
 ---
@@ -368,7 +424,7 @@ Check our [Roadmap](../../ROADMAP.md) for planned features including:
 - Custom component library
 
 ### Can I suggest features?
-Absolutely! Post your ideas in [GitHub Discussions](https://github.com/yourusername/lovabolt/discussions).
+Absolutely! Post your ideas in [GitHub Discussions](https://github.com/yourusername/WebKnot/discussions).
 
 ---
 
@@ -377,9 +433,9 @@ Absolutely! Post your ideas in [GitHub Discussions](https://github.com/yourusern
 **Can't find your answer?**
 
 1. Check the [User Guide](USER_GUIDE.md) for detailed explanations
-2. Browse [GitHub Discussions](https://github.com/yourusername/lovabolt/discussions)
-3. Search [GitHub Issues](https://github.com/yourusername/lovabolt/issues)
-4. Email us: hello@lovabolt.com
+2. Browse [GitHub Discussions](https://github.com/yourusername/WebKnot/discussions)
+3. Search [GitHub Issues](https://github.com/yourusername/WebKnot/issues)
+4. Email us: hello@WebKnot.com
 
 ---
 
@@ -390,3 +446,4 @@ Absolutely! Post your ideas in [GitHub Discussions](https://github.com/yourusern
 **Happy Building! 🚀**
 
 </div>
+

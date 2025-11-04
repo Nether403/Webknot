@@ -935,8 +935,9 @@ return result.projectType;
 
 ### Performance Targets
 - Cache hit: <50ms
-- AI analysis: <2000ms
-- Prompt enhancement: <3000ms
+- AI analysis: <5000ms (increased for reliability)
+- Prompt enhancement: <8000ms (complex processing)
+- Chat responses: <6000ms (conversational)
 - Fallback activation: <100ms
 
 ### Cost Estimates

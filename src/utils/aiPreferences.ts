@@ -21,7 +21,7 @@ export interface AIConsent {
  */
 export function isAIEnabled(): boolean {
   try {
-    const prefs = localStorage.getItem('lovabolt-ai-preferences');
+    const prefs = localStorage.getItem('webknot-ai-preferences');
     if (prefs) {
       const parsed: AIPreferences = JSON.parse(prefs);
       return parsed.aiEnabled !== false; // Default to true if not set
@@ -39,7 +39,7 @@ export function isAIEnabled(): boolean {
  */
 export function hasAIConsent(): boolean {
   try {
-    const consent = localStorage.getItem('lovabolt-ai-consent');
+    const consent = localStorage.getItem('webknot-ai-consent');
     if (consent) {
       const parsed: AIConsent = JSON.parse(consent);
       return parsed.accepted === true;
@@ -61,7 +61,7 @@ export function setAIEnabled(enabled: boolean): void {
       aiEnabled: enabled,
       updatedAt: Date.now()
     };
-    localStorage.setItem('lovabolt-ai-preferences', JSON.stringify(prefs));
+    localStorage.setItem('webknot-ai-preferences', JSON.stringify(prefs));
     
     // Dispatch event to notify components
     window.dispatchEvent(new CustomEvent('ai-preferences-changed', {
@@ -78,7 +78,7 @@ export function setAIEnabled(enabled: boolean): void {
  */
 export function getAIPreferences(): AIPreferences {
   try {
-    const prefs = localStorage.getItem('lovabolt-ai-preferences');
+    const prefs = localStorage.getItem('webknot-ai-preferences');
     if (prefs) {
       return JSON.parse(prefs);
     }
@@ -97,7 +97,7 @@ export function getAIPreferences(): AIPreferences {
  */
 export function getAIConsent(): AIConsent | null {
   try {
-    const consent = localStorage.getItem('lovabolt-ai-consent');
+    const consent = localStorage.getItem('webknot-ai-consent');
     if (consent) {
       return JSON.parse(consent);
     }

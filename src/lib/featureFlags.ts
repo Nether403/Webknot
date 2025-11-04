@@ -34,7 +34,7 @@ const defaultFlags: FeatureFlags = {
   
   // Phase 3 - Disabled until Phase 2 is stable
   aiChat: false,
-  premiumTier: false,
+  premiumTier: true, // Enable premium tier system
   
   // Global toggle - respects environment variable
   aiEnabled: import.meta.env.VITE_AI_ENABLED === 'true',
@@ -43,7 +43,7 @@ const defaultFlags: FeatureFlags = {
 /**
  * Feature flag storage key
  */
-const STORAGE_KEY = 'lovabolt-feature-flags';
+const STORAGE_KEY = 'webknot-feature-flags';
 
 /**
  * Load feature flags from localStorage

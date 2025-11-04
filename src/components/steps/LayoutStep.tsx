@@ -2,7 +2,7 @@ import React from 'react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { layoutOptions } from '../../data/wizardData';
 import { LayoutOption } from '../../types';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import LayoutCard from '../cards/LayoutCard';
 
 const LayoutStep: React.FC = () => {

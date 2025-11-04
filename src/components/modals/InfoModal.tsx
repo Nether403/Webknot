@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 
 interface InfoModalProps {
   isOpen: boolean;
@@ -61,8 +61,8 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
               
               <div className="mt-6 p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
                 <p className="text-sm">
-                  Once you complete these steps, LovaBolt will generate a detailed prompt that perfectly captures your vision. 
-                  Use this prompt with Bolt, Lovable, and other AI code generators to create your dream website!
+                  Once you complete these steps, WebKnot will generate a detailed prompt that perfectly captures your vision. 
+                  Use this prompt with Bolt and other AI code generators to create your dream website!
                 </p>
               </div>
             </div>

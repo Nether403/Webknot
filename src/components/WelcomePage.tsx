@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Cuboid } from 'lucide-react';
 
 const WelcomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -57,18 +56,26 @@ const WelcomePage: React.FC = () => {
       {/* Logo and Branding */}
       <div className="mb-8 animate-slide-up">
         <div className="mb-6">
-          <Cuboid className="w-24 h-24 text-blue-400 mx-auto rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500" />
+          <img 
+            src="/Images/logo1.png" 
+            alt="WebKnot Logo" 
+            className="w-48 h-48 mx-auto rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+          />
         </div>
-        <h1 className="text-6xl md:text-8xl font-bold text-white mb-4 tracking-tight text-gradient">
-          LovaBolt
-        </h1>
+        <div className="mb-4">
+          <img 
+            src="/Images/Title.png" 
+            alt="WebKnot" 
+            className="mx-auto max-w-2xl w-full h-auto"
+          />
+        </div>
         <p className="text-xl md:text-2xl text-gray-300 mb-2">
-          <em>Advanced Prompt Generator</em>
+          <em>Tying things together</em>
         </p>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto">
           Create comprehensive website design prompts for AI development tools like
           <span className="text-blue-400 font-semibold"> Bolt.new</span> and
-          <span className="text-purple-400 font-semibold"> Lovable.dev</span>
+          <span className="text-purple-400 font-semibold"> WebKnot.ai</span>
         </p>
       </div>
 
@@ -191,7 +198,7 @@ const WelcomePage: React.FC = () => {
       {/* Additional Info */}
       <div className="mt-16 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.6s' }}>
         <div className="glass-card rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Why LovaBolt?</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Why WebKnot?</h2>
           <p className="text-gray-300 leading-relaxed">
             Transform your website ideas into detailed, actionable prompts that AI development tools
             can understand perfectly. Our advanced wizard guides you through every design decision,

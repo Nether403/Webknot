@@ -3,7 +3,7 @@ import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { backgroundOptions as reactBitsBackgrounds } from '../../data/react-bits';
 import { backgroundPatterns } from '../../data/wizardData';
 import { BackgroundOption, BackgroundSelection } from '../../types';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { ReactBitsCard } from '../cards/ReactBitsCard';
 import { ReactBitsModal } from '../modals/ReactBitsModal';
 import { SearchFilter } from '../ui/SearchFilter';

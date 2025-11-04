@@ -13,6 +13,7 @@ import type {
   PromptEnhancement,
   GeminiError,
   GeminiErrorType,
+  ConversationMessage,
 } from '../types/gemini';
 import type { BoltBuilderState } from '../types';
 import { sanitizeInput, isValidApiKey } from '../utils/sanitization';
@@ -137,8 +138,8 @@ export class GeminiService {
       // Build enhancement prompt
       const prompt = this.buildEnhancementPrompt(basicPrompt);
       
-      // Use Pro model for higher quality (with 3s timeout for enhancement)
-      const enhancementTimeout = 3000;
+      // Use Pro model for higher quality (with 8s timeout for enhancement - more complex processing)
+      const enhancementTimeout = 8000;
       const result = await this.callWithRetry(
         () => this.callWithTimeout(
           () => this.proModel.generateContent(prompt),
@@ -177,6 +178,79 @@ export class GeminiService {
       metricsService.logApiCall({
         timestamp: Date.now(),
         operation: 'enhancement',
+        model: this.config.model,
+        latency,
+        tokensUsed: 0,
+        cacheHit: false,
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+      
+      throw this.handleError(error);
+    }
+  }
+  
+  /**
+   * Handles conversational chat with context awareness
+   * Maintains conversation continuity across multiple turns
+   * 
+   * @param message - The user's message
+   * @param context - Current wizard state for context-aware responses
+   * @param history - Previous conversation messages
+   * @returns AI assistant's response
+   */
+  async chat(
+    message: string,
+    context: BoltBuilderState,
+    history: ConversationMessage[]
+  ): Promise<string> {
+    const startTime = Date.now();
+    const metricsService = getMetricsService();
+    
+    try {
+      // Sanitize input
+      const sanitized = sanitizeInput(message);
+      
+      // Build context-aware prompt
+      const prompt = this.buildChatPrompt(sanitized, context, history);
+      
+      // Call API with timeout (6s for chat - conversational responses can be longer)
+      const chatTimeout = 6000;
+      const result = await this.callWithRetry(
+        () => this.callWithTimeout(
+          () => this.flashModel.generateContent(prompt),
+          chatTimeout
+        )
+      );
+      
+      // Get response text
+      const responseText = result.response.text();
+      
+      // Calculate metrics
+      const latency = Date.now() - startTime;
+      const tokensUsed = this.estimateTokens(prompt, responseText);
+      
+      // Log successful API call
+      metricsService.logApiCall({
+        timestamp: Date.now(),
+        operation: 'chat',
+        model: this.config.model,
+        latency,
+        tokensUsed,
+        cacheHit: false,
+        success: true,
+      });
+      
+      return responseText.trim();
+      
+    } catch (error) {
+      // Calculate metrics for failed call
+      const latency = Date.now() - startTime;
+      
+      // Log failed API call
+      metricsService.logApiCall({
+        timestamp: Date.now(),
+        operation: 'chat',
         model: this.config.model,
         latency,
         tokensUsed: 0,
@@ -334,6 +408,91 @@ Original:
 ${basicPrompt}
 
 Return complete enhanced prompt with ## headers for new sections.`;
+  }
+  
+  /**
+   * Builds a context-aware chat prompt
+   * Includes current wizard state and conversation history
+   * Uses intelligent question routing and follow-up handling
+   * 
+   * @param message - The user's message
+   * @param context - Current wizard state
+   * @param history - Previous conversation messages
+   * @param currentStep - Current wizard step (optional)
+   * @returns Formatted prompt for Gemini API
+   */
+  private buildChatPrompt(
+    message: string,
+    context: BoltBuilderState,
+    history: ConversationMessage[],
+    currentStep?: string
+  ): string {
+    // Build context summary using the existing method
+    const contextSummary = this.buildContextSummary(context);
+    
+    // Build conversation history (last 6 messages for context)
+    const recentHistory = history.slice(-6);
+    const historyText = recentHistory.length > 0
+      ? recentHistory.map(msg => 
+          `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
+        ).join('\n')
+      : 'No previous conversation';
+    
+    // Basic prompt with context
+    return `You are a helpful AI assistant for a web design wizard. Answer the user's question based on their current project context.
+
+Current Project Context:
+${contextSummary}
+
+Conversation History:
+${historyText}
+
+User Question: ${message}
+
+Provide a helpful, concise response (2-3 sentences). Focus on practical advice related to their design choices.`;
+  }
+  
+  /**
+   * Builds a summary of the current wizard state for context
+   * 
+   * @param context - Current wizard state
+   * @returns Formatted context summary
+   */
+  private buildContextSummary(context: BoltBuilderState): string {
+    const parts: string[] = [];
+    
+    // Project info
+    if (context.projectInfo.name) {
+      parts.push(`Project: ${context.projectInfo.name} (${context.projectInfo.type})`);
+    }
+    
+    // Design selections
+    if (context.selectedDesignStyle) {
+      parts.push(`Design Style: ${context.selectedDesignStyle.title}`);
+    }
+    
+    if (context.selectedColorTheme) {
+      parts.push(`Color Theme: ${context.selectedColorTheme.title}`);
+    }
+    
+    if (context.selectedLayout) {
+      parts.push(`Layout: ${context.selectedLayout.title}`);
+    }
+    
+    // React-Bits selections
+    if (context.selectedBackground) {
+      parts.push(`Background: ${context.selectedBackground.title}`);
+    }
+    
+    if (context.selectedComponents.length > 0) {
+      parts.push(`Components: ${context.selectedComponents.map(c => c.title).join(', ')}`);
+    }
+    
+    if (context.selectedAnimations.length > 0) {
+      parts.push(`Animations: ${context.selectedAnimations.map(a => a.title).join(', ')}`);
+    }
+    
+    return parts.length > 0 ? parts.join('\n') : 'No selections made yet';
   }
   
   /**

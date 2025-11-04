@@ -7,23 +7,28 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { GeminiService } from '../services/geminiService';
-import { CacheService } from '../services/cacheService';
+import { getBackendCacheService } from '../services/backendCacheService';
+import type { BackendCacheService } from '../services/backendCacheService';
 import { RateLimiter } from '../services/rateLimiter';
 import { getMetricsService } from '../services/metricsService';
 import { getCostTracker } from '../services/costTracker';
 import { getCircuitBreaker } from '../services/circuitBreaker';
+import { getRequestQueue } from '../services/requestQueue';
 import type {
   ProjectAnalysis,
   DesignSuggestion,
   UseGeminiOptions,
   UseGeminiResult,
   GeminiError,
+  ConversationMessage,
 } from '../types/gemini';
 import type { BoltBuilderState } from '../types';
 import { safeParseProjectDescription } from '../utils/nlpParser';
 import { isAIEnabled } from '../utils/aiPreferences';
 import { getProjectAnalysisWarmingData, estimateWarmingSize } from '../utils/cacheWarming';
 import { debounceAsync } from '../utils/requestBatching';
+import { enhanceSuggestionsForPremium, getApiTimeout } from '../utils/premiumFeatures';
+import { isPremiumUser } from '../utils/premiumTier';
 
 /**
  * Determines if fallback should be activated based on error type
@@ -63,10 +68,11 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const [remainingRequests, setRemainingRequests] = useState(20);
   const [resetTime, setResetTime] = useState(Date.now() + 3600000);
+  const [queuePosition, setQueuePosition] = useState<number | undefined>(undefined);
   
   // Service instances (persistent across renders)
   const geminiService = useRef<GeminiService | null>(null);
-  const cacheService = useRef<CacheService>(new CacheService());
+  const cacheService = useRef<BackendCacheService>(getBackendCacheService());
   const rateLimiter = useRef<RateLimiter>(
     new RateLimiter({
       maxRequests: 20,
@@ -75,11 +81,14 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
     })
   );
   const circuitBreaker = useRef(getCircuitBreaker());
+  const requestQueue = useRef(getRequestQueue());
+  const userId = useRef(`user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   
   // Configuration
   const enableCache = options?.enableCache ?? true;
   const enableFallback = options?.enableFallback ?? true;
-  const timeout = options?.timeout ?? 2000;
+  const baseTimeout = options?.timeout ?? 5000; // Increased from 2000ms to 5000ms for better reliability
+  const timeout = getApiTimeout(baseTimeout); // Premium users get longer timeout
   
   // Initialize Gemini service and warm cache
   useEffect(() => {
@@ -171,6 +180,65 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
     };
   }, [isUsingFallback]);
   
+  // Update queue position periodically
+  useEffect(() => {
+    const updateQueuePosition = () => {
+      const stats = requestQueue.current.getStats(userId.current);
+      setQueuePosition(stats.position);
+    };
+    
+    // Update immediately
+    updateQueuePosition();
+    
+    // Update every 500ms while there's a queue
+    const interval = setInterval(updateQueuePosition, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  /**
+   * Wraps an API call with request queuing
+   * Premium users get priority in the queue
+   * 
+   * @param operation - The API operation to execute
+   * @returns Result of the operation
+   */
+  const executeWithQueue = useCallback(
+    async <T>(operation: () => Promise<T>): Promise<T> => {
+      // Check if we should use queue (during high load)
+      const queueStats = requestQueue.current.getStats();
+      const shouldQueue = queueStats.processing >= 2 || queueStats.queueSize > 0;
+      
+      if (!shouldQueue) {
+        // Low load - execute directly
+        return await operation();
+      }
+      
+      // High load - use queue
+      console.log(
+        `[useGemini] High load detected (processing: ${queueStats.processing}, queued: ${queueStats.queueSize}). ` +
+        `Queueing request with ${isPremiumUser() ? 'HIGH' : 'NORMAL'} priority.`
+      );
+      
+      // Update queue position state
+      setQueuePosition(queueStats.queueSize + 1);
+      
+      try {
+        const result = await requestQueue.current.enqueue(operation, userId.current);
+        
+        // Clear queue position when done
+        setQueuePosition(undefined);
+        
+        return result;
+      } catch (error) {
+        // Clear queue position on error
+        setQueuePosition(undefined);
+        throw error;
+      }
+    },
+    []
+  );
+  
   /**
    * Internal implementation of project analysis
    * This is the actual analysis logic that will be debounced
@@ -243,7 +311,7 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
         
         // Check cache first if enabled (cache hits don't consume rate limit)
         if (enableCache) {
-          const cached = cacheService.current.get<ProjectAnalysis>(cacheKey);
+          const cached = await cacheService.current.get<ProjectAnalysis>(cacheKey, 'analysis');
           if (cached) {
             console.log('[useGemini] Cache hit for project analysis');
             
@@ -274,7 +342,7 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
           const minutesUntilReset = Math.ceil(timeUntilReset / 60000);
           
           const rateLimitError = new Error(
-            `AI limit reached. Please try again in ${minutesUntilReset} minute${minutesUntilReset !== 1 ? 's' : ''}.`
+            `AI limit reached. Please try again in ${minutesUntilReset} minute${minutesUntilReset !== 1 ? 's' : ''} or upgrade to Premium for unlimited access.`
           );
           
           console.warn('[useGemini] Rate limit exceeded');
@@ -286,7 +354,12 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
           setRemainingRequests(rateLimitStatus.remaining);
           setResetTime(rateLimitStatus.resetTime);
           
-          // Don't activate fallback for rate limit - user should wait
+          // Dispatch event to show upgrade prompt
+          window.dispatchEvent(new CustomEvent('show-upgrade-prompt', {
+            detail: { reason: 'rate-limit' }
+          }));
+          
+          // Don't activate fallback for rate limit - user should wait or upgrade
           // Call error callback if provided
           if (options?.onError) {
             options.onError(rateLimitError);
@@ -313,14 +386,17 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
           setRemainingRequests(newStatus.remaining);
           setResetTime(newStatus.resetTime);
           
-          const result = await geminiService.current.analyzeProject(description);
+          // Execute with queue (premium users get priority)
+          const result = await executeWithQueue(async () => {
+            return await geminiService.current!.analyzeProject(description);
+          });
           
           // Record success in circuit breaker
           circuitBreaker.current.recordSuccess();
           
           // Cache the successful result
           if (enableCache) {
-            cacheService.current.set(cacheKey, result);
+            await cacheService.current.set(cacheKey, 'analysis', result);
             console.log('[useGemini] Cached analysis result');
           }
           
@@ -474,7 +550,7 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
         
         // Check cache first if enabled (cache hits don't consume rate limit)
         if (enableCache) {
-          const cached = cacheService.current.get<DesignSuggestion[]>(cacheKey);
+          const cached = await cacheService.current.get<DesignSuggestion[]>(cacheKey, 'suggestions');
           if (cached) {
             console.log('[useGemini] Cache hit for design suggestions');
             
@@ -536,20 +612,26 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
           setRemainingRequests(newStatus.remaining);
           setResetTime(newStatus.resetTime);
           
-          const result = await geminiService.current.suggestImprovements(state);
+          // Execute with queue (premium users get priority)
+          const result = await executeWithQueue(async () => {
+            return await geminiService.current!.suggestImprovements(state);
+          });
           
           // Record success in circuit breaker
           circuitBreaker.current.recordSuccess();
           
+          // Enhance suggestions for premium users
+          const enhancedResult = enhanceSuggestionsForPremium(result);
+          
           // Cache the successful result
           if (enableCache) {
-            cacheService.current.set(cacheKey, result);
+            await cacheService.current.set(cacheKey, 'suggestions', enhancedResult);
             console.log('[useGemini] Cached suggestions result');
           }
           
           clearTimeout(loadingTimeout);
           setIsLoading(false);
-          return result;
+          return enhancedResult;
         }
         
         // No AI service available
@@ -632,7 +714,7 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
         
         // Check cache first if enabled (cache hits don't consume rate limit)
         if (enableCache) {
-          const cached = cacheService.current.get<{ originalPrompt: string; enhancedPrompt: string; improvements: string[]; addedSections: string[] }>(cacheKey);
+          const cached = await cacheService.current.get<{ originalPrompt: string; enhancedPrompt: string; improvements: string[]; addedSections: string[] }>(cacheKey, 'enhancement');
           if (cached) {
             console.log('[useGemini] Cache hit for prompt enhancement');
             
@@ -700,14 +782,17 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
           setRemainingRequests(newStatus.remaining);
           setResetTime(newStatus.resetTime);
           
-          const result = await geminiService.current.enhancePrompt(prompt);
+          // Execute with queue (premium users get priority)
+          const result = await executeWithQueue(async () => {
+            return await geminiService.current!.enhancePrompt(prompt);
+          });
           
           // Record success in circuit breaker
           circuitBreaker.current.recordSuccess();
           
           // Cache the successful result
           if (enableCache) {
-            cacheService.current.set(cacheKey, result);
+            await cacheService.current.set(cacheKey, 'enhancement', result);
             console.log('[useGemini] Cached enhancement result');
           }
           
@@ -749,15 +834,190 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
   );
   
   /**
-   * Placeholder for chat functionality (Phase 3)
+   * Sends a chat message and gets AI response
+   * Manages conversation history and context
+   * 
+   * @param message - The user's message
+   * @param wizardState - Optional wizard state for context (if not provided, uses empty state)
+   * @param currentStep - Optional current wizard step
+   * @returns AI assistant's response
    */
   const chat = useCallback(
-    async (_message: string): Promise<string> => {
-      console.warn('chat not yet implemented (Phase 3)');
-      return 'Chat functionality coming in Phase 3';
+    async (message: string, wizardState?: BoltBuilderState, currentStep?: string): Promise<string> => {
+      // Show loading indicator within 100ms
+      const loadingTimeout = setTimeout(() => {
+        setIsLoading(true);
+      }, 100);
+      
+      setError(null);
+      setIsUsingFallback(false);
+      
+      try {
+        // Validate input
+        if (!message || message.trim().length === 0) {
+          throw new Error('Message cannot be empty');
+        }
+        
+        // Check if AI is enabled in preferences
+        if (!isAIEnabled()) {
+          console.log('[useGemini] AI features disabled by user preference');
+          clearTimeout(loadingTimeout);
+          setIsLoading(false);
+          return 'AI features are currently disabled. Please enable them in settings to use the chat assistant.';
+        }
+        
+        // Check circuit breaker state
+        if (!circuitBreaker.current.canAttempt()) {
+          const statusMessage = circuitBreaker.current.getStatusMessage();
+          console.warn('[useGemini] Circuit breaker is open, chat unavailable');
+          clearTimeout(loadingTimeout);
+          setIsLoading(false);
+          return `Chat is temporarily unavailable. ${statusMessage}`;
+        }
+        
+        // Check rate limit before API call
+        const rateLimitStatus = rateLimiter.current.checkLimit();
+        
+        if (rateLimitStatus.isLimited) {
+          const timeUntilReset = rateLimiter.current.getTimeUntilReset();
+          const minutesUntilReset = Math.ceil(timeUntilReset / 60000);
+          
+          const rateLimitError = new Error(
+            `AI limit reached. Please try again in ${minutesUntilReset} minute${minutesUntilReset !== 1 ? 's' : ''}.`
+          );
+          
+          console.warn('[useGemini] Rate limit exceeded');
+          clearTimeout(loadingTimeout);
+          setIsLoading(false);
+          setError(rateLimitError);
+          
+          if (options?.onError) {
+            options.onError(rateLimitError);
+          }
+          
+          return rateLimitError.message;
+        }
+        
+        // Proceed with chat
+        console.log('[useGemini] Sending chat message to Gemini API');
+        
+        // Try AI chat if service is available
+        if (geminiService.current) {
+          // Consume a request from rate limit quota
+          const consumed = rateLimiter.current.consumeRequest();
+          
+          if (!consumed) {
+            throw new Error('Failed to consume rate limit request');
+          }
+          
+          // Update rate limit status
+          const newStatus = rateLimiter.current.checkLimit();
+          setRemainingRequests(newStatus.remaining);
+          setResetTime(newStatus.resetTime);
+          
+          // Get conversation history from localStorage
+          const history = getConversationHistory();
+          
+          // Use provided wizard state or create empty state
+          const state: BoltBuilderState = wizardState || {
+            projectInfo: {
+              name: '',
+              description: '',
+              type: 'Website',
+              purpose: 'Portfolio',
+              targetAudience: '',
+              goals: '',
+            },
+            selectedLayout: null,
+            selectedSpecialLayouts: [],
+            selectedDesignStyle: null,
+            selectedColorTheme: null,
+            selectedTypography: {
+              fontFamily: "'Inter', sans-serif",
+              headingWeight: 'Semibold',
+              bodyWeight: 'Regular',
+              textAlignment: 'Left',
+              headingSize: 'Large',
+              bodySize: 'Medium',
+              lineHeight: 'Normal',
+            },
+            selectedFunctionality: [],
+            selectedVisuals: [],
+            selectedBackground: null,
+            backgroundSelection: null,
+            selectedComponents: [],
+            selectedAnimations: [],
+          };
+          
+          // Use context-aware chat if available
+          const { buildEnhancedChatPrompt } = await import('../services/contextAwareChat');
+          
+          // Build enhanced prompt with context awareness
+          const enhancedPrompt = buildEnhancedChatPrompt(
+            message,
+            state,
+            history,
+            currentStep || 'unknown'
+          );
+          
+          // Execute with queue (premium users get priority)
+          const result = await executeWithQueue(async () => {
+            return await geminiService.current!.chat(enhancedPrompt, state, history);
+          });
+          
+          // Record success in circuit breaker
+          circuitBreaker.current.recordSuccess();
+          
+          clearTimeout(loadingTimeout);
+          setIsLoading(false);
+          return result;
+        }
+        
+        // No AI service available
+        throw new Error('AI service not available');
+        
+      } catch (err) {
+        console.error('AI chat failed:', err);
+        clearTimeout(loadingTimeout);
+        setIsLoading(false);
+        
+        const error = err as Error;
+        setError(error);
+        
+        // Record failure in circuit breaker (unless it's a rate limit error)
+        if (!error.message.toLowerCase().includes('rate limit') &&
+            !error.message.toLowerCase().includes('ai features disabled')) {
+          circuitBreaker.current.recordFailure();
+        }
+        
+        // For chat, return error message instead of throwing
+        if (options?.onError) {
+          options.onError(error);
+        }
+        
+        return `Sorry, I encountered an error: ${error.message}`;
+      }
     },
-    []
+    [options]
   );
+  
+  /**
+   * Gets conversation history from localStorage
+   * Returns last 10 messages to keep context manageable
+   */
+  const getConversationHistory = (): ConversationMessage[] => {
+    try {
+      const stored = localStorage.getItem('lovabolt-chat-history');
+      if (stored) {
+        const history = JSON.parse(stored) as ConversationMessage[];
+        // Return last 10 messages
+        return history.slice(-10);
+      }
+    } catch (error) {
+      console.error('[useGemini] Failed to load conversation history:', error);
+    }
+    return [];
+  };
   
   /**
    * Clears the cache
@@ -782,6 +1042,9 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
     // Rate limiting (Phase 1, Task 6)
     remainingRequests,
     resetTime,
+    
+    // Queue position (Phase 3, Task 20.2)
+    queuePosition,
     
     // Cache control
     clearCache,

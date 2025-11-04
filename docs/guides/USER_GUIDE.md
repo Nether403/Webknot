@@ -1,14 +1,14 @@
-# LovaBolt User Guide
+# WebKnot User Guide
 
-**Welcome to LovaBolt!** 👋
+**Welcome to WebKnot!** 👋
 
-This guide will help you create amazing website prompts for AI tools like Bolt.new and Lovable.dev. No technical knowledge required!
+This guide will help you create amazing website prompts for AI tools like Bolt.new and WebKnot.ai. No technical knowledge required!
 
 ---
 
 ## 📖 Table of Contents
 
-1. [What is LovaBolt?](#what-is-lovabolt)
+1. [What is WebKnot?](#what-is-WebKnot)
 2. [Getting Started](#getting-started)
 3. [Step-by-Step Wizard Guide](#step-by-step-wizard-guide)
 4. [AI Features Explained](#ai-features-explained)
@@ -18,26 +18,26 @@ This guide will help you create amazing website prompts for AI tools like Bolt.n
 
 ---
 
-## What is LovaBolt?
+## What is WebKnot?
 
-LovaBolt is your personal assistant for creating detailed website descriptions that AI tools can understand perfectly. Think of it as a translator between your vision and AI development tools.
+WebKnot is your personal assistant for creating detailed website descriptions that AI tools can understand perfectly. Think of it as a translator between your vision and AI development tools.
 
-### Why Use LovaBolt?
+### Why Use WebKnot?
 
-**Without LovaBolt:**
+**Without WebKnot:**
 - "I want a modern website with blue colors" → AI might miss important details
 - Spending hours writing detailed prompts
 - Forgetting to mention crucial features
 - Getting inconsistent results
 
-**With LovaBolt:**
+**With WebKnot:**
 - Guided step-by-step through every detail
 - AI suggests compatible options
 - Automatic quality checking
 - Professional prompts in minutes
 - Consistent, high-quality results
 
-### Who is LovaBolt For?
+### Who is WebKnot For?
 
 - 🎨 **Designers** - Turn your vision into detailed specifications
 - 💼 **Business Owners** - Create professional websites without coding
@@ -49,9 +49,9 @@ LovaBolt is your personal assistant for creating detailed website descriptions t
 
 ## Getting Started
 
-### Step 1: Open LovaBolt
+### Step 1: Open WebKnot
 
-Visit LovaBolt in your web browser. You'll see a beautiful welcome screen with a "Get Started" button.
+Visit WebKnot in your web browser. You'll see a beautiful welcome screen with a "Get Started" button.
 
 ### Step 2: Click "Get Started"
 
@@ -67,7 +67,7 @@ At the end, click "Generate Prompt" to create your detailed description.
 
 ### Step 5: Use Your Prompt
 
-Copy the prompt and paste it into Bolt.new or Lovable.dev to build your website!
+Copy the prompt and paste it into Bolt.new or WebKnot.ai to build your website!
 
 ---
 
@@ -92,7 +92,7 @@ Copy the prompt and paste it into Bolt.new or Lovable.dev to build your website!
 
 **💡 Tip:** Be specific! Instead of "website for business", say "portfolio website to showcase my photography to potential clients".
 
-**🤖 AI Help:** Try the "Describe Your Project" feature! Just write naturally like "I want to build a minimalist portfolio with blue colors" and LovaBolt will automatically detect your preferences.
+**🤖 AI Help:** Try the "Describe Your Project" feature! Just write naturally like "I want to build a minimalist portfolio with blue colors" and WebKnot will automatically detect your preferences.
 
 ---
 
@@ -142,7 +142,7 @@ Copy the prompt and paste it into Bolt.new or Lovable.dev to build your website!
 - Business? Go with Modern Corporate
 - Creative? Try Digital Brutalism or Futuristic
 
-**🤖 AI Help:** LovaBolt will suggest compatible color themes based on your style choice!
+**🤖 AI Help:** WebKnot will suggest compatible color themes based on your style choice!
 
 ---
 
@@ -359,7 +359,7 @@ Copy the prompt and paste it into Bolt.new or Lovable.dev to build your website!
 **Copy & Use:**
 1. Click "Generate Prompt"
 2. Click "Copy to Clipboard"
-3. Click "Go to Bolt.new" or "Go to Lovable.dev"
+3. Click "Go to Bolt.new" or "Go to WebKnot.ai"
 4. Paste and watch your website come to life!
 
 **💡 Tip:** Always use Detailed Prompt for best results. It gives AI all the information it needs.
@@ -368,7 +368,7 @@ Copy the prompt and paste it into Bolt.new or Lovable.dev to build your website!
 
 ## AI Features Explained
 
-LovaBolt includes 6 smart features to help you create better prompts faster.
+WebKnot includes 6 smart features to help you create better prompts faster.
 
 ### 1. Smart Defaults 🎯
 
@@ -380,7 +380,7 @@ LovaBolt includes 6 smart features to help you create better prompts faster.
 3. Click it to apply intelligent suggestions
 4. Review and adjust as needed
 
-**Example:** Choose "Portfolio" → LovaBolt suggests Minimalist style, Monochrome colors, and clean layouts.
+**Example:** Choose "Portfolio" → WebKnot suggests Minimalist style, Monochrome colors, and clean layouts.
 
 **Why it helps:** Saves time and ensures your choices work well together.
 
@@ -425,7 +425,7 @@ LovaBolt includes 6 smart features to help you create better prompts faster.
 3. Click suggested items to apply them
 4. See confidence percentage (higher = better match)
 
-**Example:** Choose Glassmorphism style → LovaBolt suggests Tech Neon colors and modern components.
+**Example:** Choose Glassmorphism style → WebKnot suggests Tech Neon colors and modern components.
 
 **Why it helps:** Ensures all your choices work harmoniously together.
 
@@ -439,7 +439,7 @@ LovaBolt includes 6 smart features to help you create better prompts faster.
 1. Go to Project Setup (Step 1)
 2. Find "Describe Your Project" section
 3. Write naturally: "I want a minimalist portfolio with blue colors to showcase my photography"
-4. LovaBolt detects:
+4. WebKnot detects:
    - Project Type: Portfolio
    - Design Style: Minimalist
    - Color Theme: Blue-based
@@ -477,7 +477,7 @@ LovaBolt includes 6 smart features to help you create better prompts faster.
 
 **Auto-Fix:**
 - Click "Auto-Fix" button on issues
-- LovaBolt adjusts selections automatically
+- WebKnot adjusts selections automatically
 - Review changes and confirm
 
 **Example Warning:** "Minimalist designs work best with fewer components" → Suggests reducing from 12 to 7 components.
@@ -492,7 +492,7 @@ LovaBolt includes 6 smart features to help you create better prompts faster.
 
 **Available Templates:**
 - **Bolt.new Optimized**: Structured format for Bolt
-- **Lovable.dev Optimized**: Conversational style for Lovable
+- **WebKnot.ai Optimized**: Conversational style for Lovable
 - **Claude Artifacts**: Optimized for Claude
 - **Generic**: Works with any AI tool
 
@@ -563,13 +563,13 @@ LovaBolt includes 6 smart features to help you create better prompts faster.
 ### General Questions
 
 **Q: Do I need to know how to code?**  
-A: No! LovaBolt is designed for non-technical users. Just make selections and we'll create the technical prompt.
+A: No! WebKnot is designed for non-technical users. Just make selections and we'll create the technical prompt.
 
 **Q: How long does it take?**  
 A: Most users complete the wizard in 5-10 minutes. Take your time!
 
 **Q: Can I save my progress?**  
-A: Yes! LovaBolt automatically saves every second. Close and come back anytime.
+A: Yes! WebKnot automatically saves every second. Close and come back anytime.
 
 **Q: Can I change my selections later?**  
 A: Absolutely! Use the "Back" button or click any step in the sidebar to jump around.
@@ -634,7 +634,7 @@ A:
 **Q: Which AI tool should I use?**  
 A:
 - **Bolt.new**: Great for quick prototypes and full-stack apps
-- **Lovable.dev**: Excellent for polished, production-ready sites
+- **WebKnot.ai**: Excellent for polished, production-ready sites
 - **Claude**: Good for custom implementations
 
 ### Troubleshooting
@@ -643,7 +643,7 @@ A:
 A: Try refreshing your browser or clearing your cache. Make sure JavaScript is enabled.
 
 **Q: My selections disappeared**  
-A: Check if you're in the same browser. LovaBolt saves to your browser's local storage.
+A: Check if you're in the same browser. WebKnot saves to your browser's local storage.
 
 **Q: The AI suggestions aren't showing**  
 A: Make sure you've made selections in previous steps. Suggestions appear based on your choices.
@@ -734,7 +734,7 @@ A: The score is based on design principles. If you have specific brand requireme
 
 ### Performance Issues
 
-**If LovaBolt is slow:**
+**If WebKnot is slow:**
 1. Close other browser tabs
 2. Clear browser cache
 3. Disable browser extensions temporarily
@@ -748,7 +748,7 @@ A: The score is based on design principles. If you have specific brand requireme
 1. **Check the full Troubleshooting Guide**: [docs/guides/TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 2. **Search GitHub Issues**: Someone may have had the same problem
 3. **Ask in Discussions**: Community can help
-4. **Contact Support**: hello@lovabolt.com
+4. **Contact Support**: hello@WebKnot.com
 
 **When reporting issues, include:**
 - What you were trying to do
@@ -764,7 +764,7 @@ A: The score is based on design principles. If you have specific brand requireme
 ### After Generating Your Prompt
 
 1. **Copy Your Prompt**: Click "Copy to Clipboard"
-2. **Choose Your AI Tool**: Bolt.new or Lovable.dev
+2. **Choose Your AI Tool**: Bolt.new or WebKnot.ai
 3. **Paste and Generate**: Let AI build your website
 4. **Review and Refine**: Make adjustments as needed
 5. **Launch Your Site**: Share with the world!
@@ -777,11 +777,11 @@ A: The score is based on design principles. If you have specific brand requireme
 
 ### Sharing Your Success
 
-Built something amazing with LovaBolt? We'd love to see it!
+Built something amazing with WebKnot? We'd love to see it!
 
-- Share on social media with #LovaBolt
+- Share on social media with #WebKnot
 - Post in GitHub Discussions
-- Email us: hello@lovabolt.com
+- Email us: hello@WebKnot.com
 
 ---
 
@@ -816,7 +816,7 @@ Speed up your workflow with these shortcuts:
 
 ## Glossary
 
-**AI Tool**: Software like Bolt.new or Lovable.dev that builds websites from text descriptions
+**AI Tool**: Software like Bolt.new or WebKnot.ai that builds websites from text descriptions
 
 **Component**: A reusable piece of UI (like a button, card, or carousel)
 
@@ -844,10 +844,11 @@ Speed up your workflow with these shortcuts:
 
 **[Start Creating →](http://localhost:5173)**
 
-Need help? Check our [Troubleshooting Guide](TROUBLESHOOTING.md) or [contact us](mailto:hello@lovabolt.com)
+Need help? Check our [Troubleshooting Guide](TROUBLESHOOTING.md) or [contact us](mailto:hello@WebKnot.com)
 
 ---
 
 **Made with ❤️ for creators, by creators**
 
 </div>
+

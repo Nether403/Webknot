@@ -747,7 +747,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
    * Saves the current project state to browser localStorage
    *
    * Persists all wizard selections and project information to localStorage under the
-   * key 'lovabolt-project'. This enables users to resume their work after closing
+   * key 'webknot-project'. This enables users to resume their work after closing
    * the browser or refreshing the page.
    *
    * @remarks
@@ -784,7 +784,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
 
     try {
       const serialized = JSON.stringify(projectData);
-      localStorage.setItem('lovabolt-project', serialized);
+      localStorage.setItem('webknot-project', serialized);
       console.log('[LocalStorage] Project saved successfully:', {
         size: serialized.length,
         timestamp: new Date().toISOString(),
@@ -884,7 +884,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
    * @example
    * ```tsx
    * const { loadProject } = useBoltBuilder();
-   * const savedData = JSON.parse(localStorage.getItem('lovabolt-project'));
+   * const savedData = JSON.parse(localStorage.getItem('webknot-project'));
    * loadProject(savedData);
    * ```
    *
@@ -990,7 +990,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
    * - All selections: null or empty arrays
    * - currentStep: 'project-setup'
    * - promptText: Empty string
-   * - localStorage: 'lovabolt-project' key removed
+   * - localStorage: 'webknot-project' key removed
    */
   const clearProject = () => {
     setProjectInfo({
@@ -1014,7 +1014,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     setSelectedAnimations([]);
     setCurrentStep('project-setup');
     setPromptText('');
-    localStorage.removeItem('lovabolt-project');
+    localStorage.removeItem('webknot-project');
   };
 
   // Track state changes for undo/redo with debouncing (500ms)
@@ -1152,7 +1152,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     }
     
     try {
-      const saved = localStorage.getItem('lovabolt-project');
+      const saved = localStorage.getItem('webknot-project');
       if (saved) {
         console.log(`[Load Project] ${timestamp} - Found saved project in localStorage`, {
           dataSize: saved.length,
@@ -1188,7 +1188,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
           
           // Clear corrupted data
           try {
-            localStorage.removeItem('lovabolt-project');
+            localStorage.removeItem('webknot-project');
             console.log(`[Load Project] ${timestamp} - Corrupted project data cleared from localStorage`);
           } catch (clearError) {
             console.error(`[Load Project] ${timestamp} - Failed to clear corrupted project data:`, clearError);

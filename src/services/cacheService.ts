@@ -19,7 +19,7 @@ export class CacheService {
       maxSize: config?.maxSize ?? 100,
       ttl: config?.ttl ?? 3600000, // 1 hour default
       persistToLocalStorage: config?.persistToLocalStorage ?? true,
-      storageKey: config?.storageKey ?? 'lovabolt-gemini-cache',
+      storageKey: config?.storageKey ?? 'webknot-gemini-cache',
     };
     
     this.cache = new Map();

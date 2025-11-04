@@ -1,7 +1,7 @@
 import React from 'react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { fonts, fontWeights, textAlignments, fontSizes } from '../../data/wizardData';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import FontCard from '../cards/FontCard';
 
 const TypographyStep: React.FC = () => {

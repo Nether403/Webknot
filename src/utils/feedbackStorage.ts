@@ -1,6 +1,6 @@
 import { FeedbackData } from '../components/ai/FeedbackPrompt';
 
-const FEEDBACK_STORAGE_KEY = 'lovabolt-ai-feedback';
+const FEEDBACK_STORAGE_KEY = 'webknot-ai-feedback';
 
 export interface StoredFeedback {
   feedbacks: FeedbackData[];

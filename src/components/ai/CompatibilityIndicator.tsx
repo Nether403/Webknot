@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { CheckCircle, AlertCircle, XCircle, HelpCircle } from 'lucide-react';
 import { CompatibilityResult, CompatibilityIssue } from '../../utils/compatibilityChecker';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { trackAIEvent } from '../../utils/analyticsTracking';
 import { Tooltip } from '../ui/tooltip';
 

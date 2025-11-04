@@ -11,7 +11,7 @@
 
 import { trackAIEvent } from './analyticsTracking';
 
-const METRICS_STORAGE_KEY = 'lovabolt-ai-metrics';
+const METRICS_STORAGE_KEY = 'webknot-ai-metrics';
 
 export interface WizardSession {
   sessionId: string;

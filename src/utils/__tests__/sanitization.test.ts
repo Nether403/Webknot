@@ -116,10 +116,10 @@ describe('sanitizeInput', () => {
 
   describe('API keys and tokens', () => {
     it('should remove long alphanumeric tokens', () => {
-      const input = 'Use key: sk_live_abc123xyz789def456ghi012jkl345mno678pqr901stu234';
+      const input = 'Use key: test_fake_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
       const result = sanitizeInput(input);
       expect(result).toContain('[token]');
-      expect(result).not.toContain('sk_live_abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+      expect(result).not.toContain('test_fake_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
     });
 
     it('should remove Gemini API keys', () => {
@@ -188,7 +188,7 @@ describe('isValidApiKey', () => {
   });
 
   it('should reject keys with wrong prefix', () => {
-    const invalidKey = 'sk_live_1234567890abcdefghijklmnopqrs';
+    const invalidKey = 'FAKE_test_XXXXXXXXXXXXXXXXXXXXXXXX';
     expect(isValidApiKey(invalidKey)).toBe(false);
   });
 

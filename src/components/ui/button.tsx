@@ -10,7 +10,7 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   type = 'button',
@@ -52,4 +52,3 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 export default Button;
-export { Button };

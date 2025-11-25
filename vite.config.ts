@@ -17,14 +17,12 @@ export default defineConfig({
     compression({
       include: /\.(js|css|html|svg|json)$/,
       threshold: 1024, // Only compress files larger than 1KB
-      deleteOriginFile: false,
     }),
     // Brotli compression for modern browsers
     compression({
       include: /\.(js|css|html|svg|json)$/,
-      algorithm: 'brotliCompress' as any,
+      algorithms: ['brotliCompress'],
       threshold: 1024,
-      deleteOriginFile: false,
     }),
   ],
   resolve: {
@@ -71,7 +69,7 @@ export default defineConfig({
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
-        
+
         manualChunks: {
           // Core React libraries - stable, cacheable chunk
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
@@ -128,7 +126,7 @@ export default defineConfig({
           // Utility libraries
           utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
         },
-        
+
         // Optimize chunk size
         compact: true,
       },
@@ -136,11 +134,11 @@ export default defineConfig({
 
     // Reduce chunk size warning limit for mobile optimization
     chunkSizeWarningLimit: 500,
-    
+
     // Optimize asset inlining
     assetsInlineLimit: 4096, // Inline assets smaller than 4KB
   },
-  
+
   // Optimize server for development
   server: {
     port: 5173,

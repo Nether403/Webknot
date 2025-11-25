@@ -19,6 +19,8 @@ import {
   completeWizardSession,
 } from '../utils/metricsTracking';
 import { toast } from '@/hooks/use-toast';
+import { generateEnhancedPrompt } from '../utils/enhancedPromptGenerator';
+import { getProjectContext, validateCombination } from '../utils/promptContexts';
 
 /**
  * State that can be tracked for undo/redo
@@ -145,7 +147,7 @@ const defaultTypography: Typography = {
 export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Step management
   const [currentStep, setCurrentStep] = useState('project-setup');
-  
+
   // Track if session has been started
   const sessionStartedRef = useRef(false);
 
@@ -173,7 +175,8 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [selectedAnimations, setSelectedAnimations] = useState<AnimationOption[]>([]);
 
   // Background selection state (new comprehensive type)
-  const [backgroundSelectionState, setBackgroundSelectionState] = useState<BackgroundSelection | null>(null);
+  const [backgroundSelectionState, setBackgroundSelectionState] =
+    useState<BackgroundSelection | null>(null);
 
   // Wrapper for setBackgroundSelection with logging
   const setBackgroundSelection = React.useCallback((selection: BackgroundSelection | null) => {
@@ -258,33 +261,33 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
   const validatePromptData = (): ValidationResult => {
     const warnings: string[] = [];
     const errors: string[] = [];
-    
+
     // Validate background selection
     if (backgroundSelectionState?.type === 'react-bits') {
       const reactBitsComponent = backgroundSelectionState.reactBitsComponent;
       const legacyBackground = selectedBackground;
-      
+
       if (reactBitsComponent && legacyBackground) {
         if (reactBitsComponent.id !== legacyBackground.id) {
           errors.push(
             `Background mismatch: backgroundSelection has "${reactBitsComponent.title}" ` +
-            `but selectedBackground has "${legacyBackground.title}"`
+              `but selectedBackground has "${legacyBackground.title}"`
           );
         }
       } else if (reactBitsComponent && !legacyBackground) {
         warnings.push(
           `backgroundSelection has "${reactBitsComponent.title}" but selectedBackground is null. ` +
-          `This may indicate a sync issue.`
+            `This may indicate a sync issue.`
         );
       }
     }
-    
+
     // Validate component selections
     if (selectedComponents.length > 0) {
-      const componentNames = selectedComponents.map(c => c.title).join(', ');
+      const componentNames = selectedComponents.map((c) => c.title).join(', ');
       console.log('[Validation] Components selected:', componentNames);
     }
-    
+
     // Log results
     if (errors.length > 0) {
       console.error('[Validation] Errors found:', errors);
@@ -292,11 +295,11 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
     if (warnings.length > 0) {
       console.warn('[Validation] Warnings found:', warnings);
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   };
 
@@ -304,14 +307,17 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
    * Generates a comprehensive, detailed prompt for AI-powered development
    *
    * Creates a structured markdown document containing all project specifications including:
-   * - Project overview and metadata
+   * - Project overview and metadata with context
+   * - User story and primary CTA
    * - Layout structure and design style
    * - Color scheme and typography
    * - Visual elements and backgrounds
-   * - UI components and animations
+   * - UI components and animations with use cases
    * - Functionality requirements
-   * - Technical implementation details
+   * - Content structure and suggested pages
+   * - Technical implementation details with priorities
    * - React-Bits installation instructions
+   * - Design requirements with project-specific guidance
    *
    * @returns A formatted markdown string containing the complete project specification,
    *          or an error message if required fields are incomplete
@@ -332,23 +338,26 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
    *
    * The generated prompt includes installation commands for all selected React-Bits
    * components (backgrounds, UI components, and animations) with their dependencies.
+   *
+   * The prompt is enhanced with contextual information based on project type and purpose,
+   * providing specific guidance, user stories, and recommendations.
    */
   const generatePrompt = (): string => {
     const timestamp = new Date().toISOString();
-    console.log(`[Prompt Gen] ${timestamp} - Starting prompt generation`);
-    
+    console.log(`[Prompt Gen] ${timestamp} - Starting enhanced prompt generation`);
+
     // Validate before generating
     const validation = validatePromptData();
-    
+
     if (!validation.isValid) {
       console.error(`[Prompt Gen] ${timestamp} - Validation failed:`, validation.errors);
       // Log but continue - don't block prompt generation
     }
-    
+
     if (validation.warnings.length > 0) {
       console.warn(`[Prompt Gen] ${timestamp} - Validation warnings:`, validation.warnings);
     }
-    
+
     if (!projectInfo.name || !selectedLayout || !selectedDesignStyle || !selectedColorTheme) {
       console.error(`[Prompt Gen] ${timestamp} - Missing required fields:`, {
         hasProjectName: !!projectInfo.name,
@@ -358,327 +367,59 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
       });
       return 'Please complete all required sections before generating a prompt.';
     }
-    
+
     console.log(`[Prompt Gen] ${timestamp} - Required fields validated successfully`);
 
-    const functionalityTier = selectedFunctionality.find((item) => item.tier);
-    const technicalFeatures = selectedFunctionality.filter((item) => !item.tier);
-
-    const visualElements = selectedVisuals.map((visual) => {
-      return `${visual.type}: ${visual.style}`;
+    // Get project context for enhanced guidance
+    const context = getProjectContext(projectInfo.type, projectInfo.purpose);
+    console.log(`[Prompt Gen] ${timestamp} - Retrieved project context:`, {
+      type: projectInfo.type,
+      purpose: projectInfo.purpose,
+      hasContext: !!context,
+      keyGoals: context.keyGoals.length,
+      suggestedPages: context.suggestedPages.length,
     });
 
-    // Background section (Section 7)
-    // Priority 1: Check backgroundSelection (comprehensive state)
-    const backgroundSection = (() => {
-      const bgTimestamp = new Date().toISOString();
-      console.log(`[Prompt Gen] ${bgTimestamp} - Processing background selection:`, {
-        backgroundSelectionType: backgroundSelectionState?.type || 'none',
-        hasReactBitsComponent: !!(backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent),
-        hasSolidColor: !!(backgroundSelectionState?.type === 'solid' && backgroundSelectionState.solidColor),
-        hasGradient: !!(backgroundSelectionState?.type === 'gradient' && backgroundSelectionState.gradientColors),
-        hasPattern: !!(backgroundSelectionState?.type === 'pattern' && backgroundSelectionState.pattern),
-        hasLegacyBackground: !!selectedBackground,
+    // Validate combination
+    const combinationValidation = validateCombination(projectInfo.type, projectInfo.purpose);
+    if (!combinationValidation.isValid) {
+      console.warn(`[Prompt Gen] ${timestamp} - Invalid combination:`, {
+        reason: combinationValidation.reason,
+        alternative: combinationValidation.alternative,
       });
-      
-      if (backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent) {
-        const bg = backgroundSelectionState.reactBitsComponent;
-        console.log(`[Prompt Gen] ${bgTimestamp} - Using React-Bits background from backgroundSelection:`, {
-          title: bg.title,
-          id: bg.id,
-          dependencies: bg.dependencies,
-          cliCommand: bg.cliCommand,
-        });
-        return `## 7. Background Effect
-- **Selected Background:** ${bg.title}
-- **Description:** ${bg.description}
-- **Dependencies:** ${bg.dependencies.join(', ')}
-- **Installation:** \`${bg.cliCommand}\`
-`;
-      }
-      
-      // Priority 2: Check other background types
-      if (backgroundSelectionState?.type === 'solid' && backgroundSelectionState.solidColor) {
-        console.log(`[Prompt Gen] ${bgTimestamp} - Using solid color background:`, {
-          color: backgroundSelectionState.solidColor,
-        });
-        return `## 7. Background Effect
-- **Type:** Solid Color
-- **Color:** ${backgroundSelectionState.solidColor}
-`;
-      }
-      
-      if (backgroundSelectionState?.type === 'gradient' && backgroundSelectionState.gradientColors) {
-        console.log(`[Prompt Gen] ${bgTimestamp} - Using gradient background:`, {
-          colors: backgroundSelectionState.gradientColors,
-          direction: backgroundSelectionState.gradientDirection || 'to right',
-        });
-        return `## 7. Background Effect
-- **Type:** Gradient
-- **Colors:** ${backgroundSelectionState.gradientColors.join(' → ')}
-- **Direction:** ${backgroundSelectionState.gradientDirection || 'to right'}
-`;
-      }
-      
-      if (backgroundSelectionState?.type === 'pattern' && backgroundSelectionState.pattern) {
-        console.log(`[Prompt Gen] ${bgTimestamp} - Using pattern background:`, {
-          pattern: backgroundSelectionState.pattern,
-        });
-        return `## 7. Background Effect
-- **Type:** Pattern
-- **Pattern:** ${backgroundSelectionState.pattern}
-`;
-      }
-      
-      // Fallback: Check legacy selectedBackground field
-      if (selectedBackground) {
-        console.warn(`[Prompt Gen] ${bgTimestamp} - Using legacy selectedBackground field (should use backgroundSelection):`, {
-          title: selectedBackground.title,
-          id: selectedBackground.id,
-          dependencies: selectedBackground.dependencies,
-        });
-        return `## 7. Background Effect
-- **Selected Background:** ${selectedBackground.title}
-- **Description:** ${selectedBackground.description}
-- **Dependencies:** ${selectedBackground.dependencies.join(', ')}
-- **Installation:** \`${selectedBackground.cliCommand}\`
-`;
-      }
-      
-      // No background selected
-      console.log(`[Prompt Gen] ${bgTimestamp} - No background selected`);
-      return `## 7. Background Effect
-- **Selected Background:** None
-`;
-    })();
+    }
 
-    // UI Components section (Section 8)
-    const compTimestamp = new Date().toISOString();
-    console.log(`[Prompt Gen] ${compTimestamp} - Processing UI components:`, {
-      count: selectedComponents.length,
-      components: selectedComponents.map(c => ({
-        title: c.title,
-        id: c.id,
-        dependencies: c.dependencies,
-      })),
-    });
-    
-    const componentsSection =
-      selectedComponents.length > 0
-        ? `## 8. UI Components
-**Selected Components (${selectedComponents.length}):**
-
-${selectedComponents
-  .map(
-    (comp) => `
-### ${comp.title}
-- **Description:** ${comp.description}
-- **Dependencies:** ${comp.dependencies.join(', ')}
-- **Installation:** \`${comp.cliCommand}\`
-${
-  comp.codeSnippet
-    ? `- **Usage:**
-\`\`\`tsx
-${comp.codeSnippet}
-\`\`\`
-`
-    : ''
-}`
-  )
-  .join('\n')}
-`
-        : `## 8. UI Components
-- No additional UI components selected
-`;
-
-    // UI/UX Animations section (Section 9)
-    const animTimestamp = new Date().toISOString();
-    console.log(`[Prompt Gen] ${animTimestamp} - Processing animations:`, {
-      count: selectedAnimations.length,
-      animations: selectedAnimations.map(a => ({
-        title: a.title,
-        id: a.id,
-        dependencies: a.dependencies,
-      })),
-    });
-    
-    const animationsSection =
-      selectedAnimations.length > 0
-        ? `## 9. UI/UX Animations
-**Selected Animations (${selectedAnimations.length}):**
-
-${selectedAnimations
-  .map(
-    (anim) => `
-### ${anim.title}
-- **Description:** ${anim.description}
-- **Dependencies:** ${anim.dependencies.join(', ')}
-- **Installation:** \`${anim.cliCommand}\`
-`
-  )
-  .join('\n')}
-`
-        : `## 9. UI/UX Animations
-- Standard animations and transitions
-`;
-
-    // React-Bits Installation section (Section 12)
-    // Calculate dependencies based on backgroundSelection (primary) or selectedBackground (fallback)
-    const depsTimestamp = new Date().toISOString();
-    const backgroundDeps = backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent
-      ? backgroundSelectionState.reactBitsComponent.dependencies
-      : (selectedBackground?.dependencies || []);
-    
-    const backgroundCliCommand = backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent
-      ? backgroundSelectionState.reactBitsComponent.cliCommand
-      : selectedBackground?.cliCommand;
-    
-    console.log(`[Prompt Gen] ${depsTimestamp} - Calculating dependencies:`, {
-      backgroundDeps,
-      backgroundCliCommand,
-      componentDeps: selectedComponents.flatMap((c) => c.dependencies),
-      animationDeps: selectedAnimations.flatMap((a) => a.dependencies),
-    });
-    
-    const allDependencies = [
-      ...new Set([
-        ...backgroundDeps,
-        ...selectedComponents.flatMap((c) => c.dependencies),
-        ...selectedAnimations.flatMap((a) => a.dependencies),
-      ]),
-    ];
-
-    const allCliCommands = [
-      backgroundCliCommand,
-      ...selectedComponents.map((c) => c.cliCommand),
-      ...selectedAnimations.map((a) => a.cliCommand),
-    ].filter(Boolean);
-    
-    console.log(`[Prompt Gen] ${depsTimestamp} - Dependency calculation results:`, {
-      totalDependencies: allDependencies.length,
-      dependencies: allDependencies,
-      totalCliCommands: allCliCommands.length,
-      cliCommands: allCliCommands,
+    // Use enhanced prompt generator
+    const result = generateEnhancedPrompt({
+      projectInfo,
+      selectedLayout,
+      selectedSpecialLayouts,
+      selectedDesignStyle,
+      selectedColorTheme,
+      selectedTypography,
+      selectedVisuals,
+      selectedBackground,
+      backgroundSelection: backgroundSelectionState,
+      selectedComponents,
+      selectedAnimations,
+      selectedFunctionality,
     });
 
-    const installationSection =
-      allCliCommands.length > 0
-        ? `
-
-## 12. React-Bits Installation
-
-**Step 1: Install Dependencies**
-\`\`\`bash
-npm install ${allDependencies.join(' ')}
-\`\`\`
-
-**Step 2: Install React-Bits Components**
-\`\`\`bash
-${allCliCommands.join('\n')}
-\`\`\`
-
-**Step 3: Import and Use**
-Refer to the component-specific usage examples above for implementation details.
-`
-        : '';
-
-    const promptResult = `Create a ${projectInfo.type.toLowerCase()} with the following specifications:
-
-**Project Name:** "${projectInfo.name}"
-
-## 1. Project Overview
-- **Type:** ${projectInfo.type}
-- **Purpose:** ${projectInfo.purpose}
-- **Description:** ${projectInfo.description}
-${projectInfo.targetAudience ? `- **Target Audience:** ${projectInfo.targetAudience}` : ''}
-${projectInfo.goals ? `- **Goals:** ${projectInfo.goals}` : ''}
-
-## 2. Layout Structure
-- **Primary Layout:** ${selectedLayout.title}
-- **Layout Description:** ${selectedLayout.description}
-${
-  selectedSpecialLayouts.length > 0
-    ? `
-- **Additional Layout Features:**
-  ${selectedSpecialLayouts.map((layout) => `• ${layout.title}`).join('\n  ')}`
-    : ''
-}
-
-## 3. Design Style
-- **Primary Style:** ${selectedDesignStyle.title}
-- **Style Description:** ${selectedDesignStyle.description}
-- **Design Approach:** Modern ${selectedDesignStyle.title.toLowerCase()} with attention to user experience
-
-## 4. Color Scheme
-- **Theme:** ${selectedColorTheme.title}
-- **Primary Colors:** ${selectedColorTheme.colors.join(', ')}
-- **Color Distribution:** Primary (${selectedColorTheme.distribution[0]}%), Secondary (${selectedColorTheme.distribution[1]}%), Accent (${selectedColorTheme.distribution[2]}%)
-- **Color Usage:** Use primary color for main elements, secondary for backgrounds, accent for highlights and CTAs
-
-## 5. Typography
-- **Font Family:** ${selectedTypography.fontFamily}
-- **Heading Weight:** ${selectedTypography.headingWeight}
-- **Body Text Weight:** ${selectedTypography.bodyWeight}
-- **Text Alignment:** ${selectedTypography.textAlignment}
-- **Heading Size:** ${selectedTypography.headingSize}
-- **Body Size:** ${selectedTypography.bodySize}
-- **Line Height:** ${selectedTypography.lineHeight}
-
-## 6. Visual Elements
-${visualElements.length > 0 ? visualElements.map((element) => `- ${element}`).join('\n') : '- Standard visual elements'}
-
-${backgroundSection}
-${componentsSection}
-${animationsSection}
-
-## 10. Functionality & Features
-${
-  functionalityTier
-    ? `
-**Tier:** ${functionalityTier.title}
-**Core Features:**
-${functionalityTier.features.map((feature) => `   - ${feature}`).join('\n')}`
-    : ''
-}
-
-${
-  technicalFeatures.length > 0
-    ? `
-**Technical Requirements:**
-${technicalFeatures.map((feature) => `   - ${feature.title}: ${feature.description}`).join('\n')}`
-    : ''
-}
-
-## 11. Technical Implementation
-- **Framework:** React with TypeScript
-- **Styling:** Tailwind CSS with modern design patterns
-- **Responsive Design:** Mobile-first approach with breakpoints for tablet and desktop
-- **Accessibility:** WCAG 2.1 AA compliance
-- **Performance:** Optimized loading and smooth interactions
-- **SEO:** Semantic HTML structure and meta tags
-${installationSection}
-
-## 13. Design Requirements
-- **Modern Aesthetics:** Clean, professional design with attention to detail
-- **User Experience:** Intuitive navigation and clear information hierarchy
-- **Interactive Elements:** Smooth hover states, loading states, and feedback
-- **Cross-browser Compatibility:** Support for modern browsers
-- **Mobile Optimization:** Touch-friendly interface and responsive layouts
-
-Please implement this design with pixel-perfect attention to detail, ensuring all elements work harmoniously together to create an exceptional user experience.`;
-    
-    const result = promptResult.trim();
     const endTimestamp = new Date().toISOString();
-    console.log(`[Prompt Gen] ${endTimestamp} - Prompt generation completed successfully`, {
-      promptLength: result.length,
-      sections: {
-        hasBackground: backgroundSection.includes('Selected Background'),
-        hasComponents: selectedComponents.length > 0,
-        hasAnimations: selectedAnimations.length > 0,
-        hasInstallation: installationSection.length > 0,
-      },
-    });
-    
+    console.log(
+      `[Prompt Gen] ${endTimestamp} - Enhanced prompt generation completed successfully`,
+      {
+        promptLength: result.length,
+        sections: {
+          hasContext: result.includes('**Context:**'),
+          hasUserStory: result.includes('## 2. User Story'),
+          hasContentStructure: result.includes('## 12. Content Structure'),
+          hasTechnicalPriorities: result.includes('**Technical Priorities:**'),
+          hasDesignGuidance: result.includes('**Project-Specific Design Guidance:**'),
+        },
+      }
+    );
+
     return result;
   };
 
@@ -791,17 +532,18 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
       });
     } catch (error) {
       console.error('[LocalStorage] Save failed:', error);
-      
+
       if (error instanceof DOMException) {
         if (error.name === 'QuotaExceededError') {
           const serialized = JSON.stringify(projectData);
           console.error('[LocalStorage] Quota exceeded. Project size:', serialized.length, 'bytes');
-          
+
           // Show user notification for quota exceeded
           toast({
             variant: 'destructive',
             title: 'Storage Full',
-            description: 'Unable to save project. Your browser storage is full. Please clear some browser data or use a different browser.',
+            description:
+              'Unable to save project. Your browser storage is full. Please clear some browser data or use a different browser.',
             duration: 10000,
           });
         } else {
@@ -810,11 +552,12 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
             name: error.name,
             message: error.message,
           });
-          
+
           toast({
             variant: 'destructive',
             title: 'Save Failed',
-            description: 'Unable to save project to browser storage. Your work will be preserved in memory during this session.',
+            description:
+              'Unable to save project to browser storage. Your work will be preserved in memory during this session.',
             duration: 10000,
           });
         }
@@ -824,20 +567,21 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
           message: error.message,
           stack: error.stack,
         });
-        
+
         toast({
           variant: 'destructive',
           title: 'Save Failed',
-          description: 'An unexpected error occurred while saving. Your work will be preserved in memory during this session.',
+          description:
+            'An unexpected error occurred while saving. Your work will be preserved in memory during this session.',
           duration: 10000,
         });
       }
-      
+
       // Check if localStorage is available
       if (typeof localStorage === 'undefined') {
         console.error('[LocalStorage] localStorage is not available in this environment');
       }
-      
+
       // Continue with in-memory state only
       console.log('[LocalStorage] Continuing with in-memory state only');
     }
@@ -898,13 +642,13 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     try {
       // Validate data structure before loading
       console.log('[Load Project] Starting project load with validation');
-      
+
       // Check for background mismatches in loaded data
       if (projectData.backgroundSelection && projectData.selectedBackground) {
         if (projectData.backgroundSelection.type === 'react-bits') {
           const reactBitsId = projectData.backgroundSelection.reactBitsComponent?.id;
           const legacyId = projectData.selectedBackground.id;
-          
+
           if (reactBitsId && legacyId && reactBitsId !== legacyId) {
             console.warn('[Load Project] Background mismatch detected in saved data:', {
               backgroundSelection: reactBitsId,
@@ -915,20 +659,21 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
           }
         }
       }
-      
+
       // Wrap state updates in try-catch for safety
       try {
         if (projectData.projectInfo) setProjectInfo(projectData.projectInfo);
         if (projectData.selectedLayout) setSelectedLayout(projectData.selectedLayout);
         if (projectData.selectedSpecialLayouts)
           setSelectedSpecialLayouts(projectData.selectedSpecialLayouts);
-        if (projectData.selectedDesignStyle) setSelectedDesignStyle(projectData.selectedDesignStyle);
+        if (projectData.selectedDesignStyle)
+          setSelectedDesignStyle(projectData.selectedDesignStyle);
         if (projectData.selectedColorTheme) setSelectedColorTheme(projectData.selectedColorTheme);
         if (projectData.selectedTypography) setSelectedTypography(projectData.selectedTypography);
         if (projectData.selectedFunctionality)
           setSelectedFunctionality(projectData.selectedFunctionality);
         if (projectData.selectedVisuals) setSelectedVisuals(projectData.selectedVisuals);
-        
+
         // Load backgroundSelection first (source of truth)
         if (projectData.backgroundSelection) {
           setBackgroundSelectionState(projectData.backgroundSelection);
@@ -937,17 +682,20 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
             component: projectData.backgroundSelection.reactBitsComponent?.title,
           });
         }
-        
+
         // Load selectedBackground (will be synced by useEffect if needed)
         if (projectData.selectedBackground) {
           setSelectedBackground(projectData.selectedBackground);
-          console.log('[Load Project] Loaded selectedBackground:', projectData.selectedBackground.title);
+          console.log(
+            '[Load Project] Loaded selectedBackground:',
+            projectData.selectedBackground.title
+          );
         }
-        
+
         if (projectData.selectedComponents) setSelectedComponents(projectData.selectedComponents);
         if (projectData.selectedAnimations) setSelectedAnimations(projectData.selectedAnimations);
         if (projectData.currentStep) setCurrentStep(projectData.currentStep);
-        
+
         console.log('[Load Project] Project loaded successfully');
       } catch (stateError) {
         console.error('[Load Project] Error updating state:', stateError);
@@ -1093,7 +841,10 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
   // This ensures both fields stay in sync when backgroundSelection changes
   React.useEffect(() => {
     // Only sync when backgroundSelection.type is 'react-bits'
-    if (backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent) {
+    if (
+      backgroundSelectionState?.type === 'react-bits' &&
+      backgroundSelectionState.reactBitsComponent
+    ) {
       // Check if sync is needed (avoid unnecessary updates)
       if (selectedBackground?.id !== backgroundSelectionState.reactBitsComponent.id) {
         console.log('[State Sync] Updating selectedBackground from backgroundSelection:', {
@@ -1142,15 +893,17 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
   // Load project on mount and start metrics tracking
   React.useEffect(() => {
     const timestamp = new Date().toISOString();
-    console.log(`[Load Project] ${timestamp} - Initializing context and checking for saved project`);
-    
+    console.log(
+      `[Load Project] ${timestamp} - Initializing context and checking for saved project`
+    );
+
     // Start wizard session tracking
     if (!sessionStartedRef.current) {
       console.log(`[Load Project] ${timestamp} - Starting new wizard session`);
       startWizardSession();
       sessionStartedRef.current = true;
     }
-    
+
     try {
       const saved = localStorage.getItem('webknot-project');
       if (saved) {
@@ -1158,7 +911,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
           dataSize: saved.length,
           timestamp,
         });
-        
+
         try {
           const projectData = JSON.parse(saved);
           console.log(`[Load Project] ${timestamp} - Successfully parsed project data`, {
@@ -1173,11 +926,16 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
             currentStep: projectData.currentStep,
             savedAt: projectData.savedAt,
           });
-          
+
           loadProject(projectData);
-          console.log(`[Load Project] ${timestamp} - Project loaded successfully from localStorage`);
+          console.log(
+            `[Load Project] ${timestamp} - Project loaded successfully from localStorage`
+          );
         } catch (parseError) {
-          console.error(`[Load Project] ${timestamp} - Failed to parse saved project data:`, parseError);
+          console.error(
+            `[Load Project] ${timestamp} - Failed to parse saved project data:`,
+            parseError
+          );
           if (parseError instanceof Error) {
             console.error(`[Load Project] ${timestamp} - Parse error details:`, {
               name: parseError.name,
@@ -1185,17 +943,24 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
               stack: parseError.stack,
             });
           }
-          
+
           // Clear corrupted data
           try {
             localStorage.removeItem('webknot-project');
-            console.log(`[Load Project] ${timestamp} - Corrupted project data cleared from localStorage`);
+            console.log(
+              `[Load Project] ${timestamp} - Corrupted project data cleared from localStorage`
+            );
           } catch (clearError) {
-            console.error(`[Load Project] ${timestamp} - Failed to clear corrupted project data:`, clearError);
+            console.error(
+              `[Load Project] ${timestamp} - Failed to clear corrupted project data:`,
+              clearError
+            );
           }
         }
       } else {
-        console.log(`[Load Project] ${timestamp} - No saved project found in localStorage, starting fresh`);
+        console.log(
+          `[Load Project] ${timestamp} - No saved project found in localStorage, starting fresh`
+        );
       }
     } catch (error) {
       console.error(`[Load Project] ${timestamp} - Failed to access localStorage:`, error);
@@ -1206,16 +971,18 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
           stack: error.stack,
         });
       }
-      
+
       // Check if localStorage is available
       if (typeof localStorage === 'undefined') {
-        console.error(`[Load Project] ${timestamp} - localStorage is not available in this environment`);
+        console.error(
+          `[Load Project] ${timestamp} - localStorage is not available in this environment`
+        );
       }
-      
+
       console.log(`[Load Project] ${timestamp} - Continuing with default empty state`);
     }
   }, [loadProject]);
-  
+
   // Track step changes
   React.useEffect(() => {
     updateWizardStep(currentStep);
@@ -1224,21 +991,24 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
   // Wrapper to track prompt generation completion
   const generatePromptWithTracking = React.useCallback((): string => {
     const prompt = generatePrompt();
-    
+
     // If prompt was successfully generated, mark wizard as complete
     if (prompt && !prompt.includes('Please complete all required sections')) {
       // Calculate prompt quality score (simplified - would use actual analyzer)
       const promptLength = prompt.length;
-      const hasAllSections = prompt.includes('## 1.') && prompt.includes('## 2.') && 
-                            prompt.includes('## 3.') && prompt.includes('## 4.');
-      const qualityScore = hasAllSections ? Math.min(85 + (promptLength / 100), 100) : 70;
-      
+      const hasAllSections =
+        prompt.includes('## 1.') &&
+        prompt.includes('## 2.') &&
+        prompt.includes('## 3.') &&
+        prompt.includes('## 4.');
+      const qualityScore = hasAllSections ? Math.min(85 + promptLength / 100, 100) : 70;
+
       completeWizardSession(qualityScore);
     }
-    
+
     return prompt;
   }, [generatePrompt]);
-  
+
   const contextValue: BoltBuilderContextType = {
     currentStep,
     setCurrentStep,

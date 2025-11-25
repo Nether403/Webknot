@@ -82,9 +82,30 @@ body {
   }
   
   .glass-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Enhanced text contrast for glassmorphic panels */
+  .glass-card label,
+  .glass-card .text-gray-300 {
+    color: rgb(229, 231, 235) !important; /* gray-200 */
+  }
+  
+  .glass-card .text-gray-400 {
+    color: rgb(209, 213, 219) !important; /* gray-300 */
+  }
+  
+  .glass-card input,
+  .glass-card textarea,
+  .glass-card select {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  .glass-card input::placeholder,
+  .glass-card textarea::placeholder {
+    color: rgb(156, 163, 175) !important; /* gray-400 */
   }
   
   .animate-slide-up {

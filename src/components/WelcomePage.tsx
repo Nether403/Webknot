@@ -56,26 +56,21 @@ const WelcomePage: React.FC = () => {
       {/* Logo and Branding */}
       <div className="mb-8 animate-slide-up">
         <div className="mb-6">
-          <img 
-            src="/Images/logo1.png" 
-            alt="WebKnot Logo" 
+          <img
+            src="/Images/logo1.png"
+            alt="WebKnot Logo"
             className="w-48 h-48 mx-auto rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]"
           />
         </div>
         <div className="mb-4">
-          <img 
-            src="/Images/Title.png" 
-            alt="WebKnot" 
-            className="mx-auto max-w-2xl w-full h-auto"
-          />
+          <img src="/Images/Title.png" alt="WebKnot" className="mx-auto max-w-2xl w-full h-auto" />
         </div>
-        <p className="text-xl md:text-2xl text-gray-300 mb-2">
+        <p className="text-xl md:text-2xl text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
           <em>Tying things together</em>
         </p>
-        <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-          Create comprehensive website design prompts for AI development tools like
-          <span className="text-blue-400 font-semibold"> Bolt.new</span> and
-          <span className="text-purple-400 font-semibold"> WebKnot.ai</span>
+        <p className="text-lg text-white max-w-2xl mx-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] font-medium">
+          Create comprehensive website design prompts with React/Shadcn components and backgrounds
+          for AI development tools
         </p>
       </div>
 
@@ -99,7 +94,7 @@ const WelcomePage: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">Smart Wizard</h3>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-200 text-sm">
               Intelligent step-by-step guidance through design decisions
             </p>
           </div>
@@ -130,7 +125,7 @@ const WelcomePage: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">Live Preview</h3>
-            <p className="text-gray-300 text-sm">Real-time visualization of your design choices</p>
+            <p className="text-gray-200 text-sm">Real-time visualization of your design choices</p>
           </div>
 
           <div
@@ -153,7 +148,7 @@ const WelcomePage: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">Perfect Prompts</h3>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-200 text-sm">
               Detailed prompts optimized for AI development tools
             </p>
           </div>
@@ -199,7 +194,7 @@ const WelcomePage: React.FC = () => {
       <div className="mt-16 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.6s' }}>
         <div className="glass-card rounded-xl p-8 text-center">
           <h2 className="text-2xl font-bold text-white mb-4">Why WebKnot?</h2>
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-gray-200 leading-relaxed">
             Transform your website ideas into detailed, actionable prompts that AI development tools
             can understand perfectly. Our advanced wizard guides you through every design decision,
             ensuring your vision is captured with precision and translated into professional

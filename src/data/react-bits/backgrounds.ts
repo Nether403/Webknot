@@ -351,4 +351,15 @@ export const backgroundOptions: BackgroundOption[] = [
     hasCustomization: true,
     tags: ['Wave', 'Fluid', 'Smooth'],
   },
+  {
+    id: 'floating-lines',
+    name: 'FloatingLines',
+    title: 'Floating Lines',
+    description: 'Interactive floating wave lines with parallax and mouse interaction effects.',
+    category: 'backgrounds',
+    dependencies: ['three'],
+    cliCommand: 'pnpm dlx shadcn@latest add @react-bits/FloatingLines-JS-CSS',
+    hasCustomization: true,
+    tags: ['Interactive', 'Wave', 'Parallax', 'Modern'],
+  },
 ];

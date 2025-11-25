@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ScrambledText-JS-TW",
+  "type": "registry:block",
+  "title": "ScrambledText",
+  "description": "Detects cursor position and applies a distortion effect to text.",
+  "dependencies": [
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "public/tailwind/src/tailwind/TextAnimations/ScrambledText/ScrambledText.jsx",
+      "content": "import { useEffect, useRef } from 'react';\r\nimport { gsap } from 'gsap';\r\nimport { SplitText } from 'gsap/SplitText';\r\nimport { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';\r\n\r\ngsap.registerPlugin(SplitText, ScrambleTextPlugin);\r\n\r\nconst ScrambledText = ({\r\n  radius = 100,\r\n  duration = 1.2,\r\n  speed = 0.5,\r\n  scrambleChars = '.:',\r\n  className = '',\r\n  style = {},\r\n  children\r\n}) => {\r\n  const rootRef = useRef(null);\r\n\r\n  useEffect(() => {\r\n    if (!rootRef.current) return;\r\n\r\n    const split = SplitText.create(rootRef.current.querySelector('p'), {\r\n      type: 'chars',\r\n      charsClass: 'inline-block will-change-transform'\r\n    });\r\n\r\n    split.chars.forEach(el => {\r\n      const c = el;\r\n      gsap.set(c, { attr: { 'data-content': c.innerHTML } });\r\n    });\r\n\r\n    const handleMove = e => {\r\n      split.chars.forEach(el => {\r\n        const c = el;\r\n        const { left, top, width, height } = c.getBoundingClientRect();\r\n        const dx = e.clientX - (left + width / 2);\r\n        const dy = e.clientY - (top + height / 2);\r\n        const dist = Math.hypot(dx, dy);\r\n\r\n        if (dist < radius) {\r\n          gsap.to(c, {\r\n            overwrite: true,\r\n            duration: duration * (1 - dist / radius),\r\n            scrambleText: {\r\n              text: c.dataset.content || '',\r\n              chars: scrambleChars,\r\n              speed\r\n            },\r\n            ease: 'none'\r\n          });\r\n        }\r\n      });\r\n    };\r\n\r\n    const el = rootRef.current;\r\n    el.addEventListener('pointermove', handleMove);\r\n\r\n    return () => {\r\n      el.removeEventListener('pointermove', handleMove);\r\n      split.revert();\r\n    };\r\n  }, [radius, duration, speed, scrambleChars]);\r\n\r\n  return (\r\n    <div\r\n      ref={rootRef}\r\n      className={`m-[7vw] max-w-[800px] font-mono text-[clamp(14px,4vw,32px)] text-white ${className}`}\r\n      style={style}\r\n    >\r\n      <p>{children}</p>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default ScrambledText;\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

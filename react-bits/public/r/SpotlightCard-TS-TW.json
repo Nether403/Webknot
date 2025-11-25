@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "SpotlightCard-TS-TW",
+  "type": "registry:block",
+  "title": "SpotlightCard",
+  "description": "Dynamic spotlight follows cursor casting gradient illumination.",
+  "files": [
+    {
+      "path": "public/ts/tailwind/src/ts-tailwind/Components/SpotlightCard/SpotlightCard.tsx",
+      "content": "import React, { useRef, useState } from 'react';\r\n\r\ninterface Position {\r\n  x: number;\r\n  y: number;\r\n}\r\n\r\ninterface SpotlightCardProps extends React.PropsWithChildren {\r\n  className?: string;\r\n  spotlightColor?: `rgba(${number}, ${number}, ${number}, ${number})`;\r\n}\r\n\r\nconst SpotlightCard: React.FC<SpotlightCardProps> = ({\r\n  children,\r\n  className = '',\r\n  spotlightColor = 'rgba(255, 255, 255, 0.25)'\r\n}) => {\r\n  const divRef = useRef<HTMLDivElement>(null);\r\n  const [isFocused, setIsFocused] = useState<boolean>(false);\r\n  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });\r\n  const [opacity, setOpacity] = useState<number>(0);\r\n\r\n  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = e => {\r\n    if (!divRef.current || isFocused) return;\r\n\r\n    const rect = divRef.current.getBoundingClientRect();\r\n    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });\r\n  };\r\n\r\n  const handleFocus = () => {\r\n    setIsFocused(true);\r\n    setOpacity(0.6);\r\n  };\r\n\r\n  const handleBlur = () => {\r\n    setIsFocused(false);\r\n    setOpacity(0);\r\n  };\r\n\r\n  const handleMouseEnter = () => {\r\n    setOpacity(0.6);\r\n  };\r\n\r\n  const handleMouseLeave = () => {\r\n    setOpacity(0);\r\n  };\r\n\r\n  return (\r\n    <div\r\n      ref={divRef}\r\n      onMouseMove={handleMouseMove}\r\n      onFocus={handleFocus}\r\n      onBlur={handleBlur}\r\n      onMouseEnter={handleMouseEnter}\r\n      onMouseLeave={handleMouseLeave}\r\n      className={`relative rounded-3xl border border-neutral-800 bg-neutral-900 overflow-hidden p-8 ${className}`}\r\n    >\r\n      <div\r\n        className=\"pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out\"\r\n        style={{\r\n          opacity,\r\n          background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`\r\n        }}\r\n      />\r\n      {children}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default SpotlightCard;\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

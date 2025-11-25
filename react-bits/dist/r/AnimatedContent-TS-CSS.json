@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "AnimatedContent-TS-CSS",
+  "type": "registry:block",
+  "title": "AnimatedContent",
+  "description": "Wrapper that animates any children on scroll or mount with configurable direction, distance, duration and easing.",
+  "dependencies": [
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "public/ts/default/src/ts-default/Animations/AnimatedContent/AnimatedContent.tsx",
+      "content": "import React, { useRef, useEffect, ReactNode } from 'react';\r\nimport { gsap } from 'gsap';\r\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\r\n\r\ngsap.registerPlugin(ScrollTrigger);\r\n\r\ninterface AnimatedContentProps {\r\n  children: ReactNode;\r\n  distance?: number;\r\n  direction?: 'vertical' | 'horizontal';\r\n  reverse?: boolean;\r\n  duration?: number;\r\n  ease?: string | ((progress: number) => number);\r\n  initialOpacity?: number;\r\n  animateOpacity?: boolean;\r\n  scale?: number;\r\n  threshold?: number;\r\n  delay?: number;\r\n  onComplete?: () => void;\r\n}\r\n\r\nconst AnimatedContent: React.FC<AnimatedContentProps> = ({\r\n  children,\r\n  distance = 100,\r\n  direction = 'vertical',\r\n  reverse = false,\r\n  duration = 0.8,\r\n  ease = 'power3.out',\r\n  initialOpacity = 0,\r\n  animateOpacity = true,\r\n  scale = 1,\r\n  threshold = 0.1,\r\n  delay = 0,\r\n  onComplete\r\n}) => {\r\n  const ref = useRef<HTMLDivElement>(null);\r\n\r\n  useEffect(() => {\r\n    const el = ref.current;\r\n    if (!el) return;\r\n\r\n    const axis = direction === 'horizontal' ? 'x' : 'y';\r\n    const offset = reverse ? -distance : distance;\r\n    const startPct = (1 - threshold) * 100;\r\n\r\n    gsap.set(el, {\r\n      [axis]: offset,\r\n      scale,\r\n      opacity: animateOpacity ? initialOpacity : 1\r\n    });\r\n\r\n    gsap.to(el, {\r\n      [axis]: 0,\r\n      scale: 1,\r\n      opacity: 1,\r\n      duration,\r\n      ease,\r\n      delay,\r\n      onComplete,\r\n      scrollTrigger: {\r\n        trigger: el,\r\n        start: `top ${startPct}%`,\r\n        toggleActions: 'play none none none',\r\n        once: true\r\n      }\r\n    });\r\n\r\n    return () => {\r\n      ScrollTrigger.getAll().forEach(t => t.kill());\r\n      gsap.killTweensOf(el);\r\n    };\r\n  }, [\r\n    distance,\r\n    direction,\r\n    reverse,\r\n    duration,\r\n    ease,\r\n    initialOpacity,\r\n    animateOpacity,\r\n    scale,\r\n    threshold,\r\n    delay,\r\n    onComplete\r\n  ]);\r\n\r\n  return <div ref={ref}>{children}</div>;\r\n};\r\n\r\nexport default AnimatedContent;\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

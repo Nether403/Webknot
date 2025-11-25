@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "FadeContent-TS-CSS",
+  "type": "registry:block",
+  "title": "FadeContent",
+  "description": "Simple directional fade / slide entrance wrapper with threshold-based activation.",
+  "files": [
+    {
+      "path": "public/ts/default/src/ts-default/Animations/FadeContent/FadeContent.tsx",
+      "content": "import { useRef, useEffect, useState, ReactNode } from 'react';\r\n\r\ninterface FadeContentProps {\r\n  children: ReactNode;\r\n  blur?: boolean;\r\n  duration?: number;\r\n  easing?: string;\r\n  delay?: number;\r\n  threshold?: number;\r\n  initialOpacity?: number;\r\n  className?: string;\r\n}\r\n\r\nconst FadeContent: React.FC<FadeContentProps> = ({\r\n  children,\r\n  blur = false,\r\n  duration = 1000,\r\n  easing = 'ease-out',\r\n  delay = 0,\r\n  threshold = 0.1,\r\n  initialOpacity = 0,\r\n  className = ''\r\n}) => {\r\n  const [inView, setInView] = useState(false);\r\n  const ref = useRef<HTMLDivElement | null>(null);\r\n\r\n  useEffect(() => {\r\n    const element = ref.current;\r\n    if (!element) return;\r\n\r\n    const observer = new IntersectionObserver(\r\n      ([entry]) => {\r\n        if (entry.isIntersecting) {\r\n          observer.unobserve(element);\r\n          setTimeout(() => {\r\n            setInView(true);\r\n          }, delay);\r\n        }\r\n      },\r\n      { threshold }\r\n    );\r\n\r\n    observer.observe(element);\r\n\r\n    return () => observer.disconnect();\r\n  }, [threshold, delay]);\r\n\r\n  return (\r\n    <div\r\n      ref={ref}\r\n      className={className}\r\n      style={{\r\n        opacity: inView ? 1 : initialOpacity,\r\n        transition: `opacity ${duration}ms ${easing}, filter ${duration}ms ${easing}`,\r\n        filter: blur ? (inView ? 'blur(0px)' : 'blur(10px)') : 'none'\r\n      }}\r\n    >\r\n      {children}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default FadeContent;\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

@@ -50,6 +50,3 @@ ehthumbs_vista.db
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# React-bits resources folder (local development only)
-react-bits/

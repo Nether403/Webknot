@@ -1,0 +1,1 @@
+import{j as s}from"./index-wsKSLPNH.js";const i=({children:e})=>s.jsxs("div",{className:"preview-options",children:[s.jsx("h2",{className:"demo-title-extra",children:"Customize"}),e]});export{i as C};

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "GradientText-JS-TW",
+  "type": "registry:block",
+  "title": "GradientText",
+  "description": "Animated gradient sweep across live text with speed and color control.",
+  "files": [
+    {
+      "path": "public/tailwind/src/tailwind/TextAnimations/GradientText/GradientText.jsx",
+      "content": "export default function GradientText({\r\n  children,\r\n  className = '',\r\n  colors = ['#ffaa40', '#9c40ff', '#ffaa40'],\r\n  animationSpeed = 8,\r\n  showBorder = false\r\n}) {\r\n  const gradientStyle = {\r\n    backgroundImage: `linear-gradient(to right, ${colors.join(', ')})`,\r\n    animationDuration: `${animationSpeed}s`\r\n  };\r\n\r\n  return (\r\n    <div\r\n      className={`relative mx-auto flex max-w-fit flex-row items-center justify-center rounded-[1.25rem] font-medium backdrop-blur transition-shadow duration-500 overflow-hidden cursor-pointer ${className}`}\r\n    >\r\n      {showBorder && (\r\n        <div\r\n          className=\"absolute inset-0 bg-cover z-0 pointer-events-none animate-gradient\"\r\n          style={{\r\n            ...gradientStyle,\r\n            backgroundSize: '300% 100%'\r\n          }}\r\n        >\r\n          <div\r\n            className=\"absolute inset-0 bg-black rounded-[1.25rem] z-[-1]\"\r\n            style={{\r\n              width: 'calc(100% - 2px)',\r\n              height: 'calc(100% - 2px)',\r\n              left: '50%',\r\n              top: '50%',\r\n              transform: 'translate(-50%, -50%)'\r\n            }}\r\n          ></div>\r\n        </div>\r\n      )}\r\n      <div\r\n        className=\"inline-block relative z-2 text-transparent bg-cover animate-gradient\"\r\n        style={{\r\n          ...gradientStyle,\r\n          backgroundClip: 'text',\r\n          WebkitBackgroundClip: 'text',\r\n          backgroundSize: '300% 100%'\r\n        }}\r\n      >\r\n        {children}\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n\r\n// tailwind.config.js\r\n// module.exports = {\r\n//   theme: {\r\n//     extend: {\r\n//       keyframes: {\r\n//         gradient: {\r\n//           '0%': { backgroundPosition: '0% 50%' },\r\n//           '50%': { backgroundPosition: '100% 50%' },\r\n//           '100%': { backgroundPosition: '0% 50%' },\r\n//         },\r\n//       },\r\n//       animation: {\r\n//         gradient: 'gradient 8s linear infinite'\r\n//       },\r\n//     },\r\n//   },\r\n//   plugins: [],\r\n// };\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

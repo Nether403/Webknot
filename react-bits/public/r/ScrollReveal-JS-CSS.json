@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ScrollReveal-JS-CSS",
+  "type": "registry:block",
+  "title": "ScrollReveal",
+  "description": "Text gently unblurs and reveals on scroll.",
+  "dependencies": [
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "public/default/src/content/TextAnimations/ScrollReveal/ScrollReveal.jsx",
+      "content": "import { useEffect, useRef, useMemo } from 'react';\r\nimport { gsap } from 'gsap';\r\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\r\n\r\nimport './ScrollReveal.css';\r\n\r\ngsap.registerPlugin(ScrollTrigger);\r\n\r\nconst ScrollReveal = ({\r\n  children,\r\n  scrollContainerRef,\r\n  enableBlur = true,\r\n  baseOpacity = 0.1,\r\n  baseRotation = 3,\r\n  blurStrength = 4,\r\n  containerClassName = '',\r\n  textClassName = '',\r\n  rotationEnd = 'bottom bottom',\r\n  wordAnimationEnd = 'bottom bottom'\r\n}) => {\r\n  const containerRef = useRef(null);\r\n\r\n  const splitText = useMemo(() => {\r\n    const text = typeof children === 'string' ? children : '';\r\n    return text.split(/(\\s+)/).map((word, index) => {\r\n      if (word.match(/^\\s+$/)) return word;\r\n      return (\r\n        <span className=\"word\" key={index}>\r\n          {word}\r\n        </span>\r\n      );\r\n    });\r\n  }, [children]);\r\n\r\n  useEffect(() => {\r\n    const el = containerRef.current;\r\n    if (!el) return;\r\n\r\n    const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;\r\n\r\n    gsap.fromTo(\r\n      el,\r\n      { transformOrigin: '0% 50%', rotate: baseRotation },\r\n      {\r\n        ease: 'none',\r\n        rotate: 0,\r\n        scrollTrigger: {\r\n          trigger: el,\r\n          scroller,\r\n          start: 'top bottom',\r\n          end: rotationEnd,\r\n          scrub: true\r\n        }\r\n      }\r\n    );\r\n\r\n    const wordElements = el.querySelectorAll('.word');\r\n\r\n    gsap.fromTo(\r\n      wordElements,\r\n      { opacity: baseOpacity, willChange: 'opacity' },\r\n      {\r\n        ease: 'none',\r\n        opacity: 1,\r\n        stagger: 0.05,\r\n        scrollTrigger: {\r\n          trigger: el,\r\n          scroller,\r\n          start: 'top bottom-=20%',\r\n          end: wordAnimationEnd,\r\n          scrub: true\r\n        }\r\n      }\r\n    );\r\n\r\n    if (enableBlur) {\r\n      gsap.fromTo(\r\n        wordElements,\r\n        { filter: `blur(${blurStrength}px)` },\r\n        {\r\n          ease: 'none',\r\n          filter: 'blur(0px)',\r\n          stagger: 0.05,\r\n          scrollTrigger: {\r\n            trigger: el,\r\n            scroller,\r\n            start: 'top bottom-=20%',\r\n            end: wordAnimationEnd,\r\n            scrub: true\r\n          }\r\n        }\r\n      );\r\n    }\r\n\r\n    return () => {\r\n      ScrollTrigger.getAll().forEach(trigger => trigger.kill());\r\n    };\r\n  }, [scrollContainerRef, enableBlur, baseRotation, baseOpacity, rotationEnd, wordAnimationEnd, blurStrength]);\r\n\r\n  return (\r\n    <h2 ref={containerRef} className={`scroll-reveal ${containerClassName}`}>\r\n      <p className={`scroll-reveal-text ${textClassName}`}>{splitText}</p>\r\n    </h2>\r\n  );\r\n};\r\n\r\nexport default ScrollReveal;\r\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "public/default/src/content/TextAnimations/ScrollReveal/ScrollReveal.css",
+      "content": ".scroll-reveal {\r\n  margin: 20px 0;\r\n}\r\n\r\n.scroll-reveal-text {\r\n  font-size: clamp(1.6rem, 4vw, 3rem);\r\n  line-height: 1.5;\r\n  font-weight: 600;\r\n}\r\n\r\n.word {\r\n  display: inline-block;\r\n}\r\n",
+      "type": "registry:item"
+    }
+  ]
+}

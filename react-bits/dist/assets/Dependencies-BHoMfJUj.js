@@ -1,0 +1,1 @@
+import{j as e,B as r,F as n}from"./index-wsKSLPNH.js";const i=({dependencyList:a=[]})=>e.jsxs(r,{mt:12,children:[e.jsx("h2",{className:"demo-title-extra",children:"Dependencies"}),e.jsx(n,{wrap:"wrap",className:"demo-details",children:a.map(s=>e.jsx("span",{children:s},s))})]});export{i as D};

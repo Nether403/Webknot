@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ScrollFloat-JS-TW",
+  "type": "registry:block",
+  "title": "ScrollFloat",
+  "description": "Text gently floats / parallax shifts on scroll.",
+  "dependencies": [
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "public/tailwind/src/tailwind/TextAnimations/ScrollFloat/ScrollFloat.jsx",
+      "content": "import { useEffect, useMemo, useRef } from 'react';\r\nimport { gsap } from 'gsap';\r\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\r\n\r\ngsap.registerPlugin(ScrollTrigger);\r\n\r\nconst ScrollFloat = ({\r\n  children,\r\n  scrollContainerRef,\r\n  containerClassName = '',\r\n  textClassName = '',\r\n  animationDuration = 1,\r\n  ease = 'back.inOut(2)',\r\n  scrollStart = 'center bottom+=50%',\r\n  scrollEnd = 'bottom bottom-=40%',\r\n  stagger = 0.03\r\n}) => {\r\n  const containerRef = useRef(null);\r\n\r\n  const splitText = useMemo(() => {\r\n    const text = typeof children === 'string' ? children : '';\r\n    return text.split('').map((char, index) => (\r\n      <span className=\"inline-block word\" key={index}>\r\n        {char === ' ' ? '\\u00A0' : char}\r\n      </span>\r\n    ));\r\n  }, [children]);\r\n\r\n  useEffect(() => {\r\n    const el = containerRef.current;\r\n    if (!el) return;\r\n\r\n    const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;\r\n\r\n    const charElements = el.querySelectorAll('.inline-block');\r\n\r\n    gsap.fromTo(\r\n      charElements,\r\n      {\r\n        willChange: 'opacity, transform',\r\n        opacity: 0,\r\n        yPercent: 120,\r\n        scaleY: 2.3,\r\n        scaleX: 0.7,\r\n        transformOrigin: '50% 0%'\r\n      },\r\n      {\r\n        duration: animationDuration,\r\n        ease: ease,\r\n        opacity: 1,\r\n        yPercent: 0,\r\n        scaleY: 1,\r\n        scaleX: 1,\r\n        stagger: stagger,\r\n        scrollTrigger: {\r\n          trigger: el,\r\n          scroller,\r\n          start: scrollStart,\r\n          end: scrollEnd,\r\n          scrub: true\r\n        }\r\n      }\r\n    );\r\n  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);\r\n\r\n  return (\r\n    <h2 ref={containerRef} className={`my-5 overflow-hidden ${containerClassName}`}>\r\n      <span className={`inline-block text-[clamp(1.6rem,4vw,3rem)] leading-[1.5] ${textClassName}`}>{splitText}</span>\r\n    </h2>\r\n  );\r\n};\r\n\r\nexport default ScrollFloat;\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

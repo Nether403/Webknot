@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "SpotlightCard-JS-CSS",
+  "type": "registry:block",
+  "title": "SpotlightCard",
+  "description": "Dynamic spotlight follows cursor casting gradient illumination.",
+  "files": [
+    {
+      "path": "public/default/src/content/Components/SpotlightCard/SpotlightCard.jsx",
+      "content": "import { useRef } from 'react';\r\nimport './SpotlightCard.css';\r\n\r\nconst SpotlightCard = ({ children, className = '', spotlightColor = 'rgba(255, 255, 255, 0.25)' }) => {\r\n  const divRef = useRef(null);\r\n\r\n  const handleMouseMove = e => {\r\n    const rect = divRef.current.getBoundingClientRect();\r\n    const x = e.clientX - rect.left;\r\n    const y = e.clientY - rect.top;\r\n\r\n    divRef.current.style.setProperty('--mouse-x', `${x}px`);\r\n    divRef.current.style.setProperty('--mouse-y', `${y}px`);\r\n    divRef.current.style.setProperty('--spotlight-color', spotlightColor);\r\n  };\r\n\r\n  return (\r\n    <div ref={divRef} onMouseMove={handleMouseMove} className={`card-spotlight ${className}`}>\r\n      {children}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default SpotlightCard;\r\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "public/default/src/content/Components/SpotlightCard/SpotlightCard.css",
+      "content": ".card-spotlight {\r\n  position: relative;\r\n  border-radius: 1.5rem;\r\n  border: 1px solid #222;\r\n  background-color: #111;\r\n  padding: 2rem;\r\n  overflow: hidden;\r\n  --mouse-x: 50%;\r\n  --mouse-y: 50%;\r\n  --spotlight-color: rgba(255, 255, 255, 0.05);\r\n}\r\n\r\n.card-spotlight::before {\r\n  content: '';\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 80%);\r\n  opacity: 0;\r\n  transition: opacity 0.5s ease;\r\n  pointer-events: none;\r\n}\r\n\r\n.card-spotlight:hover::before,\r\n.card-spotlight:focus-within::before {\r\n  opacity: 0.6;\r\n}\r\n",
+      "type": "registry:item"
+    }
+  ]
+}

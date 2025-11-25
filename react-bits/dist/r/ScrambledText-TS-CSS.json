@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ScrambledText-TS-CSS",
+  "type": "registry:block",
+  "title": "ScrambledText",
+  "description": "Detects cursor position and applies a distortion effect to text.",
+  "dependencies": [
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "public/ts/default/src/ts-default/TextAnimations/ScrambledText/ScrambledText.tsx",
+      "content": "import React, { useEffect, useRef } from 'react';\r\nimport { gsap } from 'gsap';\r\nimport { SplitText } from 'gsap/SplitText';\r\nimport { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';\r\n\r\nimport './ScrambledText.css';\r\n\r\ngsap.registerPlugin(SplitText, ScrambleTextPlugin);\r\n\r\nexport interface ScrambledTextProps {\r\n  radius?: number;\r\n  duration?: number;\r\n  speed?: number;\r\n  scrambleChars?: string;\r\n  className?: string;\r\n  style?: React.CSSProperties;\r\n  children: React.ReactNode;\r\n}\r\n\r\nconst ScrambledText: React.FC<ScrambledTextProps> = ({\r\n  radius = 100,\r\n  duration = 1.2,\r\n  speed = 0.5,\r\n  scrambleChars = '.:',\r\n  className = '',\r\n  style = {},\r\n  children\r\n}) => {\r\n  const rootRef = useRef<HTMLDivElement | null>(null);\r\n  const charsRef = useRef<HTMLElement[]>([]);\r\n\r\n  useEffect(() => {\r\n    if (!rootRef.current) return;\r\n\r\n    const split = SplitText.create(rootRef.current.querySelector('p'), {\r\n      type: 'chars',\r\n      charsClass: 'char'\r\n    });\r\n    charsRef.current = split.chars as HTMLElement[];\r\n\r\n    charsRef.current.forEach(c => {\r\n      gsap.set(c, {\r\n        display: 'inline-block',\r\n        attr: { 'data-content': c.innerHTML }\r\n      });\r\n    });\r\n\r\n    const handleMove = (e: PointerEvent) => {\r\n      charsRef.current.forEach(c => {\r\n        const { left, top, width, height } = c.getBoundingClientRect();\r\n        const dx = e.clientX - (left + width / 2);\r\n        const dy = e.clientY - (top + height / 2);\r\n        const dist = Math.hypot(dx, dy);\r\n\r\n        if (dist < radius) {\r\n          gsap.to(c, {\r\n            overwrite: true,\r\n            duration: duration * (1 - dist / radius),\r\n            scrambleText: {\r\n              text: (c as HTMLElement).dataset.content || '',\r\n              chars: scrambleChars,\r\n              speed\r\n            },\r\n            ease: 'none'\r\n          });\r\n        }\r\n      });\r\n    };\r\n\r\n    const el = rootRef.current;\r\n    el.addEventListener('pointermove', handleMove);\r\n\r\n    return () => {\r\n      el.removeEventListener('pointermove', handleMove);\r\n      split.revert();\r\n    };\r\n  }, [radius, duration, speed, scrambleChars]);\r\n\r\n  return (\r\n    <div ref={rootRef} className={`text-block ${className}`} style={style}>\r\n      <p>{children}</p>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default ScrambledText;\r\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "public/ts/default/src/ts-default/TextAnimations/ScrambledText/ScrambledText.css",
+      "content": ".text-block {\r\n  margin: 7vw;\r\n  max-width: 800px;\r\n  font-family: monospace;\r\n  font-size: clamp(14px, 4vw, 32px);\r\n  color: #fff;\r\n}\r\n\r\n.char {\r\n  will-change: transform;\r\n  display: inline-block;\r\n}\r\n",
+      "type": "registry:item"
+    }
+  ]
+}

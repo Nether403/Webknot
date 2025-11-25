@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "Noise-JS-CSS",
+  "type": "registry:block",
+  "title": "Noise",
+  "description": "Animated film grain / noise overlay adding subtle texture and motion.",
+  "files": [
+    {
+      "path": "public/default/src/content/Animations/Noise/Noise.jsx",
+      "content": "import { useRef, useEffect } from 'react';\r\nimport './Noise.css';\r\n\r\nconst Noise = ({\r\n  patternSize = 250,\r\n  patternScaleX = 1,\r\n  patternScaleY = 1,\r\n  patternRefreshInterval = 2,\r\n  patternAlpha = 15\r\n}) => {\r\n  const grainRef = useRef(null);\r\n\r\n  useEffect(() => {\r\n    const canvas = grainRef.current;\r\n    if (!canvas) return;\r\n\r\n    const ctx = canvas.getContext('2d', { alpha: true });\r\n    if (!ctx) return;\r\n\r\n    let frame = 0;\r\n    let animationId;\r\n    const canvasSize = 1024;\r\n\r\n    const resize = () => {\r\n      if (!canvas) return;\r\n      canvas.width = canvasSize;\r\n      canvas.height = canvasSize;\r\n\r\n      canvas.style.width = '100vw';\r\n      canvas.style.height = '100vh';\r\n    };\r\n\r\n    const drawGrain = () => {\r\n      const imageData = ctx.createImageData(canvasSize, canvasSize);\r\n      const data = imageData.data;\r\n\r\n      for (let i = 0; i < data.length; i += 4) {\r\n        const value = Math.random() * 255;\r\n        data[i] = value;\r\n        data[i + 1] = value;\r\n        data[i + 2] = value;\r\n        data[i + 3] = patternAlpha;\r\n      }\r\n\r\n      ctx.putImageData(imageData, 0, 0);\r\n    };\r\n\r\n    const loop = () => {\r\n      if (frame % patternRefreshInterval === 0) {\r\n        drawGrain();\r\n      }\r\n      frame++;\r\n      animationId = window.requestAnimationFrame(loop);\r\n    };\r\n\r\n    window.addEventListener('resize', resize);\r\n    resize();\r\n    loop();\r\n\r\n    return () => {\r\n      window.removeEventListener('resize', resize);\r\n      window.cancelAnimationFrame(animationId);\r\n    };\r\n  }, [patternSize, patternScaleX, patternScaleY, patternRefreshInterval, patternAlpha]);\r\n\r\n  return <canvas className=\"noise-overlay\" ref={grainRef} style={{ imageRendering: 'pixelated' }} />;\r\n};\r\n\r\nexport default Noise;\r\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "public/default/src/content/Animations/Noise/Noise.css",
+      "content": ".noise-overlay {\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  pointer-events: none;\r\n}\r\n",
+      "type": "registry:item"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "MagnetLines-JS-TW",
+  "type": "registry:block",
+  "title": "MagnetLines",
+  "description": "Animated field lines bend toward the cursor.",
+  "files": [
+    {
+      "path": "public/tailwind/src/tailwind/Animations/MagnetLines/MagnetLines.jsx",
+      "content": "import { useRef, useEffect } from 'react';\r\n\r\nexport default function MagnetLines({\r\n  rows = 9,\r\n  columns = 9,\r\n  containerSize = '80vmin',\r\n  lineColor = '#efefef',\r\n  lineWidth = '1vmin',\r\n  lineHeight = '6vmin',\r\n  baseAngle = -10,\r\n  className = '',\r\n  style = {}\r\n}) {\r\n  const containerRef = useRef(null);\r\n\r\n  useEffect(() => {\r\n    const container = containerRef.current;\r\n    if (!container) return;\r\n\r\n    const items = container.querySelectorAll('span');\r\n\r\n    const onPointerMove = pointer => {\r\n      items.forEach(item => {\r\n        const rect = item.getBoundingClientRect();\r\n        const centerX = rect.x + rect.width / 2;\r\n        const centerY = rect.y + rect.height / 2;\r\n\r\n        const b = pointer.x - centerX;\r\n        const a = pointer.y - centerY;\r\n        const c = Math.sqrt(a * a + b * b) || 1;\r\n        const r = ((Math.acos(b / c) * 180) / Math.PI) * (pointer.y > centerY ? 1 : -1);\r\n\r\n        item.style.setProperty('--rotate', `${r}deg`);\r\n      });\r\n    };\r\n\r\n    window.addEventListener('pointermove', onPointerMove);\r\n\r\n    if (items.length) {\r\n      const middleIndex = Math.floor(items.length / 2);\r\n      const rect = items[middleIndex].getBoundingClientRect();\r\n      onPointerMove({ x: rect.x, y: rect.y });\r\n    }\r\n\r\n    return () => {\r\n      window.removeEventListener('pointermove', onPointerMove);\r\n    };\r\n  }, []);\r\n\r\n  const total = rows * columns;\r\n  const spans = Array.from({ length: total }, (_, i) => (\r\n    <span\r\n      key={i}\r\n      className=\"block origin-center\"\r\n      style={{\r\n        backgroundColor: lineColor,\r\n        width: lineWidth,\r\n        height: lineHeight,\r\n        '--rotate': `${baseAngle}deg`,\r\n        transform: 'rotate(var(--rotate))',\r\n        willChange: 'transform'\r\n      }}\r\n    />\r\n  ));\r\n\r\n  return (\r\n    <div\r\n      ref={containerRef}\r\n      className={`grid place-items-center ${className}`}\r\n      style={{\r\n        gridTemplateColumns: `repeat(${columns}, 1fr)`,\r\n        gridTemplateRows: `repeat(${rows}, 1fr)`,\r\n        width: containerSize,\r\n        height: containerSize,\r\n        ...style\r\n      }}\r\n    >\r\n      {spans}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

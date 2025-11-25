@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "StarBorder-JS-TW",
+  "type": "registry:block",
+  "title": "StarBorder",
+  "description": "Animated star / sparkle border orbiting content with twinkle pulses.",
+  "files": [
+    {
+      "path": "public/tailwind/src/tailwind/Animations/StarBorder/StarBorder.jsx",
+      "content": "const StarBorder = ({\r\n  as: Component = 'button',\r\n  className = '',\r\n  color = 'white',\r\n  speed = '6s',\r\n  thickness = 1,\r\n  children,\r\n  ...rest\r\n}) => {\r\n  return (\r\n    <Component\r\n      className={`relative inline-block overflow-hidden rounded-[20px] ${className}`}\r\n      style={{\r\n        padding: `${thickness}px 0`,\r\n        ...rest.style\r\n      }}\r\n      {...rest}\r\n    >\r\n      <div\r\n        className=\"absolute w-[300%] h-[50%] opacity-70 bottom-[-11px] right-[-250%] rounded-full animate-star-movement-bottom z-0\"\r\n        style={{\r\n          background: `radial-gradient(circle, ${color}, transparent 10%)`,\r\n          animationDuration: speed\r\n        }}\r\n      ></div>\r\n      <div\r\n        className=\"absolute w-[300%] h-[50%] opacity-70 top-[-10px] left-[-250%] rounded-full animate-star-movement-top z-0\"\r\n        style={{\r\n          background: `radial-gradient(circle, ${color}, transparent 10%)`,\r\n          animationDuration: speed\r\n        }}\r\n      ></div>\r\n      <div className=\"relative z-1 bg-gradient-to-b from-black to-gray-900 border border-gray-800 text-white text-center text-[16px] py-[16px] px-[26px] rounded-[20px]\">\r\n        {children}\r\n      </div>\r\n    </Component>\r\n  );\r\n};\r\n\r\nexport default StarBorder;\r\n\r\n// tailwind.config.js\r\n// module.exports = {\r\n//   theme: {\r\n//     extend: {\r\n//       animation: {\r\n//         'star-movement-bottom': 'star-movement-bottom linear infinite alternate',\r\n//         'star-movement-top': 'star-movement-top linear infinite alternate',\r\n//       },\r\n//       keyframes: {\r\n//         'star-movement-bottom': {\r\n//           '0%': { transform: 'translate(0%, 0%)', opacity: '1' },\r\n//           '100%': { transform: 'translate(-100%, 0%)', opacity: '0' },\r\n//         },\r\n//         'star-movement-top': {\r\n//           '0%': { transform: 'translate(0%, 0%)', opacity: '1' },\r\n//           '100%': { transform: 'translate(100%, 0%)', opacity: '0' },\r\n//         },\r\n//       },\r\n//     },\r\n//   }\r\n// }\r\n",
+      "type": "registry:component"
+    }
+  ]
+}

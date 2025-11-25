@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ScrollFloat-TS-CSS",
+  "type": "registry:block",
+  "title": "ScrollFloat",
+  "description": "Text gently floats / parallax shifts on scroll.",
+  "dependencies": [
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "public/ts/default/src/ts-default/TextAnimations/ScrollFloat/ScrollFloat.tsx",
+      "content": "import React, { useEffect, useMemo, useRef, ReactNode, RefObject } from 'react';\r\nimport { gsap } from 'gsap';\r\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\r\n\r\nimport './ScrollFloat.css';\r\n\r\ngsap.registerPlugin(ScrollTrigger);\r\n\r\ninterface ScrollFloatProps {\r\n  children: ReactNode;\r\n  scrollContainerRef?: RefObject<HTMLElement>;\r\n  containerClassName?: string;\r\n  textClassName?: string;\r\n  animationDuration?: number;\r\n  ease?: string;\r\n  scrollStart?: string;\r\n  scrollEnd?: string;\r\n  stagger?: number;\r\n}\r\n\r\nconst ScrollFloat: React.FC<ScrollFloatProps> = ({\r\n  children,\r\n  scrollContainerRef,\r\n  containerClassName = '',\r\n  textClassName = '',\r\n  animationDuration = 1,\r\n  ease = 'back.inOut(2)',\r\n  scrollStart = 'center bottom+=50%',\r\n  scrollEnd = 'bottom bottom-=40%',\r\n  stagger = 0.03\r\n}) => {\r\n  const containerRef = useRef<HTMLHeadingElement>(null);\r\n\r\n  const splitText = useMemo(() => {\r\n    const text = typeof children === 'string' ? children : '';\r\n    return text.split('').map((char, index) => (\r\n      <span className=\"char\" key={index}>\r\n        {char === ' ' ? '\\u00A0' : char}\r\n      </span>\r\n    ));\r\n  }, [children]);\r\n\r\n  useEffect(() => {\r\n    const el = containerRef.current;\r\n    if (!el) return;\r\n\r\n    const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;\r\n\r\n    const charElements = el.querySelectorAll('.char');\r\n\r\n    gsap.fromTo(\r\n      charElements,\r\n      {\r\n        willChange: 'opacity, transform',\r\n        opacity: 0,\r\n        yPercent: 120,\r\n        scaleY: 2.3,\r\n        scaleX: 0.7,\r\n        transformOrigin: '50% 0%'\r\n      },\r\n      {\r\n        duration: animationDuration,\r\n        ease: ease,\r\n        opacity: 1,\r\n        yPercent: 0,\r\n        scaleY: 1,\r\n        scaleX: 1,\r\n        stagger: stagger,\r\n        scrollTrigger: {\r\n          trigger: el,\r\n          scroller,\r\n          start: scrollStart,\r\n          end: scrollEnd,\r\n          scrub: true\r\n        }\r\n      }\r\n    );\r\n  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);\r\n\r\n  return (\r\n    <h2 ref={containerRef} className={`scroll-float ${containerClassName}`}>\r\n      <span className={`scroll-float-text ${textClassName}`}>{splitText}</span>\r\n    </h2>\r\n  );\r\n};\r\n\r\nexport default ScrollFloat;\r\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "public/ts/default/src/ts-default/TextAnimations/ScrollFloat/ScrollFloat.css",
+      "content": ".scroll-float {\r\n  overflow: hidden;\r\n}\r\n\r\n.scroll-float-text {\r\n  display: inline-block;\r\n  font-size: clamp(1.6rem, 8vw, 10rem);\r\n  font-weight: 900;\r\n  text-align: center;\r\n  line-height: 1.5;\r\n}\r\n\r\n.char {\r\n  display: inline-block;\r\n}\r\n",
+      "type": "registry:item"
+    }
+  ]
+}

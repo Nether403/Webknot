@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Beaker, TrendingUp, CheckCircle, Play, Trophy } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { getPromptOptimizationService } from '../../services/promptOptimization';
 import type { PromptTest, PromptVariation } from '../../services/promptOptimization';
 import type { FeedbackTarget } from '../../types/gemini';

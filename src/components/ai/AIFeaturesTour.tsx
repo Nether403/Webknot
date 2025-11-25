@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 
 interface TourStep {
   title: string;

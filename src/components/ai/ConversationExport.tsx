@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react';
 import { Download, FileText, Lock } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { isPremiumUser } from '../../utils/premiumTier';
 import { exportConversationHistory } from '../../utils/premiumFeatures';
 import { toast } from '@/hooks/use-toast';

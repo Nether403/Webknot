@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { functionalityOptions } from '../../data/wizardData';
 import { FunctionalityOption } from '../../types';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import FunctionalityModal from '../modals/FunctionalityModal';
 
 const FunctionalityStep: React.FC = () => {

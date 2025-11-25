@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Shield, CheckCircle2, XCircle } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 
 export interface AIConsentDialogProps {
   onAccept?: () => void;

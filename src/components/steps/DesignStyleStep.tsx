@@ -1,7 +1,7 @@
 import React from 'react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { designStyles } from '../../data/wizardData';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import DesignStyleCard from '../cards/DesignStyleCard';
 import { DesignSuggestions } from '../ai/DesignSuggestions';
 import { useDesignSuggestions } from '../../hooks/useDesignSuggestions';

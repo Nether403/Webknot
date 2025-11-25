@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { Sparkles, Check, X, Edit, Copy, ChevronDown, ChevronUp } from 'lucide-react';
 import type { PromptEnhancement as PromptEnhancementType } from '../../types/gemini';
 import { FeedbackButtons } from './FeedbackButtons';

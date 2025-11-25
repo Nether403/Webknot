@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { ReactBitsComponent } from '../../types';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 interface ReactBitsModalProps {

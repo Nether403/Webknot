@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { colorThemes } from '../../data/wizardData';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import ColorThemeCard from '../cards/ColorThemeCard';
 import { SmartSuggestionPanel } from '../ai/SmartSuggestionPanel';
 import { useSmartSuggestions } from '../../hooks/useSmartSuggestions';

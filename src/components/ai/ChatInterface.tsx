@@ -10,7 +10,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, MessageCircle, X, Minimize2, Maximize2 } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import type { ConversationMessage } from '../../types/gemini';
 

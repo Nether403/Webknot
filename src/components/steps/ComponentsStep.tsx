@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { componentOptions as reactBitsComponents } from '../../data/react-bits';
 import { ComponentOption } from '../../types';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { ReactBitsCard } from '../cards/ReactBitsCard';
 import { ReactBitsModal } from '../modals/ReactBitsModal';
 import { SearchFilter } from '../ui/SearchFilter';

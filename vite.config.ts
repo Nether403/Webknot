@@ -28,33 +28,19 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      'three': 'three',
     },
+    dedupe: ['three'],
   },
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    exclude: ['lucide-react', 'three'],
   },
   build: {
     // Disable sourcemaps in production for smaller bundle size
     sourcemap: false,
 
-    // Use terser for minification with optimized settings
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        // Remove console.log statements in production
-        drop_console: true,
-        drop_debugger: true,
-        // Additional compression options for mobile
-        passes: 2,
-        pure_funcs: ['console.log', 'console.info', 'console.debug'],
-      },
-      mangle: {
-        safari10: true, // Fix Safari 10 issues
-      },
-      format: {
-        comments: false, // Remove all comments
-      },
-    },
+    // Use esbuild for minification (faster and more compatible with Three.js)
+    minify: 'esbuild',
 
     // Target modern browsers for smaller bundle
     target: 'es2020',
@@ -69,7 +55,10 @@ export default defineConfig({
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
-
+        
+        // Ensure proper module format for Three.js
+        format: 'es',
+        
         manualChunks: {
           // Core React libraries - stable, cacheable chunk
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
@@ -105,14 +94,8 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
           ],
 
-          // 3D libraries - used by react-bits components (lazy load)
-          'three-vendor': [
-            'three',
-            '@react-three/fiber',
-            '@react-three/drei',
-            '@react-three/postprocessing',
-            'postprocessing',
-          ],
+          // 3D libraries - Let Vite handle Three.js automatically to avoid bundling issues
+          // Removed manual chunking for Three.js - it will be code-split on demand
 
           // Animation libraries - used by react-bits components
           'animation-vendor': ['gsap', 'motion'],

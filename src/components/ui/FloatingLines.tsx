@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
-import {
+import * as THREE from 'three';
+import './FloatingLines.css';
+
+const {
   Scene,
   OrthographicCamera,
   WebGLRenderer,
@@ -9,8 +12,7 @@ import {
   Vector3,
   Vector2,
   Clock,
-} from 'three';
-import './FloatingLines.css';
+} = THREE;
 
 const vertexShader = `
 precision highp float;

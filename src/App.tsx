@@ -15,8 +15,8 @@ function App() {
         {/* Skip navigation links for accessibility */}
         <SkipLink href="#main-content">Skip to main content</SkipLink>
         <div className="min-h-screen bg-black overflow-hidden">
-          {/* Floating Lines Background */}
-          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          {/* Floating Lines Background - Temporarily disabled for production debugging */}
+          {/* <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <FloatingLines
               enabledWaves={['top', 'middle', 'bottom']}
               lineCount={[10, 15, 20]}
@@ -26,7 +26,7 @@ function App() {
               interactive={true}
               parallax={true}
             />
-          </div>
+          </div> */}
 
           <div className="relative z-10">
             <Router>

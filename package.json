@@ -12,6 +12,9 @@
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "test": "vitest",
+    "test:run": "vitest --run",
+    "test:legacy-ai": "vitest --run --config vitest.legacy-ai.config.ts",
+    "test:performance": "vitest --run --config vitest.performance.config.ts",
     "test:ui": "vitest --ui",
     "prepare": "husky"
   },

@@ -1,11 +1,17 @@
 /**
  * Prompt Analyzer - AI-powered prompt quality analysis
- * 
+ *
  * Analyzes generated prompts for completeness, quality, and best practices.
  * Provides suggestions for improvement and can auto-fix common issues.
  */
 
-import type { ProjectInfo, DesignStyle, ColorTheme, ComponentOption, AnimationOption } from '../types';
+import type {
+  ProjectInfo,
+  DesignStyle,
+  ColorTheme,
+  ComponentOption,
+  AnimationOption,
+} from '../types';
 
 export interface PromptSuggestion {
   type: 'warning' | 'tip' | 'recommendation';
@@ -34,7 +40,7 @@ export interface PromptAnalysisInput {
 
 /**
  * Analyzes a prompt for quality and completeness
- * 
+ *
  * @param input - The prompt and related selections to analyze
  * @returns Analysis result with score, suggestions, and strengths/weaknesses
  */
@@ -61,7 +67,12 @@ export const analyzePrompt = (input: PromptAnalysisInput): PromptAnalysisResult 
   }
 
   // Check for accessibility
-  if (!lowerPrompt.includes('accessibility') && !lowerPrompt.includes('wcag') && !lowerPrompt.includes('aria')) {
+  if (
+    !lowerPrompt.includes('accessibility') &&
+    !lowerPrompt.includes('accessible') &&
+    !lowerPrompt.includes('wcag') &&
+    !lowerPrompt.includes('aria')
+  ) {
     suggestions.push({
       type: 'recommendation',
       message: 'Accessibility features not specified',
@@ -87,7 +98,12 @@ export const analyzePrompt = (input: PromptAnalysisInput): PromptAnalysisResult 
   }
 
   // Check for performance considerations
-  if (!lowerPrompt.includes('performance') && !lowerPrompt.includes('optimized') && !lowerPrompt.includes('fast')) {
+  if (
+    !lowerPrompt.includes('performance') &&
+    !lowerPrompt.includes('performant') &&
+    !lowerPrompt.includes('optimized') &&
+    !lowerPrompt.includes('fast')
+  ) {
     suggestions.push({
       type: 'tip',
       message: 'Consider adding performance requirements',
@@ -100,7 +116,11 @@ export const analyzePrompt = (input: PromptAnalysisInput): PromptAnalysisResult 
   }
 
   // Check for SEO (for websites)
-  if (projectInfo?.type === 'Website' && !lowerPrompt.includes('seo') && !lowerPrompt.includes('search engine')) {
+  if (
+    projectInfo?.type === 'Website' &&
+    !lowerPrompt.includes('seo') &&
+    !lowerPrompt.includes('search engine')
+  ) {
     suggestions.push({
       type: 'recommendation',
       message: 'SEO not mentioned for website project',
@@ -113,7 +133,11 @@ export const analyzePrompt = (input: PromptAnalysisInput): PromptAnalysisResult 
   }
 
   // Check for security (for web apps with auth)
-  if (lowerPrompt.includes('authentication') && !lowerPrompt.includes('security') && !lowerPrompt.includes('secure')) {
+  if (
+    lowerPrompt.includes('authentication') &&
+    !lowerPrompt.includes('security') &&
+    !lowerPrompt.includes('secure')
+  ) {
     suggestions.push({
       type: 'warning',
       message: 'Authentication mentioned but security not addressed',
@@ -122,7 +146,7 @@ export const analyzePrompt = (input: PromptAnalysisInput): PromptAnalysisResult 
       severity: 'high',
     });
     weaknesses.push('Security considerations missing for authentication');
-  } else if (lowerPrompt.includes('security')) {
+  } else if (lowerPrompt.includes('security') || lowerPrompt.includes('secure')) {
     strengths.push('Includes security considerations');
   }
 
@@ -169,7 +193,7 @@ export const analyzePrompt = (input: PromptAnalysisInput): PromptAnalysisResult 
 
 /**
  * Calculates a quality score based on strengths, weaknesses, and suggestions
- * 
+ *
  * @param strengths - List of identified strengths
  * @param weaknesses - List of identified weaknesses
  * @param suggestions - List of suggestions for improvement
@@ -186,7 +210,7 @@ export const calculatePromptScore = (
   score -= weaknesses.length * 5;
 
   // Deduct points for suggestions by severity
-  suggestions.forEach(suggestion => {
+  suggestions.forEach((suggestion) => {
     if (suggestion.severity === 'high') score -= 15;
     else if (suggestion.severity === 'medium') score -= 10;
     else score -= 5;
@@ -201,15 +225,12 @@ export const calculatePromptScore = (
 
 /**
  * Applies auto-fixable improvements to a prompt
- * 
+ *
  * @param prompt - The original prompt text
  * @param suggestions - List of suggestions (only auto-fixable ones will be applied)
  * @returns Improved prompt text
  */
-export const applyAutoFixes = (
-  prompt: string,
-  suggestions: PromptSuggestion[]
-): string => {
+export const applyAutoFixes = (prompt: string, suggestions: PromptSuggestion[]): string => {
   let optimized = prompt;
 
   // Find the technical implementation section
@@ -217,7 +238,7 @@ export const applyAutoFixes = (
   const hasTechnicalSection = technicalSectionRegex.test(optimized);
 
   // Collect all auto-fixable suggestions
-  const autoFixableSuggestions = suggestions.filter(s => s.autoFixable && s.fix);
+  const autoFixableSuggestions = suggestions.filter((s) => s.autoFixable && s.fix);
 
   if (autoFixableSuggestions.length === 0) {
     return optimized;
@@ -225,16 +246,20 @@ export const applyAutoFixes = (
 
   // If there's a technical section, add fixes there
   if (hasTechnicalSection) {
-    const fixes = autoFixableSuggestions.map(s => `- **${s.fix?.split(':')[0]}:** ${s.fix?.split(':')[1]?.trim() || s.fix}`);
-    
+    const fixes = autoFixableSuggestions.map(
+      (s) => `- **${s.fix?.split(':')[0]}:** ${s.fix?.split(':')[1]?.trim() || s.fix}`
+    );
+
     optimized = optimized.replace(
       technicalSectionRegex,
       (match) => `${match}\n${fixes.join('\n')}`
     );
   } else {
     // Add a new technical requirements section at the end
-    const fixes = autoFixableSuggestions.map(s => `- **${s.fix?.split(':')[0]}:** ${s.fix?.split(':')[1]?.trim() || s.fix}`);
-    
+    const fixes = autoFixableSuggestions.map(
+      (s) => `- **${s.fix?.split(':')[0]}:** ${s.fix?.split(':')[1]?.trim() || s.fix}`
+    );
+
     optimized += `\n\n## Technical Requirements\n${fixes.join('\n')}`;
   }
 
@@ -243,7 +268,7 @@ export const applyAutoFixes = (
 
 /**
  * Safe wrapper for analyzePrompt that handles errors gracefully
- * 
+ *
  * @param input - The prompt and related selections to analyze
  * @returns Analysis result or default neutral result on error
  */

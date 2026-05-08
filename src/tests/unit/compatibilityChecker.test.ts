@@ -1,6 +1,6 @@
 /**
  * Unit Tests for Compatibility Checker System
- * 
+ *
  * Tests the compatibility validation logic including:
  * - Detection of style-color conflicts
  * - Detection of component count issues
@@ -36,7 +36,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const styleColorWarning = result.warnings.find(w =>
+      const styleColorWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('minimalist')
       );
 
@@ -61,7 +61,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const brutalismWarning = result.warnings.find(w =>
+      const brutalismWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('brutalist')
       );
 
@@ -84,7 +84,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const glassWarning = result.warnings.find(w =>
+      const glassWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('glassmorphism')
       );
 
@@ -103,7 +103,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const componentWarning = result.warnings.find(w =>
+      const componentWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('fewer components')
       );
 
@@ -127,7 +127,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const componentWarning = result.warnings.find(w =>
+      const componentWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('bold, prominent')
       );
 
@@ -152,7 +152,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const authIssue = result.issues.find(i =>
+      const authIssue = result.issues.find((i) =>
         i.message.toLowerCase().includes('authentication')
       );
 
@@ -180,7 +180,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const authIssue = result.issues.find(i =>
+      const authIssue = result.issues.find((i) =>
         i.message.toLowerCase().includes('authentication')
       );
 
@@ -196,14 +196,12 @@ describe('Compatibility Checker System', () => {
             features: ['Shopping Cart', 'Checkout'],
           } as any,
         ],
-        selectedComponents: [
-          { id: 'card', title: 'Card' },
-        ],
+        selectedComponents: [{ id: 'card', title: 'Card' }],
       };
 
       const result = checkCompatibility(selections);
 
-      const ecommerceIssue = result.issues.find(i =>
+      const ecommerceIssue = result.issues.find((i) =>
         i.message.toLowerCase().includes('e-commerce')
       );
 
@@ -226,9 +224,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const bgWarning = result.warnings.find(w =>
-        w.message.toLowerCase().includes('vibrant')
-      );
+      const bgWarning = result.warnings.find((w) => w.message.toLowerCase().includes('vibrant'));
 
       expect(bgWarning).toBeDefined();
       expect(bgWarning?.severity).toBe('medium');
@@ -249,9 +245,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const bgWarning = result.warnings.find(w =>
-        w.message.toLowerCase().includes('subtle')
-      );
+      const bgWarning = result.warnings.find((w) => w.message.toLowerCase().includes('subtle'));
 
       expect(bgWarning).toBeDefined();
       expect(bgWarning?.severity).toBe('low');
@@ -264,7 +258,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const animWarning = result.warnings.find(w =>
+      const animWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('animations')
       );
 
@@ -280,7 +274,7 @@ describe('Compatibility Checker System', () => {
 
       const result = checkCompatibility(selections);
 
-      const animWarning = result.warnings.find(w =>
+      const animWarning = result.warnings.find((w) =>
         w.message.toLowerCase().includes('animations')
       );
 
@@ -310,13 +304,13 @@ describe('Compatibility Checker System', () => {
       expect(result.warnings).toHaveLength(0);
     });
 
-    it('should handle empty selections gracefully', () => {
+    it('should return pending state for empty selections', () => {
       const selections: SelectionsToCheck = {};
 
       const result = checkCompatibility(selections);
 
-      expect(result.score).toBe(100);
-      expect(result.harmony).toBe('excellent');
+      expect(result.score).toBe(0);
+      expect(result.harmony).toBe('pending');
       expect(result.issues).toHaveLength(0);
       expect(result.warnings).toHaveLength(0);
     });

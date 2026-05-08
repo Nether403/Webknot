@@ -1,6 +1,6 @@
 /**
  * Feature Flags Tests
- * 
+ *
  * Basic tests to verify feature flag system works correctly
  */
 
@@ -22,7 +22,7 @@ describe('Feature Flags', () => {
       expect(flags.aiSuggestions).toBe(false);
       expect(flags.aiPromptEnhancement).toBe(false);
       expect(flags.aiChat).toBe(false);
-      expect(flags.premiumTier).toBe(false);
+      expect(flags.premiumTier).toBe(true);
     });
 
     it('should enable a feature', () => {

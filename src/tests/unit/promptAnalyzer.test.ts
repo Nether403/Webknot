@@ -1,6 +1,6 @@
 /**
  * Unit Tests for Prompt Analyzer System
- * 
+ *
  * Tests the prompt analysis logic including:
  * - Detection of missing responsive design
  * - Detection of missing accessibility
@@ -28,7 +28,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const responsiveSuggestion = result.suggestions.find(s =>
+      const responsiveSuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('responsive')
       );
 
@@ -45,7 +45,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const accessibilitySuggestion = result.suggestions.find(s =>
+      const accessibilitySuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('accessibility')
       );
 
@@ -64,7 +64,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const conflictSuggestion = result.suggestions.find(s =>
+      const conflictSuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('minimalist')
       );
 
@@ -82,8 +82,8 @@ describe('Prompt Analyzer System', () => {
       const result = analyzePrompt(input);
 
       expect(result.strengths).toContain('Includes responsive design requirements');
-      
-      const responsiveSuggestion = result.suggestions.find(s =>
+
+      const responsiveSuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('responsive')
       );
       expect(responsiveSuggestion).toBeUndefined();
@@ -97,8 +97,8 @@ describe('Prompt Analyzer System', () => {
       const result = analyzePrompt(input);
 
       expect(result.strengths).toContain('Includes accessibility considerations');
-      
-      const accessibilitySuggestion = result.suggestions.find(s =>
+
+      const accessibilitySuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('accessibility')
       );
       expect(accessibilitySuggestion).toBeUndefined();
@@ -122,9 +122,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const seoSuggestion = result.suggestions.find(s =>
-        s.message.toLowerCase().includes('seo')
-      );
+      const seoSuggestion = result.suggestions.find((s) => s.message.toLowerCase().includes('seo'));
 
       expect(seoSuggestion).toBeDefined();
       expect(seoSuggestion?.severity).toBe('medium');
@@ -148,7 +146,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const securitySuggestion = result.suggestions.find(s =>
+      const securitySuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('security')
       );
 
@@ -174,7 +172,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const errorSuggestion = result.suggestions.find(s =>
+      const errorSuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('error')
       );
 
@@ -199,7 +197,7 @@ describe('Prompt Analyzer System', () => {
 
       const result = analyzePrompt(input);
 
-      const testSuggestion = result.suggestions.find(s =>
+      const testSuggestion = result.suggestions.find((s) =>
         s.message.toLowerCase().includes('testing')
       );
 
@@ -228,9 +226,11 @@ describe('Prompt Analyzer System', () => {
       expect(result.optimizedPrompt).not.toBe(input.prompt);
     });
 
-    it('should not return optimized prompt when no auto-fixes available', () => {
+    it('should not return optimized prompt when all auto-fixable requirements are present', () => {
       const input: PromptAnalysisInput = {
-        prompt: 'Create a responsive, accessible, performant website with error handling and testing',
+        prompt:
+          'Create a responsive, accessible, performant website with secure authentication, SEO, error handling, validation, and testing',
+        projectInfo: { type: 'Website' } as any,
       };
 
       const result = analyzePrompt(input);
@@ -293,13 +293,13 @@ describe('Prompt Analyzer System', () => {
     it('should add up to 20 bonus points for strengths', () => {
       const strengths = Array(10).fill('Strength'); // 10 strengths * 3 = 30, capped at 20
       const score = calculatePromptScore(strengths, [], []);
-      expect(score).toBe(120); // 100 + 20 (capped)
+      expect(score).toBe(100); // 100 + 20 bonus, capped at 100 overall
     });
 
     it('should add 3 points per strength up to cap', () => {
       const strengths = ['Strength 1', 'Strength 2', 'Strength 3'];
       const score = calculatePromptScore(strengths, [], []);
-      expect(score).toBe(109); // 100 + (3 * 3)
+      expect(score).toBe(100); // 100 + (3 * 3), capped at 100 overall
     });
 
     it('should handle mixed strengths, weaknesses, and suggestions', () => {
@@ -319,7 +319,7 @@ describe('Prompt Analyzer System', () => {
           severity: 'low',
         },
       ];
-      
+
       // 100 + (2 * 3) - (1 * 5) - 15 - 5 = 81
       const score = calculatePromptScore(strengths, weaknesses, suggestions);
       expect(score).toBe(81);
@@ -334,7 +334,7 @@ describe('Prompt Analyzer System', () => {
     it('should not go above 100 (with cap on strengths)', () => {
       const strengths = Array(10).fill('Strength');
       const score = calculatePromptScore(strengths, [], []);
-      expect(score).toBe(120); // 100 + 20 (capped), but overall capped at 100 in implementation
+      expect(score).toBe(100); // 100 + 20 bonus, capped at 100 overall
     });
   });
 

@@ -63,18 +63,6 @@ export const checkCompatibility = (selections: SelectionsToCheck): Compatibility
   const issues: CompatibilityIssue[] = [];
   const warnings: CompatibilityIssue[] = [];
 
-  // Check if minimum selections have been made (at least 2)
-  const selectionCount = countSelections(selections);
-  if (selectionCount < 2) {
-    // Return pending state - no score calculated yet
-    return {
-      score: 0,
-      issues: [],
-      warnings: [],
-      harmony: 'pending' as any, // Will be handled in UI
-    };
-  }
-
   // Check design style + color theme compatibility
   if (selections.selectedDesignStyle && selections.selectedColorTheme) {
     const styleColorCompat = checkStyleColorCompatibility(
@@ -128,6 +116,19 @@ export const checkCompatibility = (selections: SelectionsToCheck): Compatibility
       suggestion: 'Consider limiting to 3-5 key animations for better performance',
       autoFixable: false,
     });
+  }
+
+  // Check if minimum selections have been made (at least 2) unless a standalone
+  // rule produced feedback such as excessive animation selection.
+  const selectionCount = countSelections(selections);
+  if (selectionCount < 2 && issues.length === 0 && warnings.length === 0) {
+    // Return pending state - no score calculated yet
+    return {
+      score: 0,
+      issues: [],
+      warnings: [],
+      harmony: 'pending' as any, // Will be handled in UI
+    };
   }
 
   // Calculate compatibility score
@@ -330,15 +331,14 @@ const checkBackgroundColorCompatibility = (
   backgroundSelection: BackgroundSelection,
   theme: ColorTheme
 ): CompatibilityIssue | null => {
-  const bgId = backgroundSelection.type === 'react-bits' 
-    ? backgroundSelection.reactBitsComponent?.id || ''
-    : backgroundSelection.type;
+  const legacyBackgroundId = (backgroundSelection as unknown as { id?: string }).id;
+  const bgId =
+    backgroundSelection.type === 'react-bits'
+      ? backgroundSelection.reactBitsComponent?.id || legacyBackgroundId || ''
+      : backgroundSelection.type || legacyBackgroundId || '';
 
   // Check if neon/vibrant backgrounds clash with monochrome themes
-  if (
-    (bgId.includes('neon') || bgId.includes('vibrant')) &&
-    theme.id.includes('monochrome')
-  ) {
+  if ((bgId.includes('neon') || bgId.includes('vibrant')) && theme.id.includes('monochrome')) {
     return {
       severity: 'medium',
       message: 'Vibrant backgrounds may clash with monochrome color themes',

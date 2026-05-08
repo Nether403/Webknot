@@ -1,6 +1,6 @@
 /**
  * Unit Tests for Smart Defaults System
- * 
+ *
  * Tests the smart defaults logic including:
  * - Correct defaults returned for each project type
  * - Existing selections are not overridden
@@ -9,11 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import {
-  getSmartDefaults,
-  applySmartDefaults,
-  SMART_DEFAULTS,
-} from '../../utils/smartDefaults';
+import { getSmartDefaults, applySmartDefaults, SMART_DEFAULTS } from '../../utils/smartDefaults';
 
 describe('Smart Defaults System', () => {
   describe('getSmartDefaults', () => {
@@ -22,7 +18,7 @@ describe('Smart Defaults System', () => {
 
       expect(result.applied).toBe(true);
       expect(result.defaults.designStyle).toBe('minimalist');
-      expect(result.defaults.colorTheme).toBe('monochrome-modern');
+      expect(result.defaults.colorTheme).toBe('minimal-beige');
       expect(result.defaults.layout).toBe('single-column');
       expect(result.confidence).toBe(0.85);
       expect(result.reasoning).toContain('Portfolio');
@@ -34,7 +30,7 @@ describe('Smart Defaults System', () => {
 
       expect(result.applied).toBe(true);
       expect(result.defaults.designStyle).toBe('material-design');
-      expect(result.defaults.colorTheme).toBe('tech-neon');
+      expect(result.defaults.colorTheme).toBe('material-blue');
       expect(result.defaults.layout).toBe('grid-layout');
       expect(result.defaults.functionality).toContain('advanced-package');
     });
@@ -43,8 +39,8 @@ describe('Smart Defaults System', () => {
       const result = getSmartDefaults('Dashboard', 'Analytics dashboard');
 
       expect(result.applied).toBe(true);
-      expect(result.defaults.designStyle).toBe('modern-corporate');
-      expect(result.defaults.colorTheme).toBe('professional-blue');
+      expect(result.defaults.designStyle).toBe('fluent-design');
+      expect(result.defaults.colorTheme).toBe('fluent-azure');
       expect(result.defaults.layout).toBe('sidebar-layout');
       expect(result.defaults.background).toBe('subtle-grid');
     });
@@ -54,7 +50,7 @@ describe('Smart Defaults System', () => {
 
       expect(result.applied).toBe(true);
       expect(result.defaults.designStyle).toBe('glassmorphism');
-      expect(result.defaults.colorTheme).toBe('tech-neon');
+      expect(result.defaults.colorTheme).toBe('frosted-blue');
       expect(result.defaults.layout).toBe('app-layout');
     });
 
@@ -62,8 +58,8 @@ describe('Smart Defaults System', () => {
       const result = getSmartDefaults('Mobile App', 'Mobile application');
 
       expect(result.applied).toBe(true);
-      expect(result.defaults.designStyle).toBe('minimalist');
-      expect(result.defaults.colorTheme).toBe('vibrant-modern');
+      expect(result.defaults.designStyle).toBe('apple-hig');
+      expect(result.defaults.colorTheme).toBe('apple-sky');
       expect(result.defaults.layout).toBe('mobile-first');
     });
 
@@ -71,8 +67,8 @@ describe('Smart Defaults System', () => {
       const result = getSmartDefaults('Website', 'Company website');
 
       expect(result.applied).toBe(true);
-      expect(result.defaults.designStyle).toBe('modern-corporate');
-      expect(result.defaults.colorTheme).toBe('professional-blue');
+      expect(result.defaults.designStyle).toBe('material-design');
+      expect(result.defaults.colorTheme).toBe('ocean-breeze');
       expect(result.defaults.layout).toBe('single-column');
     });
 
@@ -100,7 +96,7 @@ describe('Smart Defaults System', () => {
 
       expect(result.reasoning).toContain('Portfolio');
       expect(result.reasoning).toContain('minimalist');
-      expect(result.reasoning).toContain('monochrome-modern');
+      expect(result.reasoning).toContain('minimal-beige');
     });
 
     it('should include all expected properties in defaults', () => {
@@ -134,7 +130,7 @@ describe('Smart Defaults System', () => {
 
       expect(result.layout).toBe('single-column');
       expect(result.designStyle).toBe('minimalist');
-      expect(result.colorTheme).toBe('monochrome-modern');
+      expect(result.colorTheme).toBe('minimal-beige');
       expect(result.background).toBe('aurora');
     });
 

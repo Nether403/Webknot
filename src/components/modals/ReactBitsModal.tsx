@@ -68,7 +68,7 @@ const ReactBitsModalComponent: React.FC<ReactBitsModalProps> = ({ isOpen, onClos
         aria-describedby="modal-description"
       >
         <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl overflow-hidden max-h-[85vh] sm:max-h-[80vh] overflow-y-auto transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-purple-500/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-br from-teal-500/10 to-purple-500/10 pointer-events-none" />
 
           <div className="relative p-6 sm:p-8">
             {/* Header */}

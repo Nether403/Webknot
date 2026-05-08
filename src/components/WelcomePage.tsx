@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Wand2 } from 'lucide-react';
 
 const WelcomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -55,15 +56,15 @@ const WelcomePage: React.FC = () => {
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center">
       {/* Logo and Branding */}
       <div className="mb-8 animate-slide-up">
-        <div className="mb-6">
-          <img
-            src="/Images/logo1.png"
-            alt="WebKnot Logo"
-            className="w-48 h-48 mx-auto rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+        <div className="mb-6 flex justify-center">
+          <Wand2
+            className="w-48 h-48 mx-auto text-blue-500 rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]"
           />
         </div>
         <div className="mb-4">
-          <img src="/Images/Title.png" alt="WebKnot" className="mx-auto max-w-2xl w-full h-auto" />
+          <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-purple-600 mx-auto max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            WebKnot
+          </h1>
         </div>
         <p className="text-xl md:text-2xl text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
           <em>Tying things together</em>
@@ -161,7 +162,7 @@ const WelcomePage: React.FC = () => {
           onClick={handleGetStarted}
           disabled={isLoading}
           className={`
-            relative px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700
+            relative px-12 py-4 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700
             rounded-xl border border-white/20 transition-all duration-300 
             hover:scale-105 hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]
             disabled:opacity-50 disabled:cursor-not-allowed

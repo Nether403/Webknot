@@ -38,7 +38,7 @@
         type: 'Website',
         purpose: 'Portfolio'
       },
-      selectedBackground: {
+      backgroundSelection: {
         id: 'aurora',
         name: 'Aurora',
         title: 'Aurora',
@@ -91,7 +91,7 @@
     // Verify data integrity
     const parsed = JSON.parse(saved);
     assert(parsed.projectInfo.name === testData.projectInfo.name, 'Project info persisted correctly');
-    assert(parsed.selectedBackground.id === 'aurora', 'Background selection persisted');
+    assert(parsed.backgroundSelection.id === 'aurora', 'Background selection persisted');
     assert(parsed.selectedComponents.length === 2, 'Components array persisted (count: 2)');
     assert(parsed.selectedAnimations.length === 1, 'Animations array persisted (count: 1)');
     assert(parsed.currentStep === 'preview', 'Current step persisted');
@@ -108,10 +108,10 @@
     
     // Validate background structure
     assert(
-      state.selectedBackground && 
-      state.selectedBackground.id &&
-      state.selectedBackground.cliCommand &&
-      state.selectedBackground.dependencies,
+      state.backgroundSelection && 
+      state.backgroundSelection.id &&
+      state.backgroundSelection.cliCommand &&
+      state.backgroundSelection.dependencies,
       'Background has required fields (id, cliCommand, dependencies)'
     );
     
@@ -140,7 +140,7 @@
     const state = JSON.parse(saved);
     
     // Simulate prompt generation
-    const hasBackground = state.selectedBackground !== null;
+    const hasBackground = state.backgroundSelection !== null;
     const hasComponents = state.selectedComponents && state.selectedComponents.length > 0;
     const hasAnimations = state.selectedAnimations && state.selectedAnimations.length > 0;
     
@@ -151,7 +151,7 @@
     // Verify CLI commands are present
     if (hasBackground) {
       assert(
-        state.selectedBackground.cliCommand.includes('npx shadcn'),
+        state.backgroundSelection.cliCommand.includes('npx shadcn'),
         'Background CLI command is valid'
       );
     }
@@ -172,7 +172,7 @@
     
     // Verify dependencies collection
     const allDeps = [
-      ...(state.selectedBackground?.dependencies || []),
+      ...(state.backgroundSelection?.dependencies || []),
       ...state.selectedComponents.flatMap(c => c.dependencies),
       ...state.selectedAnimations.flatMap(a => a.dependencies)
     ];
@@ -196,7 +196,7 @@
         type: 'Website',
         purpose: 'Portfolio'
       },
-      selectedBackground: null,
+      backgroundSelection: null,
       selectedComponents: [],
       selectedAnimations: [],
       currentStep: 'preview'
@@ -206,13 +206,13 @@
     const saved = localStorage.getItem('lovabolt-project');
     const parsed = JSON.parse(saved);
     
-    assert(parsed.selectedBackground === null, 'Handles null background');
+    assert(parsed.backgroundSelection === null, 'Handles null background');
     assert(parsed.selectedComponents.length === 0, 'Handles empty components array');
     assert(parsed.selectedAnimations.length === 0, 'Handles empty animations array');
     
     // Verify no errors with empty state
     const allDeps = [
-      ...(parsed.selectedBackground?.dependencies || []),
+      ...(parsed.backgroundSelection?.dependencies || []),
       ...parsed.selectedComponents.flatMap(c => c.dependencies),
       ...parsed.selectedAnimations.flatMap(a => a.dependencies)
     ];
@@ -253,7 +253,7 @@
         type: 'Website',
         purpose: 'Portfolio'
       },
-      selectedBackground: {
+      backgroundSelection: {
         id: 'aurora',
         name: 'Aurora',
         title: 'Aurora',
@@ -276,7 +276,7 @@
     
     // Verify all CLI commands present
     const allCommands = [
-      parsed.selectedBackground.cliCommand,
+      parsed.backgroundSelection.cliCommand,
       ...parsed.selectedComponents.map(c => c.cliCommand),
       ...parsed.selectedAnimations.map(a => a.cliCommand)
     ];
@@ -284,7 +284,7 @@
     
     // Verify unique dependencies
     const allDeps = [
-      ...parsed.selectedBackground.dependencies,
+      ...parsed.backgroundSelection.dependencies,
       ...parsed.selectedComponents.flatMap(c => c.dependencies),
       ...parsed.selectedAnimations.flatMap(a => a.dependencies)
     ];
@@ -372,7 +372,7 @@
         type: 'Website',
         purpose: 'Portfolio'
       },
-      selectedBackground: {
+      backgroundSelection: {
         id: 'aurora',
         name: 'Aurora',
         title: 'Aurora',
@@ -396,7 +396,7 @@
     localStorage.setItem('lovabolt-project', JSON.stringify(fullState));
     let state = JSON.parse(localStorage.getItem('lovabolt-project'));
     assert(state.currentStep === 'animations', 'Step changed to animations');
-    assert(state.selectedBackground !== null, 'Background preserved during navigation');
+    assert(state.backgroundSelection !== null, 'Background preserved during navigation');
     assert(state.selectedComponents.length === 1, 'Components preserved during navigation');
     
     // Navigate back further
@@ -411,7 +411,7 @@
     localStorage.setItem('lovabolt-project', JSON.stringify(fullState));
     state = JSON.parse(localStorage.getItem('lovabolt-project'));
     assert(state.currentStep === 'preview', 'Step changed back to preview');
-    assert(state.selectedBackground !== null, 'All selections intact after navigation cycle');
+    assert(state.backgroundSelection !== null, 'All selections intact after navigation cycle');
     assert(state.selectedComponents.length === 1, 'All selections intact after navigation cycle');
     assert(state.selectedAnimations.length === 1, 'All selections intact after navigation cycle');
     
@@ -447,7 +447,7 @@
       type: 'Website',
       purpose: 'Portfolio'
     },
-    selectedBackground: {
+    backgroundSelection: {
       id: 'aurora',
       name: 'Aurora',
       title: 'Aurora',

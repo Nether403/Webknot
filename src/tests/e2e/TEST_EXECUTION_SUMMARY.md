@@ -287,7 +287,7 @@ All assets loaded successfully without any network errors.
 ## State Management Validation
 
 ### Context State
-- ✅ selectedBackground updates correctly
+- ✅ backgroundSelection updates correctly
 - ✅ selectedComponents array manages multiple selections
 - ✅ selectedAnimations uses AnimationOption type
 - ✅ Progress calculation includes new steps

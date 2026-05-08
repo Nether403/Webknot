@@ -110,7 +110,7 @@ export function useDesignSuggestions(
     if (state.selectedDesignStyle) count++;
     if (state.selectedColorTheme) count++;
     if (state.selectedLayout) count++;
-    if (state.selectedBackground) count++;
+    if (state.backgroundSelection) count++;
     if (state.selectedComponents.length > 0) count++;
     if (state.selectedAnimations.length > 0) count++;
     if (state.selectedFunctionality.length > 0) count++;
@@ -120,7 +120,7 @@ export function useDesignSuggestions(
     state.selectedDesignStyle,
     state.selectedColorTheme,
     state.selectedLayout,
-    state.selectedBackground,
+    state.backgroundSelection,
     state.selectedComponents,
     state.selectedAnimations,
     state.selectedFunctionality,
@@ -199,7 +199,7 @@ export function useDesignSuggestions(
     state.selectedDesignStyle,
     state.selectedColorTheme,
     state.selectedLayout,
-    state.selectedBackground,
+    state.backgroundSelection,
     state.selectedComponents,
     state.selectedAnimations,
     state.selectedFunctionality,

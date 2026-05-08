@@ -79,7 +79,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ option }) => {
     >
       {hasError || (!webmUrl && !mp4Url) ? (
         // Fallback if video fails to load
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-800 to-gray-900">
           <div className="text-center p-4">
             <svg
               className="w-12 h-12 mx-auto mb-2 text-gray-600"

@@ -276,7 +276,7 @@ export const BackgroundPreview: React.FC<BackgroundPreviewProps> = ({ option }) 
         className="w-full h-40 rounded-lg overflow-hidden bg-gray-900 relative"
         aria-label={`Preview of ${option.title} background`}
       >
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-800 to-gray-900">
           <div className="text-center p-4">
             <svg
               className="w-12 h-12 mx-auto mb-2 text-gray-600"
@@ -299,7 +299,7 @@ export const BackgroundPreview: React.FC<BackgroundPreviewProps> = ({ option }) 
   }
 
   const errorFallback = (
-    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-900/20 to-gray-900">
+    <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-red-900/20 to-gray-900">
       <div className="text-center p-4">
         <svg
           className="w-10 h-10 mx-auto mb-2 text-red-400"

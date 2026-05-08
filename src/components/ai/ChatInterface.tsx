@@ -236,7 +236,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                           : 'bg-gray-800 text-gray-200'
                       }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap break-words">
+                      <p className="text-sm whitespace-pre-wrap wrap-break-word">
                         {message.content}
                       </p>
                       <p

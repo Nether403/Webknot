@@ -131,7 +131,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ isOpen, onClose }) => {
         }
       `}>
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-b from-blue-900/20 to-transparent pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.2)_0%,transparent_70%)] pointer-events-none" />
         
         <div className="relative z-10">

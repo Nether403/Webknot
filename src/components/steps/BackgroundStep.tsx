@@ -175,7 +175,7 @@ const BackgroundStepContent: React.FC = () => {
         >
           <div className="absolute inset-0 glass-card" />
           <div className="relative text-center">
-            <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-gradient-to-br from-gray-700 to-gray-900" />
+            <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-linear-to-br from-gray-700 to-gray-900" />
             <p className="text-white font-medium text-sm">Solid Color</p>
           </div>
         </button>
@@ -189,7 +189,7 @@ const BackgroundStepContent: React.FC = () => {
         >
           <div className="absolute inset-0 glass-card" />
           <div className="relative text-center">
-            <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600" />
+            <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-linear-to-br from-blue-500 to-purple-600" />
             <p className="text-white font-medium text-sm">Gradient</p>
           </div>
         </button>
@@ -217,7 +217,7 @@ const BackgroundStepContent: React.FC = () => {
         >
           <div className="absolute inset-0 glass-card" />
           <div className="relative text-center">
-            <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-linear-to-br from-teal-500 to-blue-600 flex items-center justify-center">
               <svg
                 className="w-6 h-6 text-white"
                 fill="none"

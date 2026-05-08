@@ -12,7 +12,7 @@
     },
     {
       "path": "public/default/src/content/Backgrounds/Waves/Waves.css",
-      "content": ".waves {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n\r\n.waves::before {\r\n  content: '';\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  width: 0.5rem;\r\n  height: 0.5rem;\r\n  background: #160000;\r\n  border-radius: 50%;\r\n  transform: translate3d(calc(var(-0.5rem) - 50%), calc(var(50%) - 50%), 0);\r\n  will-change: transform;\r\n}\r\n\r\n.waves-canvas {\r\n  display: block;\r\n  width: 100%;\r\n  height: 100%;\r\n}\r\n",
+      "content": ".waves {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n\r\n.waves::before {\r\n  content: '';\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  width: 0.5rem;\r\n  height: 0.5rem;\r\n  background: #160000;\r\n  border-radius: 50%;\r\n  transform: translate3d(calc(var(--x, -0.5rem) - 50%), calc(var(--y, 50%) - 50%), 0);\r\n  will-change: transform;\r\n}\r\n\r\n.waves-canvas {\r\n  display: block;\r\n  width: 100%;\r\n  height: 100%;\r\n}\r\n",
       "type": "registry:item"
     }
   ]

@@ -196,7 +196,7 @@ describe('GeminiService', () => {
         selectedDesignStyle: { id: 'minimalist', title: 'Minimalist', description: '' },
         selectedColorTheme: { id: 'ocean', title: 'Ocean Breeze', description: '' },
         selectedComponents: [{ id: 'carousel', title: 'Carousel', description: '' }],
-        selectedBackground: { id: 'aurora', title: 'Aurora', description: '' },
+        backgroundSelection: { id: 'aurora', title: 'Aurora', description: '' },
         selectedAnimations: [{ id: 'fade', title: 'Fade In', description: '' }],
       } as any;
       

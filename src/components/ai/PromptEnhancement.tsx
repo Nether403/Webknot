@@ -139,7 +139,7 @@ export const PromptEnhancement: React.FC<PromptEnhancementProps> = ({
                 <ul className="space-y-1">
                   {enhancement.improvements.map((improvement, index) => (
                     <li key={index} className="text-sm text-gray-300 flex items-start gap-2">
-                      <Check className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-teal-400 mt-0.5 shrink-0" />
                       <span>{improvement}</span>
                     </li>
                   ))}

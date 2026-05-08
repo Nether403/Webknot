@@ -173,7 +173,7 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
       />
       <div
         ref={fadeRef}
-        className="absolute inset-0 pointer-events-none transition-opacity duration-[250ms] z-40"
+        className="absolute inset-0 pointer-events-none transition-opacity duration-250 z-40"
         style={{
           backdropFilter: 'grayscale(1) brightness(0.78)',
           WebkitBackdropFilter: 'grayscale(1) brightness(0.78)',

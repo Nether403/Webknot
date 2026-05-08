@@ -39,8 +39,8 @@ const ProjectSetupStep: React.FC = () => {
     setSelectedTypography,
     selectedFunctionality,
     setSelectedFunctionality,
-    selectedBackground,
-    setSelectedBackground,
+    backgroundSelection,
+    setBackgroundSelection,
     selectedComponents,
     setSelectedComponents,
     selectedAnimations,
@@ -267,7 +267,7 @@ const ProjectSetupStep: React.FC = () => {
       selectedColorTheme,
       selectedTypography,
       selectedFunctionality,
-      selectedBackground,
+      backgroundSelection,
       selectedComponents,
       selectedAnimations,
     };
@@ -312,7 +312,12 @@ const ProjectSetupStep: React.FC = () => {
 
     if (defaults.background) {
       const background = backgroundOptions.find((b) => b.id === defaults.background);
-      if (background) setSelectedBackground(background);
+      if (background) {
+        setBackgroundSelection({
+          type: 'react-bits',
+          id: background.id
+        });
+      }
     }
 
     if (defaults.components) {
@@ -425,7 +430,7 @@ const ProjectSetupStep: React.FC = () => {
       {showSmartDefaultsNotification && (
         <div className="glass-card border-l-4 border-teal-500 text-white p-4 mb-6 rounded-lg animate-fade-in backdrop-blur-sm">
           <div className="flex items-start gap-3">
-            <CheckCircle className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
+            <CheckCircle className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="font-semibold text-teal-400 mb-1">Smart Defaults Applied!</p>
               <p className="text-sm text-gray-300">
@@ -548,7 +553,7 @@ const ProjectSetupStep: React.FC = () => {
         {isUsingFallback && aiAnalysis && !isAnalyzing && (
           <div className="glass-card rounded-lg p-4 border border-yellow-500/30 animate-fade-in bg-yellow-500/5">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-white font-medium">AI temporarily unavailable</p>
                 <p className="text-xs text-gray-400 mt-1">
@@ -563,7 +568,7 @@ const ProjectSetupStep: React.FC = () => {
         {analysisError && !isAnalyzing && !aiAnalysis && (
           <div className="glass-card rounded-lg p-4 border border-yellow-500/30 animate-fade-in">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-white font-medium">AI analysis unavailable</p>
                 <p className="text-xs text-gray-400 mt-1">
@@ -578,7 +583,7 @@ const ProjectSetupStep: React.FC = () => {
         {aiAnalysis && !isAnalyzing && (
           <div className="glass-card rounded-lg p-4 border border-teal-500/30 animate-fade-in">
             <div className="flex items-start gap-3 mb-3">
-              <Sparkles className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
+              <Sparkles className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-white font-semibold">AI Suggestions</p>
@@ -622,7 +627,7 @@ const ProjectSetupStep: React.FC = () => {
                 type="button"
                 onClick={handleApplyAiSuggestions}
                 className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3 rounded-lg
-                         bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700
+                         bg-linear-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700
                          text-white font-medium transition-all duration-200
                          hover:scale-[1.02] active:scale-[0.98]
                          shadow-lg hover:shadow-xl"
@@ -649,7 +654,7 @@ const ProjectSetupStep: React.FC = () => {
         {isUsingFallback && !analysisError && aiAnalysis && (
           <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
               <div>
                 <h3 className="text-sm font-semibold text-white mb-1">
                   Using Standard Analysis
@@ -735,7 +740,7 @@ const ProjectSetupStep: React.FC = () => {
                 type="button"
                 onClick={handleApplySmartDefaults}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg
-                         bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700
+                         bg-linear-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700
                          text-white font-medium transition-all duration-200
                          hover:scale-[1.02] active:scale-[0.98]
                          shadow-lg hover:shadow-xl"

@@ -8,6 +8,7 @@ import cors from 'cors';
 import { appConfig } from './config.js';
 import cacheRoutes from './routes/cache.js';
 import healthRoutes from './routes/health.js';
+import aiRoutes from './routes/ai.js';
 
 // Initialize Express app
 const app: Express = express();
@@ -38,6 +39,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/cache', cacheRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
@@ -48,6 +50,7 @@ app.get('/', (req: Request, res: Response) => {
     endpoints: {
       health: '/api/health',
       cache: '/api/cache',
+      ai: '/api/ai',
     },
   });
 });
@@ -87,6 +90,7 @@ const server = app.listen(appConfig.port, () => {
 API Endpoints:
   - Health:  http://localhost:${appConfig.port}/api/health
   - Cache:   http://localhost:${appConfig.port}/api/cache
+  - AI:      http://localhost:${appConfig.port}/api/ai
   `);
 });
 

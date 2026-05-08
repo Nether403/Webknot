@@ -158,7 +158,6 @@ export function useChat(): UseChatResult {
           selectedTypography: wizardContext.selectedTypography,
           selectedFunctionality: wizardContext.selectedFunctionality,
           selectedVisuals: wizardContext.selectedVisuals,
-          selectedBackground: wizardContext.selectedBackground,
           backgroundSelection: wizardContext.backgroundSelection,
           selectedComponents: wizardContext.selectedComponents,
           selectedAnimations: wizardContext.selectedAnimations,

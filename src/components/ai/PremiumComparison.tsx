@@ -165,7 +165,7 @@ export const PremiumComparison: React.FC<PremiumComparisonProps> = ({
           </div>
           <button
             onClick={onUpgrade}
-            className="px-8 py-4 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-semibold rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg shadow-teal-500/20"
+            className="px-8 py-4 bg-linear-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-semibold rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg shadow-teal-500/20"
           >
             <TrendingUp className="w-5 h-5" />
             Upgrade to Premium

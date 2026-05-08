@@ -19,7 +19,7 @@ vi.mock('../../contexts/BoltBuilderContext', () => ({
     selectedDesignStyle: { id: 'glassmorphism', title: 'Glassmorphism', description: '' },
     selectedColorTheme: { id: 'dark', title: 'Dark Theme', description: '' },
     selectedLayout: { id: 'single-page', title: 'Single Page', description: '' },
-    selectedBackground: { id: 'aurora', title: 'Aurora', description: '' },
+    backgroundSelection: { id: 'aurora', title: 'Aurora', description: '' },
     selectedComponents: [
       { id: 'carousel', title: 'Carousel', description: '' },
     ],

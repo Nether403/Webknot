@@ -271,7 +271,7 @@ export const ComprehensiveAnalyticsDashboard: React.FC = () => {
                     <div className="flex-1 flex items-center gap-2">
                       <div className="flex-1 h-6 bg-gray-700 rounded overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-teal-500 to-teal-600 rounded"
+                          className="h-full bg-linear-to-r from-teal-500 to-teal-600 rounded"
                           style={{
                             width: `${Math.min((trend.cost / Math.max(...costTrends.map(t => t.cost))) * 100, 100)}%`
                           }}

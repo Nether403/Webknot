@@ -133,7 +133,7 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
       {/* Settings Panel */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg p-6">
         <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-br from-purple-500/10 to-blue-500/10 pointer-events-none" />
           
           <div className="relative p-6">
             {/* Header */}
@@ -151,7 +151,7 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
             <div className="space-y-6">
               {/* Premium Status / Upgrade Button */}
               {isPremium ? (
-                <div className="bg-gradient-to-r from-teal-500/20 to-teal-600/20 p-5 rounded-lg border border-teal-500/30">
+                <div className="bg-linear-to-r from-teal-500/20 to-teal-600/20 p-5 rounded-lg border border-teal-500/30">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-teal-500/30 rounded-lg">
                       <Sparkles className="w-5 h-5 text-teal-400" />
@@ -167,7 +167,7 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
               ) : (
-                <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-5 rounded-lg border border-purple-500/20">
+                <div className="bg-linear-to-r from-purple-500/10 to-blue-500/10 p-5 rounded-lg border border-purple-500/20">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1">
                       <div className="p-2 bg-purple-500/20 rounded-lg mt-1">
@@ -182,7 +182,7 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
                         </p>
                         <Button
                           onClick={handleUpgrade}
-                          className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white"
+                          className="bg-linear-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white"
                           size="sm"
                         >
                           <Sparkles className="w-4 h-4 mr-2" />
@@ -265,22 +265,22 @@ export const AISettings: React.FC<AISettingsProps> = ({ isOpen, onClose }) => {
               {/* Info Box */}
               <div className="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
                 <div className="flex items-start gap-3">
-                  <Info className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <Info className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
                   <div className="text-sm text-gray-300">
                     <p className="mb-2">
                       <span className="font-semibold text-white">How it works:</span>
                     </p>
                     <ul className="space-y-1 text-gray-400">
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500/60 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-blue-500/60 rounded-full mt-1.5 shrink-0" />
                         <span>When enabled, AI features enhance your experience with intelligent suggestions</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500/60 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-blue-500/60 rounded-full mt-1.5 shrink-0" />
                         <span>When disabled, the app uses only rule-based algorithms (no AI)</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500/60 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-blue-500/60 rounded-full mt-1.5 shrink-0" />
                         <span>All features work perfectly in both modes</span>
                       </li>
                     </ul>

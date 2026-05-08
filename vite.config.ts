@@ -1,11 +1,13 @@
 import path from 'path';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { compression } from 'vite-plugin-compression2';
 
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     react(),
     visualizer({
       filename: './dist/stats.html',
@@ -59,56 +61,28 @@ export default defineConfig({
         // Ensure proper module format for Three.js
         format: 'es',
 
-        manualChunks: {
-          // Core React libraries - stable, cacheable chunk
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-
-          // Radix UI components - separate chunk for UI primitives
-          'radix-ui': [
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-aspect-ratio',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-context-menu',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-hover-card',
-            '@radix-ui/react-label',
-            '@radix-ui/react-menubar',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-toggle',
-            '@radix-ui/react-toggle-group',
-            '@radix-ui/react-tooltip',
-          ],
-
-          // Animation libraries — used by react-bits components
-          'animation-vendor': ['gsap', 'motion'],
-
-          // React-Bits WebGL dependencies
-          'react-bits-deps': ['ogl'],
-
-          // Form libraries - ready for react-hook-form integration
-          'form-vendor': ['zod'], // Will include react-hook-form, @hookform/resolvers when added
-
-          // Utility libraries
-          utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
-        },
-
-        // Optimize chunk size
-        compact: true,
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('@radix-ui')) {
+              return 'radix-ui';
+            }
+            if (id.includes('gsap') || id.includes('motion')) {
+              return 'animation-vendor';
+            }
+            if (id.includes('ogl')) {
+              return 'react-bits-deps';
+            }
+            if (id.includes('zod')) {
+              return 'form-vendor';
+            }
+            if (id.includes('clsx') || id.includes('tailwind-merge') || id.includes('class-variance-authority')) {
+              return 'utils';
+            }
+          }
+        }
       },
     },
 

@@ -62,7 +62,7 @@ export const AIConsentDialog: React.FC<AIConsentDialogProps> = ({
       {/* Modal */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl p-6">
         <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-blue-500/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-br from-teal-500/10 to-blue-500/10 pointer-events-none" />
           
           <div className="relative p-8">
             {/* Header */}
@@ -87,20 +87,20 @@ export const AIConsentDialog: React.FC<AIConsentDialogProps> = ({
               {/* What we send */}
               <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700/50">
                 <div className="flex items-start gap-3 mb-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5 shrink-0" />
                   <div>
                     <h3 className="font-semibold text-white mb-2">What we send to Google:</h3>
                     <ul className="text-sm space-y-2 text-gray-400">
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-teal-500/60 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-teal-500/60 rounded-full mt-1.5 shrink-0" />
                         <span>Your project descriptions (anonymized and sanitized)</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-teal-500/60 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-teal-500/60 rounded-full mt-1.5 shrink-0" />
                         <span>Design selections (no personal data)</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-teal-500/60 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-teal-500/60 rounded-full mt-1.5 shrink-0" />
                         <span>Generated prompts (technical content only)</span>
                       </li>
                     </ul>
@@ -111,20 +111,20 @@ export const AIConsentDialog: React.FC<AIConsentDialogProps> = ({
               {/* What we DON'T send */}
               <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700/50">
                 <div className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                  <XCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
                   <div>
                     <h3 className="font-semibold text-white mb-2">What we DON'T send:</h3>
                     <ul className="text-sm space-y-2 text-gray-400">
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 shrink-0" />
                         <span>Personal information (names, emails, phone numbers)</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 shrink-0" />
                         <span>IP addresses or session data</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 shrink-0" />
                         <span>Any sensitive or personally identifiable information</span>
                       </li>
                     </ul>

@@ -92,7 +92,7 @@ export class AIErrorBoundary extends Component<AIErrorBoundaryProps, AIErrorBoun
       return (
         <div className="glass-card p-4 rounded-xl border border-yellow-500/20">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-sm text-yellow-400 font-medium mb-1">
                 {fallbackMessage || 'AI features temporarily unavailable'}

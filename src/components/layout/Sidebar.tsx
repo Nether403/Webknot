@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <aside
         className={`
-          bg-gray-800 bg-opacity-90 backdrop-blur-lg text-white w-64 flex-shrink-0 
+          bg-gray-800 bg-opacity-90 backdrop-blur-lg text-white w-64 shrink-0 
           overflow-y-auto transition-all duration-300 ease-in-out
           ${
             isOpen

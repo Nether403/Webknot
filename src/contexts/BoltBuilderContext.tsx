@@ -33,7 +33,6 @@ interface TrackableState {
   selectedTypography: Typography;
   selectedFunctionality: FunctionalityOption[];
   selectedVisuals: VisualElement[];
-  selectedBackground: BackgroundOption | null;
   backgroundSelection: BackgroundSelection | null;
   selectedComponents: ComponentOption[];
   selectedAnimations: AnimationOption[];
@@ -51,7 +50,6 @@ interface ProjectData {
   selectedTypography?: Typography;
   selectedFunctionality?: FunctionalityOption[];
   selectedVisuals?: VisualElement[];
-  selectedBackground?: BackgroundOption;
   backgroundSelection?: BackgroundSelection;
   selectedComponents?: ComponentOption[];
   selectedAnimations?: AnimationOption[];
@@ -92,10 +90,6 @@ interface BoltBuilderContextType {
   // Visuals
   selectedVisuals: VisualElement[];
   setSelectedVisuals: React.Dispatch<React.SetStateAction<VisualElement[]>>;
-
-  // React-Bits: Background
-  selectedBackground: BackgroundOption | null;
-  setSelectedBackground: (background: BackgroundOption | null) => void;
 
   // Background Selection (new comprehensive type)
   backgroundSelection: BackgroundSelection | null;
@@ -170,7 +164,6 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [selectedVisuals, setSelectedVisuals] = useState<VisualElement[]>([]);
 
   // React-Bits state
-  const [selectedBackground, setSelectedBackground] = useState<BackgroundOption | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<ComponentOption[]>([]);
   const [selectedAnimations, setSelectedAnimations] = useState<AnimationOption[]>([]);
 
@@ -208,7 +201,6 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
     selectedTypography: defaultTypography,
     selectedFunctionality: [],
     selectedVisuals: [],
-    selectedBackground: null,
     backgroundSelection: null,
     selectedComponents: [],
     selectedAnimations: [],
@@ -237,7 +229,7 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
     if (selectedColorTheme) completed++;
     if (selectedTypography.fontFamily) completed++;
     if (selectedVisuals.length > 0) completed++;
-    if (selectedBackground) completed++;
+    if (backgroundSelectionState) completed++;
     if (selectedComponents.length > 0) completed++;
     if (selectedFunctionality.length > 0) completed++;
     if (selectedAnimations.length > 0) completed++;
@@ -263,23 +255,8 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
     const errors: string[] = [];
 
     // Validate background selection
-    if (backgroundSelectionState?.type === 'react-bits') {
-      const reactBitsComponent = backgroundSelectionState.reactBitsComponent;
-      const legacyBackground = selectedBackground;
-
-      if (reactBitsComponent && legacyBackground) {
-        if (reactBitsComponent.id !== legacyBackground.id) {
-          errors.push(
-            `Background mismatch: backgroundSelection has "${reactBitsComponent.title}" ` +
-              `but selectedBackground has "${legacyBackground.title}"`
-          );
-        }
-      } else if (reactBitsComponent && !legacyBackground) {
-        warnings.push(
-          `backgroundSelection has "${reactBitsComponent.title}" but selectedBackground is null. ` +
-            `This may indicate a sync issue.`
-        );
-      }
+    if (!backgroundSelectionState) {
+      warnings.push(`No background selected.`);
     }
 
     // Validate component selections
@@ -342,7 +319,7 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
    * The prompt is enhanced with contextual information based on project type and purpose,
    * providing specific guidance, user stories, and recommendations.
    */
-  const generatePrompt = (): string => {
+  const generatePrompt = React.useCallback((): string => {
     const timestamp = new Date().toISOString();
     console.log(`[Prompt Gen] ${timestamp} - Starting enhanced prompt generation`);
 
@@ -398,7 +375,6 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
       selectedColorTheme,
       selectedTypography,
       selectedVisuals,
-      selectedBackground,
       backgroundSelection: backgroundSelectionState,
       selectedComponents,
       selectedAnimations,
@@ -421,7 +397,19 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
     );
 
     return result;
-  };
+  }, [
+    projectInfo,
+    selectedLayout,
+    selectedSpecialLayouts,
+    selectedDesignStyle,
+    selectedColorTheme,
+    selectedTypography,
+    selectedVisuals,
+    backgroundSelectionState,
+    selectedComponents,
+    selectedAnimations,
+    selectedFunctionality,
+  ]);
 
   /**
    * Generates a concise, simplified prompt for AI-powered development
@@ -459,8 +447,8 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     // Build react-bits summary
     const reactBitsSummary = [];
-    if (selectedBackground) {
-      reactBitsSummary.push(`${selectedBackground.title} background`);
+    if (backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent) {
+      reactBitsSummary.push(`${backgroundSelectionState.reactBitsComponent.title} background`);
     }
     if (selectedComponents.length > 0) {
       reactBitsSummary.push(
@@ -515,7 +503,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
       selectedTypography,
       selectedFunctionality,
       selectedVisuals,
-      selectedBackground,
       backgroundSelection: backgroundSelectionState,
       selectedComponents,
       selectedAnimations,
@@ -594,7 +581,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedTypography,
     selectedFunctionality,
     selectedVisuals,
-    selectedBackground,
     backgroundSelectionState,
     selectedComponents,
     selectedAnimations,
@@ -617,7 +603,7 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
    *   - selectedTypography: Typography settings
    *   - selectedFunctionality: Functionality options
    *   - selectedVisuals: Visual elements
-   *   - selectedBackground: React-Bits background selection
+   *   - backgroundSelection: React-Bits background selection
    *   - backgroundSelection: Comprehensive background selection data
    *   - selectedComponents: React-Bits UI components
    *   - selectedAnimations: React-Bits animations
@@ -643,23 +629,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
       // Validate data structure before loading
       console.log('[Load Project] Starting project load with validation');
 
-      // Check for background mismatches in loaded data
-      if (projectData.backgroundSelection && projectData.selectedBackground) {
-        if (projectData.backgroundSelection.type === 'react-bits') {
-          const reactBitsId = projectData.backgroundSelection.reactBitsComponent?.id;
-          const legacyId = projectData.selectedBackground.id;
-
-          if (reactBitsId && legacyId && reactBitsId !== legacyId) {
-            console.warn('[Load Project] Background mismatch detected in saved data:', {
-              backgroundSelection: reactBitsId,
-              selectedBackground: legacyId,
-            });
-            // Prefer backgroundSelection as source of truth
-            console.log('[Load Project] Using backgroundSelection as source of truth');
-          }
-        }
-      }
-
       // Wrap state updates in try-catch for safety
       try {
         if (projectData.projectInfo) setProjectInfo(projectData.projectInfo);
@@ -681,15 +650,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
             type: projectData.backgroundSelection.type,
             component: projectData.backgroundSelection.reactBitsComponent?.title,
           });
-        }
-
-        // Load selectedBackground (will be synced by useEffect if needed)
-        if (projectData.selectedBackground) {
-          setSelectedBackground(projectData.selectedBackground);
-          console.log(
-            '[Load Project] Loaded selectedBackground:',
-            projectData.selectedBackground.title
-          );
         }
 
         if (projectData.selectedComponents) setSelectedComponents(projectData.selectedComponents);
@@ -756,7 +716,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     setSelectedTypography(defaultTypography);
     setSelectedFunctionality([]);
     setSelectedVisuals([]);
-    setSelectedBackground(null);
     setBackgroundSelectionState(null);
     setSelectedComponents([]);
     setSelectedAnimations([]);
@@ -781,7 +740,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
         selectedTypography,
         selectedFunctionality,
         selectedVisuals,
-        selectedBackground,
         backgroundSelection: backgroundSelectionState,
         selectedComponents,
         selectedAnimations,
@@ -799,7 +757,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedTypography,
     selectedFunctionality,
     selectedVisuals,
-    selectedBackground,
     backgroundSelectionState,
     selectedComponents,
     selectedAnimations,
@@ -816,7 +773,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
       setSelectedTypography(historyState.selectedTypography);
       setSelectedFunctionality(historyState.selectedFunctionality);
       setSelectedVisuals(historyState.selectedVisuals);
-      setSelectedBackground(historyState.selectedBackground);
       setBackgroundSelectionState(historyState.backgroundSelection);
       setSelectedComponents(historyState.selectedComponents);
       setSelectedAnimations(historyState.selectedAnimations);
@@ -837,33 +793,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     historyRedo();
   }, [historyRedo]);
 
-  // State synchronization: Sync selectedBackground from backgroundSelection
-  // This ensures both fields stay in sync when backgroundSelection changes
-  React.useEffect(() => {
-    // Only sync when backgroundSelection.type is 'react-bits'
-    if (
-      backgroundSelectionState?.type === 'react-bits' &&
-      backgroundSelectionState.reactBitsComponent
-    ) {
-      // Check if sync is needed (avoid unnecessary updates)
-      if (selectedBackground?.id !== backgroundSelectionState.reactBitsComponent.id) {
-        console.log('[State Sync] Updating selectedBackground from backgroundSelection:', {
-          from: selectedBackground?.title || 'null',
-          to: backgroundSelectionState.reactBitsComponent.title,
-          timestamp: new Date().toISOString(),
-        });
-        setSelectedBackground(backgroundSelectionState.reactBitsComponent);
-      }
-    } else if (backgroundSelectionState?.type !== 'react-bits' && selectedBackground !== null) {
-      // Clear selectedBackground if not using React-Bits
-      console.log('[State Sync] Clearing selectedBackground (non-React-Bits type):', {
-        type: backgroundSelectionState?.type || 'null',
-        timestamp: new Date().toISOString(),
-      });
-      setSelectedBackground(null);
-    }
-  }, [backgroundSelectionState, selectedBackground]);
-
   // Auto-save functionality with debouncing (1 second delay)
   // This prevents excessive localStorage writes during rapid state changes
   // Performance optimization: Reduces I/O operations and improves responsiveness
@@ -882,7 +811,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     selectedTypography,
     selectedFunctionality,
     selectedVisuals,
-    selectedBackground,
     backgroundSelectionState,
     selectedComponents,
     selectedAnimations,
@@ -919,7 +847,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
             hasLayout: !!projectData.selectedLayout,
             hasDesignStyle: !!projectData.selectedDesignStyle,
             hasColorTheme: !!projectData.selectedColorTheme,
-            hasBackground: !!projectData.selectedBackground,
             hasBackgroundSelection: !!projectData.backgroundSelection,
             hasComponents: !!projectData.selectedComponents,
             hasAnimations: !!projectData.selectedAnimations,
@@ -1028,8 +955,6 @@ Include ${functionalityTier ? functionalityTier.title.toLowerCase() : 'basic'} f
     setSelectedFunctionality,
     selectedVisuals,
     setSelectedVisuals,
-    selectedBackground,
-    setSelectedBackground,
     backgroundSelection,
     setBackgroundSelection,
     selectedComponents,

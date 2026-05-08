@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Monitor } from 'lucide-react';
+import { Menu, Monitor, Wand2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useBoltBuilder } from '../../contexts/BoltBuilderContext';
 import { Button } from '../ui/button';
@@ -29,10 +29,8 @@ const Header: React.FC<HeaderProps> = ({ onGeneratePrompt, onToggleSidebar, onTo
           onClick={() => navigate('/')}
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          <img 
-            src="/Images/logo1.png" 
-            alt="WebKnot Logo" 
-            className="w-16 h-16 rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500"
+          <Wand2
+            className="w-8 h-8 text-blue-500 rotate-12 transform-gpu hover:rotate-45 transition-transform duration-500"
           />
           <h1 className="text-2xl font-bold text-white">
             WebKnot

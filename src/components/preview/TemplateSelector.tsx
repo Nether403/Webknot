@@ -173,7 +173,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       {selectedTemplateId && (
         <div className="glass-card p-4 rounded-xl border border-teal-500/20">
           <div className="flex items-start gap-3">
-            <Info className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
+            <Info className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="text-sm font-medium text-white mb-1">Template Applied</h4>
               <p className="text-xs text-gray-400">

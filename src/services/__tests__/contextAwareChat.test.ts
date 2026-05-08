@@ -47,7 +47,7 @@ describe('Context-Aware Chat Service', () => {
         title: 'Single Page',
         description: 'All content on one page',
       },
-      selectedBackground: {
+      backgroundSelection: {
         id: 'aurora',
         title: 'Aurora',
         description: 'Animated aurora background',
@@ -282,7 +282,7 @@ describe('Context-Aware Chat Service', () => {
         selectedDesignStyle: null,
         selectedColorTheme: null,
         selectedLayout: null,
-        selectedBackground: null,
+        backgroundSelection: null,
         selectedComponents: [],
         selectedAnimations: [],
       } as any;

@@ -59,8 +59,8 @@ const GridMotion: FC<GridMotionProps> = ({ items = [], gradientColor = 'black' }
           background: `radial-gradient(circle, ${gradientColor} 0%, transparent 100%)`
         }}
       >
-        <div className="absolute inset-0 pointer-events-none z-[4] bg-[length:250px]"></div>
-        <div className="gap-4 flex-none relative w-[150vw] h-[150vh] grid grid-rows-4 grid-cols-1 rotate-[-15deg] origin-center z-[2]">
+        <div className="absolute inset-0 pointer-events-none z-4 bg-size-[250px]"></div>
+        <div className="gap-4 flex-none relative w-[150vw] h-[150vh] grid grid-rows-4 grid-cols-1 rotate-[-15deg] origin-center z-2">
           {Array.from({ length: 4 }, (_, rowIndex) => (
             <div
               key={rowIndex}
@@ -81,7 +81,7 @@ const GridMotion: FC<GridMotionProps> = ({ items = [], gradientColor = 'black' }
                           style={{ backgroundImage: `url(${content})` }}
                         ></div>
                       ) : (
-                        <div className="p-4 text-center z-[1]">{content}</div>
+                        <div className="p-4 text-center z-1">{content}</div>
                       )}
                     </div>
                   </div>

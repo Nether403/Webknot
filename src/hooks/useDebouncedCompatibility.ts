@@ -21,7 +21,7 @@ export const useDebouncedCompatibility = (delay: number = 200): CompatibilityRes
     selectedColorTheme,
     selectedComponents,
     selectedFunctionality,
-    selectedBackground,
+    backgroundSelection,
     selectedAnimations,
   } = useBoltBuilder();
 
@@ -32,7 +32,7 @@ export const useDebouncedCompatibility = (delay: number = 200): CompatibilityRes
       colorTheme: selectedColorTheme?.id,
       components: selectedComponents?.map(c => c.id).join(','),
       functionality: selectedFunctionality?.map(f => f.id).join(','),
-      background: selectedBackground?.id,
+      background: backgroundSelection?.id,
       animations: selectedAnimations?.map(a => a.id).join(','),
     });
   }, [
@@ -40,7 +40,7 @@ export const useDebouncedCompatibility = (delay: number = 200): CompatibilityRes
     selectedColorTheme,
     selectedComponents,
     selectedFunctionality,
-    selectedBackground,
+    backgroundSelection,
     selectedAnimations,
   ]);
 
@@ -54,7 +54,7 @@ export const useDebouncedCompatibility = (delay: number = 200): CompatibilityRes
       selectedColorTheme,
       selectedComponents,
       selectedFunctionality,
-      selectedBackground,
+      backgroundSelection,
       selectedAnimations,
     });
   }, [
@@ -63,7 +63,7 @@ export const useDebouncedCompatibility = (delay: number = 200): CompatibilityRes
     selectedColorTheme,
     selectedComponents,
     selectedFunctionality,
-    selectedBackground,
+    backgroundSelection,
     selectedAnimations,
   ]);
 

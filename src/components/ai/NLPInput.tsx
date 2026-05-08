@@ -243,7 +243,7 @@ export const NLPInput: React.FC<NLPInputProps> = ({
           {/* Low Confidence Warning */}
           {!hasHighConfidenceDetections && (
             <div className="flex items-start gap-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-              <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
               <p className="text-xs text-yellow-400">
                 We detected some preferences but with low confidence. Try adding more details about your project for better results.
               </p>

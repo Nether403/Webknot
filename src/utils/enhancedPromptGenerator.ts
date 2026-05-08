@@ -29,7 +29,7 @@ export interface EnhancedPromptParams {
   selectedColorTheme: ColorTheme | null;
   selectedTypography: Typography;
   selectedVisuals: VisualElement[];
-  selectedBackground: BackgroundOption | null;
+
   backgroundSelection: BackgroundSelection | null;
   selectedComponents: ComponentOption[];
   selectedAnimations: AnimationOption[];
@@ -48,7 +48,7 @@ export function generateEnhancedPrompt(params: EnhancedPromptParams): string {
     selectedColorTheme,
     selectedTypography,
     selectedVisuals,
-    selectedBackground,
+
     backgroundSelection,
     selectedComponents,
     selectedAnimations,
@@ -77,14 +77,13 @@ export function generateEnhancedPrompt(params: EnhancedPromptParams): string {
   const colorSection = buildColorSection(selectedColorTheme);
   const typographySection = buildTypographySection(selectedTypography);
   const visualsSection = buildVisualsSection(selectedVisuals);
-  const backgroundSection = buildBackgroundSection(selectedBackground, backgroundSelection);
+  const backgroundSection = buildBackgroundSection(backgroundSelection);
   const componentsSection = buildComponentsSection(selectedComponents, context);
   const animationsSection = buildAnimationsSection(selectedAnimations);
   const functionalitySection = buildFunctionalitySection(selectedFunctionality);
   const contentStructureSection = buildContentStructureSection(context);
   const technicalSection = buildTechnicalSection(context);
   const installationSection = buildInstallationSection(
-    selectedBackground,
     backgroundSelection,
     selectedComponents,
     selectedAnimations
@@ -190,7 +189,6 @@ ${visualElements.length > 0 ? visualElements.map((element) => `- ${element}`).jo
 }
 
 function buildBackgroundSection(
-  selectedBackground: BackgroundOption | null,
   backgroundSelection: BackgroundSelection | null
 ): string {
   // Priority 1: Check backgroundSelection (comprehensive state)
@@ -227,15 +225,7 @@ function buildBackgroundSection(
 `;
   }
 
-  // Fallback: Check legacy selectedBackground field
-  if (selectedBackground) {
-    return `## 8. Background Effect
-- **Selected Background:** ${selectedBackground.title}
-- **Description:** ${selectedBackground.description}
-- **Dependencies:** ${selectedBackground.dependencies.join(', ')}
-- **Installation:** \`${selectedBackground.cliCommand}\`
-`;
-  }
+
 
   // No background selected
   return `## 8. Background Effect
@@ -366,7 +356,6 @@ ${context.accessibilityNotes.map((note: string) => `- ${note}`).join('\n')}`;
 }
 
 function buildInstallationSection(
-  selectedBackground: BackgroundOption | null,
   backgroundSelection: BackgroundSelection | null,
   selectedComponents: ComponentOption[],
   selectedAnimations: AnimationOption[]
@@ -375,12 +364,12 @@ function buildInstallationSection(
   const backgroundDeps =
     backgroundSelection?.type === 'react-bits' && backgroundSelection.reactBitsComponent
       ? backgroundSelection.reactBitsComponent.dependencies
-      : selectedBackground?.dependencies || [];
+      : [];
 
   const backgroundCliCommand =
     backgroundSelection?.type === 'react-bits' && backgroundSelection.reactBitsComponent
       ? backgroundSelection.reactBitsComponent.cliCommand
-      : selectedBackground?.cliCommand;
+      : undefined;
 
   const allDependencies = [
     ...new Set([

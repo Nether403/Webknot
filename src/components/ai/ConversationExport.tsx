@@ -75,7 +75,7 @@ export const ConversationExport: React.FC<ConversationExportProps> = ({
       <div className="relative overflow-hidden rounded-lg">
         <div className="absolute inset-0 glass-card" />
         <div className="relative p-4 flex items-center gap-3">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
               <Lock className="w-5 h-5 text-purple-400" />
             </div>
@@ -87,7 +87,7 @@ export const ConversationExport: React.FC<ConversationExportProps> = ({
           <Button
             onClick={handleExport}
             size="sm"
-            className="flex-shrink-0 bg-purple-600 hover:bg-purple-700 text-white"
+            className="shrink-0 bg-purple-600 hover:bg-purple-700 text-white"
           >
             Upgrade
           </Button>
@@ -101,7 +101,7 @@ export const ConversationExport: React.FC<ConversationExportProps> = ({
       <div className="absolute inset-0 glass-card" />
       <div className="relative p-4">
         <div className="flex items-start gap-3 mb-3">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center">
               <FileText className="w-5 h-5 text-teal-400" />
             </div>

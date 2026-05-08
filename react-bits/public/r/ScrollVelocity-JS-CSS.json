@@ -15,7 +15,7 @@
     },
     {
       "path": "public/default/src/content/TextAnimations/ScrollVelocity/ScrollVelocity.css",
-      "content": ".parallax {\r\n  position: relative;\r\n  overflow: hidden;\r\n}\r\n\r\n.scroller {\r\n  display: flex;\r\n  white-space: nowrap;\r\n  text-align: center;\r\n  font-family: sans-serif;\r\n  font-size: 2.25rem;\r\n  font-weight: bold;\r\n  letter-spacing: -0.02em;\r\n  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));\r\n}\r\n\r\n.scroller span {\r\n  flex-shrink: 0;\r\n}\r\n\r\n@media (min-width: 768px) {\r\n  .scroller {\r\n    font-size: 5rem;\r\n    line-height: 5rem;\r\n  }\r\n}\r\n",
+      "content": ".parallax {\r\n  position: relative;\r\n  overflow: hidden;\r\n}\r\n\r\n.scroller {\r\n  display: flex;\r\n  white-space: nowrap;\r\n  text-align: center;\r\n  font-family: sans-serif;\r\n  font-size: 2.25rem;\r\n  font-weight: bold;\r\n  letter-spacing: -0.02em;\r\n  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));\r\n}\r\n\r\n.scroller span {\r\n  shrink: 0;\r\n}\r\n\r\n@media (min-width: 768px) {\r\n  .scroller {\r\n    font-size: 5rem;\r\n    line-height: 5rem;\r\n  }\r\n}\r\n",
       "type": "registry:item"
     }
   ]

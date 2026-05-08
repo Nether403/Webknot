@@ -12,7 +12,7 @@ export const useCompatibilityCheck = (): CompatibilityResult => {
     selectedColorTheme,
     selectedComponents,
     selectedFunctionality,
-    selectedBackground,
+    backgroundSelection,
     selectedAnimations,
   } = useBoltBuilder();
 
@@ -23,7 +23,7 @@ export const useCompatibilityCheck = (): CompatibilityResult => {
       selectedColorTheme,
       selectedComponents,
       selectedFunctionality,
-      selectedBackground,
+      backgroundSelection,
       selectedAnimations,
     });
   }, [
@@ -31,7 +31,7 @@ export const useCompatibilityCheck = (): CompatibilityResult => {
     selectedColorTheme,
     selectedComponents,
     selectedFunctionality,
-    selectedBackground,
+    backgroundSelection,
     selectedAnimations,
   ]);
 

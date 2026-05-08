@@ -93,23 +93,17 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
   // Initialize Gemini service and warm cache
   useEffect(() => {
     if (!geminiService.current) {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      
-      if (apiKey && typeof apiKey === 'string') {
-        try {
-          geminiService.current = new GeminiService({
-            apiKey,
-            model: 'gemini-2.5-flash-exp',
-            temperature: 0.7,
-            maxOutputTokens: 1000,
-            timeout,
-          });
-        } catch (err) {
-          console.error('Failed to initialize Gemini service:', err);
-          // Service will remain null, fallback will be used
-        }
-      } else {
-        console.warn('Gemini API key not found. AI features will use fallback.');
+      try {
+        geminiService.current = new GeminiService({
+          apiKey: 'backend-proxy', // Dummy key to satisfy the config interface
+          model: 'gemini-2.5-flash-exp',
+          temperature: 0.7,
+          maxOutputTokens: 1000,
+          timeout,
+        });
+      } catch (err) {
+        console.error('Failed to initialize Gemini service:', err);
+        // Service will remain null, fallback will be used
       }
     }
     
@@ -544,7 +538,7 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
           designStyle: state.selectedDesignStyle?.id,
           colorTheme: state.selectedColorTheme?.id,
           components: state.selectedComponents.map(c => c.id).sort(),
-          background: state.selectedBackground?.id,
+          background: state.backgroundSelection?.id,
           animations: state.selectedAnimations.map(a => a.id).sort(),
         })}`;
         
@@ -943,7 +937,6 @@ export function useGemini(options?: UseGeminiOptions): UseGeminiResult {
             },
             selectedFunctionality: [],
             selectedVisuals: [],
-            selectedBackground: null,
             backgroundSelection: null,
             selectedComponents: [],
             selectedAnimations: [],

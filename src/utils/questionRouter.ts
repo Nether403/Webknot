@@ -393,7 +393,7 @@ npx shadcn@latest add https://21st.dev/r/component-name
     (lowerMessage.includes('style') || lowerMessage.includes('class'))
   ) {
     return `\`\`\`tsx
-<div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-lg shadow-lg">
+<div className="bg-linear-to-r from-blue-500 to-purple-600 p-6 rounded-lg shadow-lg">
   <h2 className="text-white text-xl font-bold">Styled Element</h2>
 </div>
 \`\`\``;

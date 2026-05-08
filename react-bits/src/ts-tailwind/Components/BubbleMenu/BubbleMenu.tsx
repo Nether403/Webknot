@@ -96,7 +96,7 @@ export default function BubbleMenu({
     'flex items-center justify-between',
     'gap-4 px-8',
     'pointer-events-none',
-    'z-[1001]',
+    'z-1001',
     className
   ]
     .filter(Boolean)
@@ -324,7 +324,7 @@ export default function BubbleMenu({
             'inset-0',
             'flex items-center justify-center',
             'pointer-events-none',
-            'z-[1000]'
+            'z-1000'
           ].join(' ')}
           aria-hidden={!isMenuOpen}
         >
@@ -347,7 +347,7 @@ export default function BubbleMenu({
                 className={[
                   'pill-col',
                   'flex justify-center items-stretch',
-                  '[flex:0_0_calc(100%/3)]',
+                  'flex-[0_0_calc(100%/3)]',
                   'box-border'
                 ].join(' ')}
               >

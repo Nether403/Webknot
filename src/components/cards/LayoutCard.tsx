@@ -68,7 +68,7 @@ const LayoutCard: React.FC<LayoutCardProps> = ({
       case 'Hero Section':
         return (
           <div className="w-16 h-16 flex flex-col gap-1">
-            <div className="h-10 bg-gradient-to-r from-indigo-500/80 to-purple-500/80 rounded-md flex items-center justify-center">
+            <div className="h-10 bg-linear-to-r from-indigo-500/80 to-purple-500/80 rounded-md flex items-center justify-center">
               <div className="w-8 h-1 bg-white/60 rounded" />
             </div>
             <div className="flex-1 bg-indigo-500/40 rounded-md" />
@@ -109,7 +109,7 @@ const LayoutCard: React.FC<LayoutCardProps> = ({
         );
       default:
         return (
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-lg" />
+          <div className="w-16 h-16 bg-linear-to-br from-blue-500/30 to-purple-500/30 rounded-lg" />
         );
     }
   };

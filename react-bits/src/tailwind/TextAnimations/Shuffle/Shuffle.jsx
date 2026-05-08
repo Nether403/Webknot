@@ -324,7 +324,7 @@ const Shuffle = ({
     }
   );
 
-  const baseTw = 'inline-block whitespace-normal break-words will-change-transform uppercase text-[4rem] leading-none';
+  const baseTw = 'inline-block whitespace-normal wrap-break-word will-change-transform uppercase text-[4rem] leading-none';
   const commonStyle = {
     textAlign,
     fontFamily: `'Press Start 2P', sans-serif`,

@@ -248,7 +248,7 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
                           </span>
                           {isApplied && (
                             <CheckCircle 
-                              className="w-4 h-4 text-teal-400 flex-shrink-0" 
+                              className="w-4 h-4 text-teal-400 shrink-0" 
                               aria-hidden="true"
                             />
                           )}

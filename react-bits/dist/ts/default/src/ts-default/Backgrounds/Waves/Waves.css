@@ -18,7 +18,7 @@
   height: 0.5rem;
   background: #160000;
   border-radius: 50%;
-  transform: translate3d(calc(var(-0.5rem) - 50%), calc(var(50%) - 50%), 0);
+  transform: translate3d(calc(var(--x, -0.5rem) - 50%), calc(var(--y, 50%) - 50%), 0);
   will-change: transform;
 }
 

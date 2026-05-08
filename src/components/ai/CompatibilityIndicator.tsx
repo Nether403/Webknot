@@ -183,7 +183,7 @@ const CompatibilityIndicatorComponent: React.FC<CompatibilityIndicatorProps> = (
               aria-labelledby={`issue-message-${index}`}
             >
               <div className="flex items-start gap-2 mb-1">
-                <XCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                <XCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" aria-hidden="true" />
                 <p id={`issue-message-${index}`} className="text-sm text-red-300 flex-1">{issue.message}</p>
               </div>
               <p className="text-xs text-gray-400 ml-6 mb-2">{issue.suggestion}</p>
@@ -221,7 +221,7 @@ const CompatibilityIndicatorComponent: React.FC<CompatibilityIndicatorProps> = (
               aria-labelledby={`warning-message-${index}`}
             >
               <div className="flex items-start gap-2 mb-1">
-                <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" aria-hidden="true" />
                 <p id={`warning-message-${index}`} className="text-sm text-yellow-300 flex-1">{warning.message}</p>
               </div>
               <p className="text-xs text-gray-400 ml-6">{warning.suggestion}</p>

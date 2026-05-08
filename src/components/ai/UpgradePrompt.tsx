@@ -51,8 +51,8 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
       <div className="relative overflow-hidden rounded-lg">
         <div className="absolute inset-0 glass-card" />
         <div className="relative p-4 flex items-center gap-3">
-          <div className="flex-shrink-0">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+          <div className="shrink-0">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-teal-500 to-teal-600 flex items-center justify-center">
               <Icon className="w-5 h-5 text-white" />
             </div>
           </div>
@@ -62,7 +62,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </div>
           <button
             onClick={onUpgrade}
-            className="flex-shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors"
+            className="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
             Upgrade
           </button>
@@ -78,7 +78,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-teal-500 to-teal-600 flex items-center justify-center">
               <Icon className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -105,7 +105,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         {/* Benefits */}
         <div className="space-y-3 mb-6">
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
+            <div className="shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
               <svg className="w-3 h-3 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
@@ -117,7 +117,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
+            <div className="shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
               <svg className="w-3 h-3 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
@@ -129,7 +129,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
+            <div className="shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
               <svg className="w-3 h-3 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
@@ -141,7 +141,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
+            <div className="shrink-0 w-5 h-5 rounded-full bg-teal-500/20 flex items-center justify-center mt-0.5">
               <svg className="w-3 h-3 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
@@ -157,7 +157,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={onUpgrade}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+            className="flex-1 px-6 py-3 bg-linear-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
           >
             <TrendingUp className="w-5 h-5" />
             Upgrade to Premium

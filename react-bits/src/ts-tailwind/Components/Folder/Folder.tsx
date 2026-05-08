@@ -138,7 +138,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
           })}
           <div
             className={`absolute z-30 w-full h-full origin-bottom transition-all duration-300 ease-in-out ${
-              !open ? 'group-hover:[transform:skew(15deg)_scaleY(0.6)]' : ''
+              !open ? 'group-hover:transform-[skew(15deg)_scaleY(0.6)]' : ''
             }`}
             style={{
               backgroundColor: color,
@@ -148,7 +148,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
           ></div>
           <div
             className={`absolute z-30 w-full h-full origin-bottom transition-all duration-300 ease-in-out ${
-              !open ? 'group-hover:[transform:skew(-15deg)_scaleY(0.6)]' : ''
+              !open ? 'group-hover:transform-[skew(-15deg)_scaleY(0.6)]' : ''
             }`}
             style={{
               backgroundColor: color,

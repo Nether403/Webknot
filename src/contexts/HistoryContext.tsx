@@ -64,12 +64,12 @@ export interface HistoryContextType<T> {
  * ```tsx
  * // Basic usage
  * const { state, canUndo, canRedo, undo, redo, pushState } = useHistory({
- *   selectedBackground: null,
+ *   backgroundSelection: null,
  *   selectedComponents: [],
  * });
  *
  * // Update state
- * pushState({ selectedBackground: newBackground, selectedComponents: [] });
+ * pushState({ backgroundSelection: newSelection, selectedComponents: [] });
  *
  * // Undo/redo
  * if (canUndo) undo();

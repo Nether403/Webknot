@@ -113,7 +113,6 @@ export interface BoltBuilderState {
   selectedTypography: Typography;
   selectedFunctionality: FunctionalityOption[];
   selectedVisuals: VisualElement[];
-  selectedBackground: BackgroundOption | null;
   backgroundSelection: BackgroundSelection | null;
   selectedComponents: ComponentOption[];
   selectedAnimations: AnimationOption[];

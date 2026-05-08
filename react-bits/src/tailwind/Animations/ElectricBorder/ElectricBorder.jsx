@@ -131,7 +131,7 @@ const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thi
     <div ref={rootRef} className={'relative isolate ' + (className ?? '')} style={style}>
       <svg
         ref={svgRef}
-        className="fixed -left-[10000px] -top-[10000px] w-[10px] h-[10px] opacity-[0.001] pointer-events-none"
+        className="fixed left-[-10000px] top-[-10000px] w-[10px] h-[10px] opacity-[0.001] pointer-events-none"
         aria-hidden
         focusable="false"
       >

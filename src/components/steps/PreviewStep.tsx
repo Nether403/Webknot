@@ -31,7 +31,6 @@ const PreviewStep: React.FC = () => {
     selectedTypography,
     selectedFunctionality,
     selectedVisuals,
-    selectedBackground,
     backgroundSelection,
     selectedComponents,
     selectedAnimations,
@@ -74,7 +73,6 @@ const PreviewStep: React.FC = () => {
           selectedTypography,
           selectedFunctionality,
           selectedVisuals,
-          selectedBackground: selectedBackground || undefined,
           backgroundSelection: backgroundSelection || undefined,
           selectedComponents,
           selectedAnimations,
@@ -417,17 +415,31 @@ const PreviewStep: React.FC = () => {
         {/* Background Effect */}
         <div className="glass-card rounded-lg p-6">
           <h3 className="font-bold text-lg mb-3 text-white">Background Effect</h3>
-          {selectedBackground ? (
+          {backgroundSelection ? (
             <div>
-              <p className="text-white font-semibold mb-2">{selectedBackground.title}</p>
-              <p className="text-gray-300 text-sm mb-3">{selectedBackground.description}</p>
-              {selectedBackground.previewUrl && (
-                <div className="relative h-24 rounded-lg overflow-hidden border border-white/10">
-                  <img 
-                    src={selectedBackground.previewUrl} 
-                    alt={`${selectedBackground.title} preview`}
-                    className="w-full h-full object-cover"
-                  />
+              {backgroundSelection.type === 'react-bits' && backgroundSelection.reactBitsComponent ? (
+                <>
+                  <p className="text-white font-semibold mb-2">{backgroundSelection.reactBitsComponent.title}</p>
+                  <p className="text-gray-300 text-sm mb-3">{backgroundSelection.reactBitsComponent.description}</p>
+                  {backgroundSelection.reactBitsComponent.previewUrl && (
+                    <div className="relative h-24 rounded-lg overflow-hidden border border-white/10">
+                      <img 
+                        src={backgroundSelection.reactBitsComponent.previewUrl} 
+                        alt={`${backgroundSelection.reactBitsComponent.title} preview`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-white font-semibold capitalize">{backgroundSelection.type} Background</p>
+                  {backgroundSelection.type === 'solid' && (
+                    <div className="w-full h-24 rounded-lg ring-1 ring-white/20" style={{ backgroundColor: backgroundSelection.solidColor }} />
+                  )}
+                  {backgroundSelection.type === 'gradient' && (
+                    <div className="w-full h-24 rounded-lg ring-1 ring-white/20" style={{ background: `linear-gradient(${backgroundSelection.gradientDirection}, ${backgroundSelection.gradientColors?.join(', ')})` }} />
+                  )}
                 </div>
               )}
             </div>
@@ -590,7 +602,7 @@ const PreviewStep: React.FC = () => {
             generatePromptType('detailed');
             setIsPromptModalOpen(true);
           }}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3"
+          className="bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3"
           size="lg"
         >
           Generate Your Prompt

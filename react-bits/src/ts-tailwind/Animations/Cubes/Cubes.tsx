@@ -305,7 +305,7 @@ const Cubes: React.FC<CubesProps> = ({
           cells.map((__, c) => (
             <div
               key={`${r}-${c}`}
-              className="cube relative w-full h-full aspect-square [transform-style:preserve-3d]"
+              className="cube relative w-full h-full aspect-square transform-3d"
               data-row={r}
               data-col={c}
             >

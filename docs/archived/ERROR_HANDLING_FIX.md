@@ -67,7 +67,7 @@ Created consistent error UI for failed previews:
 
 ```typescript
 const errorFallback = (
-  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-900/20 to-gray-900">
+  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-red-900/20 to-gray-900">
     <div className="text-center p-4">
       <svg>⚠️</svg>
       <div className="text-red-400 text-xs">Preview error</div>

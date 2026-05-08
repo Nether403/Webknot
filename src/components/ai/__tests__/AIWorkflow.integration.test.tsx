@@ -42,7 +42,7 @@ const mockWizardState: Partial<BoltBuilderState> = {
     title: 'Single Page',
     description: 'One-page layout',
   },
-  selectedBackground: {
+  backgroundSelection: {
     id: 'aurora',
     title: 'Aurora',
     description: 'Aurora background effect',

@@ -144,7 +144,7 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
     <div ref={rootRef} className={'relative isolate ' + (className ?? '')} style={style}>
       <svg
         ref={svgRef}
-        className="fixed -left-[10000px] -top-[10000px] w-[10px] h-[10px] opacity-[0.001] pointer-events-none"
+        className="fixed left-[-10000px] top-[-10000px] w-[10px] h-[10px] opacity-[0.001] pointer-events-none"
         aria-hidden
         focusable="false"
       >

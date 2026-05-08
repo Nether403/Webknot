@@ -86,7 +86,7 @@ const DecayCard = ({ width = 300, height = 400, image = 'https://picsum.photos/3
       <svg
         viewBox="-60 -75 720 900"
         preserveAspectRatio="xMidYMid slice"
-        className="relative w-full h-full block [will-change:transform]"
+        className="relative w-full h-full block will-change-transform"
       >
         <filter id="imgFilter">
           <feTurbulence

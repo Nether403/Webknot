@@ -42,7 +42,7 @@ export const QueuePositionIndicator: React.FC<QueuePositionIndicatorProps> = ({
       } ${className}`}
     >
       {/* Icon */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         {premium ? (
           <Zap className="w-5 h-5 text-teal-500" />
         ) : (
@@ -98,7 +98,7 @@ export const QueuePositionIndicator: React.FC<QueuePositionIndicatorProps> = ({
       </div>
       
       {/* Loading animation */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <div className="relative w-8 h-8">
           <div className="absolute inset-0 border-2 border-gray-700 rounded-full" />
           <div

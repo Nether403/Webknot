@@ -161,7 +161,7 @@ export function shouldIncludeContextForQuestion(
     context.selectedDesignStyle !== null ||
     context.selectedColorTheme !== null ||
     context.selectedLayout !== null ||
-    context.selectedBackground !== null ||
+    context.backgroundSelection !== null ||
     context.selectedComponents.length > 0 ||
     context.selectedAnimations.length > 0;
   

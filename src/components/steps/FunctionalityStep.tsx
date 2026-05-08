@@ -85,7 +85,7 @@ const FunctionalityStep: React.FC = () => {
                     )}
                   </div>
                   
-                  <p className="text-sm text-gray-300 mb-4 flex-grow">{option.description}</p>
+                  <p className="text-sm text-gray-300 mb-4 grow">{option.description}</p>
                   
                   <button
                     onClick={(e) => showDetails(e, option)}
@@ -132,7 +132,7 @@ const FunctionalityStep: React.FC = () => {
                     )}
                   </div>
                   
-                  <p className="text-sm text-gray-300 mb-4 flex-grow">{option.description}</p>
+                  <p className="text-sm text-gray-300 mb-4 grow">{option.description}</p>
                   
                   <button
                     onClick={(e) => showDetails(e, option)}

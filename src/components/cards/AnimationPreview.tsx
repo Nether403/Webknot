@@ -170,7 +170,7 @@ export const AnimationPreview: React.FC<AnimationPreviewProps> = ({ option }) =>
         className="w-full h-40 rounded-lg overflow-hidden bg-gray-900 relative"
         aria-label={`Preview of ${option.title} animation`}
       >
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-800 to-gray-900">
           <div className="text-center p-4">
             <svg
               className="w-12 h-12 mx-auto mb-2 text-gray-600"

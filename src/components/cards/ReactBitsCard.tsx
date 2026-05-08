@@ -56,7 +56,7 @@ const ReactBitsCardComponent: React.FC<ReactBitsCardProps> = ({
       <div className="absolute inset-0 glass-card transition-all duration-300" />
       {/* Gradient overlay for selected state */}
       {isSelected && (
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent pointer-events-none transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-linear-to-br from-teal-500/10 to-transparent pointer-events-none transition-opacity duration-300" />
       )}
       <div className="relative p-6 flex flex-col h-full min-h-[200px]">
         {/* Preview based on category */}
@@ -109,7 +109,7 @@ const ReactBitsCardComponent: React.FC<ReactBitsCardProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-300 mb-4 flex-grow" id={`${option.id}-desc`}>
+        <p className="text-sm text-gray-300 mb-4 grow" id={`${option.id}-desc`}>
           {option.description}
         </p>
 

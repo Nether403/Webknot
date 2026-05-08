@@ -76,8 +76,14 @@ export function buildContextSummary(
   }
   
   // React-Bits selections
-  if (state.selectedBackground) {
-    selections.push(`Background: ${state.selectedBackground.title}`);
+  if (state.backgroundSelection?.type === 'react-bits' && state.backgroundSelection.reactBitsComponent) {
+    selections.push(`Background: ${state.backgroundSelection.reactBitsComponent.title}`);
+  } else if (state.backgroundSelection?.type === 'solid' && state.backgroundSelection.solidColor) {
+    selections.push(`Background: Solid (${state.backgroundSelection.solidColor})`);
+  } else if (state.backgroundSelection?.type === 'gradient' && state.backgroundSelection.gradientColors) {
+    selections.push(`Background: Gradient (${state.backgroundSelection.gradientColors.join(' → ')})`);
+  } else if (state.backgroundSelection?.type === 'pattern' && state.backgroundSelection.pattern) {
+    selections.push(`Background: Pattern (${state.backgroundSelection.pattern})`);
   }
   
   if (state.selectedComponents.length > 0) {
@@ -174,8 +180,14 @@ export function buildDetailedContext(
     selectionsParts.push(`Visuals: ${visuals}`);
   }
   
-  if (state.selectedBackground) {
-    selectionsParts.push(`Background: ${state.selectedBackground.title}`);
+  if (state.backgroundSelection?.type === 'react-bits' && state.backgroundSelection.reactBitsComponent) {
+    selectionsParts.push(`Background: ${state.backgroundSelection.reactBitsComponent.title}`);
+  } else if (state.backgroundSelection?.type === 'solid' && state.backgroundSelection.solidColor) {
+    selectionsParts.push(`Background: Solid (${state.backgroundSelection.solidColor})`);
+  } else if (state.backgroundSelection?.type === 'gradient' && state.backgroundSelection.gradientColors) {
+    selectionsParts.push(`Background: Gradient (${state.backgroundSelection.gradientColors.join(' → ')})`);
+  } else if (state.backgroundSelection?.type === 'pattern' && state.backgroundSelection.pattern) {
+    selectionsParts.push(`Background: Pattern (${state.backgroundSelection.pattern})`);
   }
   
   if (state.selectedComponents.length > 0) {

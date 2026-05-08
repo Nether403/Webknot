@@ -275,7 +275,7 @@ const ComponentsStepContent: React.FC = () => {
       {selectedComponents.length > 0 && (
         <div className="relative overflow-hidden rounded-xl animate-slide-up">
           <div className="absolute inset-0 glass-card transition-all duration-300" />
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-br from-teal-500/5 to-transparent pointer-events-none" />
           <div className="relative p-4 sm:p-6">
             <h3 className="text-base sm:text-lg font-semibold text-white mb-4">
               Installation Commands ({selectedComponents.length})

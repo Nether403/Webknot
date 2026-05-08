@@ -251,7 +251,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
       <div className="relative p-4">
         <div className="flex items-start gap-3">
           {/* Icon */}
-          <div className="flex-shrink-0 mt-0.5">
+          <div className="shrink-0 mt-0.5">
             {getSuggestionIcon(suggestion.type)}
           </div>
           
@@ -263,7 +263,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
               </p>
               <button
                 onClick={() => onDismiss(index)}
-                className="flex-shrink-0 text-gray-400 hover:text-white transition-colors"
+                className="shrink-0 text-gray-400 hover:text-white transition-colors"
                 aria-label="Dismiss suggestion"
               >
                 <X className="w-4 h-4" />

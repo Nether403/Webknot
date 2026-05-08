@@ -13,7 +13,7 @@ Successfully implemented comprehensive visual polish improvements across all rea
 - ✅ Enhanced glassmorphism with smooth transitions (`transition-all duration-300`)
 - ✅ Added shadow effects for selected state (`shadow-lg shadow-teal-500/20`)
 - ✅ Added hover shadow effects (`hover:shadow-xl hover:shadow-black/20`)
-- ✅ Added gradient overlay for selected cards (`bg-gradient-to-br from-teal-500/10`)
+- ✅ Added gradient overlay for selected cards (`bg-linear-to-br from-teal-500/10`)
 - ✅ Set minimum card height for consistency (`min-h-[200px]`)
 
 #### Interactive States

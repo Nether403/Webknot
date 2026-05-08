@@ -204,7 +204,7 @@ export const AIErrorFeedback: React.FC<AIErrorFeedbackProps> = ({
       <div className="p-4">
         {/* Header */}
         <div className="flex items-start gap-3 mb-3">
-          <div className={`flex-shrink-0 ${iconColor}`}>
+          <div className={`shrink-0 ${iconColor}`}>
             {errorInfo.icon}
           </div>
           <div className="flex-1">
@@ -235,7 +235,7 @@ export const AIErrorFeedback: React.FC<AIErrorFeedbackProps> = ({
           <ul className="space-y-1.5">
             {errorInfo.recoverySteps.map((step, index) => (
               <li key={index} className="flex items-start gap-2 text-sm text-gray-300">
-                <span className="text-gray-500 flex-shrink-0">•</span>
+                <span className="text-gray-500 shrink-0">•</span>
                 <span>{step}</span>
               </li>
             ))}

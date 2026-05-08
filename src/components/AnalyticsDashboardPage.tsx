@@ -13,7 +13,7 @@ export const AnalyticsDashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-b from-blue-900/20 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.2)_0%,transparent_70%)] pointer-events-none" />
       
       {/* Content */}

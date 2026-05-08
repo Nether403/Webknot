@@ -494,7 +494,7 @@ export const ReactBitsCard: React.FC<ReactBitsCardProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-300 mb-4 flex-grow">{option.description}</p>
+        <p className="text-sm text-gray-300 mb-4 grow">{option.description}</p>
 
         {/* Dependencies badge */}
         {option.dependencies.length > 0 && (

@@ -213,7 +213,7 @@ describe('Compatibility Checker System', () => {
 
     it('should detect vibrant background with monochrome theme', () => {
       const selections: SelectionsToCheck = {
-        selectedBackground: {
+        backgroundSelection: {
           id: 'neon-gradient',
           title: 'Neon Gradient',
         } as any,
@@ -236,7 +236,7 @@ describe('Compatibility Checker System', () => {
 
     it('should detect subtle background with bold theme', () => {
       const selections: SelectionsToCheck = {
-        selectedBackground: {
+        backgroundSelection: {
           id: 'subtle-grid',
           title: 'Subtle Grid',
         } as any,

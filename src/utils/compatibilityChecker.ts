@@ -4,6 +4,7 @@ import {
   ComponentOption,
   FunctionalityOption,
   BackgroundOption,
+  BackgroundSelection,
   AnimationOption,
 } from '../types';
 
@@ -36,7 +37,7 @@ export interface SelectionsToCheck {
   selectedColorTheme?: ColorTheme | null;
   selectedComponents?: ComponentOption[];
   selectedFunctionality?: FunctionalityOption[];
-  selectedBackground?: BackgroundOption | null;
+  backgroundSelection?: BackgroundSelection | null;
   selectedAnimations?: AnimationOption[];
 }
 
@@ -49,7 +50,7 @@ const countSelections = (selections: SelectionsToCheck): number => {
   if (selections.selectedColorTheme) count++;
   if (selections.selectedComponents && selections.selectedComponents.length > 0) count++;
   if (selections.selectedFunctionality && selections.selectedFunctionality.length > 0) count++;
-  if (selections.selectedBackground) count++;
+  if (selections.backgroundSelection) count++;
   if (selections.selectedAnimations && selections.selectedAnimations.length > 0) count++;
   return count;
 };
@@ -108,9 +109,9 @@ export const checkCompatibility = (selections: SelectionsToCheck): Compatibility
   }
 
   // Check background vs color theme
-  if (selections.selectedBackground && selections.selectedColorTheme) {
+  if (selections.backgroundSelection && selections.selectedColorTheme) {
     const bgColorCompat = checkBackgroundColorCompatibility(
-      selections.selectedBackground,
+      selections.backgroundSelection,
       selections.selectedColorTheme
     );
     if (bgColorCompat) {
@@ -326,12 +327,16 @@ const checkFunctionalityComponents = (
  * Check compatibility between background and color theme
  */
 const checkBackgroundColorCompatibility = (
-  background: BackgroundOption,
+  backgroundSelection: BackgroundSelection,
   theme: ColorTheme
 ): CompatibilityIssue | null => {
+  const bgId = backgroundSelection.type === 'react-bits' 
+    ? backgroundSelection.reactBitsComponent?.id || ''
+    : backgroundSelection.type;
+
   // Check if neon/vibrant backgrounds clash with monochrome themes
   if (
-    (background.id.includes('neon') || background.id.includes('vibrant')) &&
+    (bgId.includes('neon') || bgId.includes('vibrant')) &&
     theme.id.includes('monochrome')
   ) {
     return {
@@ -345,7 +350,7 @@ const checkBackgroundColorCompatibility = (
 
   // Check if subtle backgrounds work with bold themes
   if (
-    (background.id.includes('subtle') || background.id.includes('minimal')) &&
+    (bgId.includes('subtle') || bgId.includes('minimal') || backgroundSelection.type === 'solid') &&
     (theme.id.includes('neon') || theme.id.includes('vibrant'))
   ) {
     return {

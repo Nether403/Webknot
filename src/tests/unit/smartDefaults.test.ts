@@ -125,7 +125,7 @@ describe('Smart Defaults System', () => {
         selectedColorTheme: undefined,
         selectedTypography: undefined,
         selectedFunctionality: [],
-        selectedBackground: undefined,
+        backgroundSelection: undefined,
         selectedComponents: [],
         selectedAnimations: [],
       };
@@ -203,7 +203,7 @@ describe('Smart Defaults System', () => {
 
     it('should not override existing background selection', () => {
       const currentState = {
-        selectedBackground: { id: 'gradient-mesh', title: 'Gradient Mesh' },
+        backgroundSelection: { id: 'gradient-mesh', title: 'Gradient Mesh' },
       };
 
       const result = applySmartDefaults('Portfolio', 'Test', currentState);

@@ -116,7 +116,7 @@ const ColorThemeStep: React.FC = () => {
           >
             <div className="absolute inset-0 glass-card" />
             <div className="relative text-center">
-              <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-white to-gray-800 flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-linear-to-br from-white to-gray-800 flex items-center justify-center">
                 <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
                   <line x1="8" y1="21" x2="16" y2="21"/>

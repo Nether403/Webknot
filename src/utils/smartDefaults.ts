@@ -282,7 +282,7 @@ export const applySmartDefaults = (
     selectedColorTheme?: any;
     selectedTypography?: Typography;
     selectedFunctionality?: any[];
-    selectedBackground?: any;
+    backgroundSelection?: any;
     selectedComponents?: any[];
     selectedAnimations?: any[];
   }
@@ -323,7 +323,7 @@ export const applySmartDefaults = (
     result.functionality = defaults.functionality;
   }
 
-  if (!currentState.selectedBackground && defaults.background) {
+  if (!currentState.backgroundSelection && defaults.background) {
     result.background = defaults.background;
   }
 
@@ -385,7 +385,7 @@ export const safeApplySmartDefaults = (
     selectedColorTheme?: any;
     selectedTypography?: Typography;
     selectedFunctionality?: any[];
-    selectedBackground?: any;
+    backgroundSelection?: any;
     selectedComponents?: any[];
     selectedAnimations?: any[];
   }

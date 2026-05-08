@@ -28,18 +28,18 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      'three': 'three',
     },
-    dedupe: ['three'],
   },
   optimizeDeps: {
-    exclude: ['lucide-react', 'three'],
+    exclude: ['lucide-react'],
+    // react-bits is a standalone subproject — never crawl it from the main bundle
+    entries: ['src/**/*.tsx', 'src/**/*.ts'],
   },
   build: {
     // Disable sourcemaps in production for smaller bundle size
     sourcemap: false,
 
-    // Use esbuild for minification (faster and more compatible with Three.js)
+    // Use esbuild for minification (faster)
     minify: 'esbuild',
 
     // Target modern browsers for smaller bundle
@@ -55,10 +55,10 @@ export default defineConfig({
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
-        
+
         // Ensure proper module format for Three.js
         format: 'es',
-        
+
         manualChunks: {
           // Core React libraries - stable, cacheable chunk
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
@@ -94,10 +94,7 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
           ],
 
-          // 3D libraries - Let Vite handle Three.js automatically to avoid bundling issues
-          // Removed manual chunking for Three.js - it will be code-split on demand
-
-          // Animation libraries - used by react-bits components
+          // Animation libraries — used by react-bits components
           'animation-vendor': ['gsap', 'motion'],
 
           // React-Bits WebGL dependencies

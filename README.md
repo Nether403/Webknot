@@ -198,24 +198,32 @@ The optimized build will be in the `dist` folder.
 ## 🛠️ Tech Stack
 
 ### Core Technologies
-- **React 18.3** - UI library
+- **React 19** - UI library
 - **TypeScript 5.5** - Type safety
-- **Vite 5.4** - Build tool and dev server
+- **Vite 8** - Build tool and dev server
 - **React Router 7.9** - Client-side routing
 
 ### UI & Styling
-- **Tailwind CSS 3.4** - Utility-first CSS
+- **Tailwind CSS 4** - CSS-first utility framework
 - **Radix UI** - Accessible component primitives
 - **Lucide React** - Beautiful icon library
 - **Class Variance Authority** - Component variants
+- **Three.js / React-Bits** - Optional high-fidelity visual effects, lazy-loaded where practical
 
 ### State Management
 - **React Context API** - Global state
 - **LocalStorage** - Persistence layer
+- **TanStack Query** - Server-state foundation for AI/API requests
 
 ### Form & Validation
 - **React Hook Form 7.53** - Form management
-- **Zod 3.23** - Schema validation
+- **Zod 4** - Schema validation
+
+### Backend AI Proxy
+- **Express** - Server-side API proxy and cache endpoints
+- **@google/genai** - Server-only Gemini integration
+- **Neon/Postgres** - Planned project/session persistence
+- **Upstash Redis** - Optional response cache
 
 ---
 

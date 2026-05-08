@@ -6,9 +6,9 @@ import { Tooltip } from '../ui/tooltip';
 
 interface NLPInputProps {
   onApplyDetections: (result: NLPParseResult) => void;
-  currentProjectInfo?: ProjectInfo; // eslint-disable-line @typescript-eslint/no-unused-vars
-  currentDesignStyle?: DesignStyle; // eslint-disable-line @typescript-eslint/no-unused-vars
-  currentColorTheme?: ColorTheme; // eslint-disable-line @typescript-eslint/no-unused-vars
+  currentProjectInfo?: ProjectInfo;
+  currentDesignStyle?: DesignStyle;
+  currentColorTheme?: ColorTheme;
   initialDescription?: string;
   onDescriptionChange?: (description: string) => void;
 }
@@ -19,11 +19,11 @@ interface NLPInputProps {
  */
 export const NLPInput: React.FC<NLPInputProps> = ({
   onApplyDetections,
-  currentProjectInfo,
-  currentDesignStyle,
-  currentColorTheme,
+  currentProjectInfo: _currentProjectInfo,
+  currentDesignStyle: _currentDesignStyle,
+  currentColorTheme: _currentColorTheme,
   initialDescription = '',
-  onDescriptionChange
+  onDescriptionChange,
 }) => {
   const [description, setDescription] = useState(initialDescription);
   const [parseResult, setParseResult] = useState<NLPParseResult | null>(null);
@@ -77,26 +77,21 @@ export const NLPInput: React.FC<NLPInputProps> = ({
     return 'Low';
   };
 
-  const hasDetections = parseResult && (
-    parseResult.projectType ||
-    parseResult.designStyle ||
-    parseResult.colorTheme
-  );
+  const hasDetections =
+    parseResult && (parseResult.projectType || parseResult.designStyle || parseResult.colorTheme);
 
-  const hasHighConfidenceDetections = parseResult && (
-    (parseResult.confidence['projectType'] && parseResult.confidence['projectType'] > 0.5) ||
-    (parseResult.confidence['designStyle'] && parseResult.confidence['designStyle'] > 0.5) ||
-    (parseResult.confidence['colorTheme'] && parseResult.confidence['colorTheme'] > 0.5)
-  );
+  const hasHighConfidenceDetections =
+    parseResult &&
+    ((parseResult.confidence['projectType'] && parseResult.confidence['projectType'] > 0.5) ||
+      (parseResult.confidence['designStyle'] && parseResult.confidence['designStyle'] > 0.5) ||
+      (parseResult.confidence['colorTheme'] && parseResult.confidence['colorTheme'] > 0.5));
 
   return (
     <div className="space-y-4" role="region" aria-label="Natural language project description">
       {/* Header */}
       <div className="flex items-center gap-2">
         <Sparkles className="w-5 h-5 text-teal-400" aria-hidden="true" />
-        <h3 className="text-lg font-semibold text-white">
-          Describe Your Project
-        </h3>
+        <h3 className="text-lg font-semibold text-white">Describe Your Project</h3>
         <Tooltip content="Describe your project in natural language and we'll automatically detect your project type, design style, and color preferences.">
           <a
             href="/docs/AI_FEATURES_GUIDE.md#natural-language-input"
@@ -111,7 +106,8 @@ export const NLPInput: React.FC<NLPInputProps> = ({
       </div>
 
       <p className="text-sm text-gray-400">
-        Tell us about your project in your own words, and we'll automatically detect your preferences.
+        Tell us about your project in your own words, and we'll automatically detect your
+        preferences.
       </p>
 
       {/* Textarea */}
@@ -123,7 +119,7 @@ export const NLPInput: React.FC<NLPInputProps> = ({
           className="w-full h-32 px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
           aria-label="Project description"
         />
-        
+
         {isAnalyzing && (
           <div className="absolute bottom-3 right-3 flex items-center gap-2 text-sm text-gray-400">
             <div className="w-4 h-4 border-2 border-teal-400 border-t-transparent rounded-full animate-spin" />
@@ -134,7 +130,7 @@ export const NLPInput: React.FC<NLPInputProps> = ({
 
       {/* Detected Selections */}
       {hasDetections && !isAnalyzing && (
-        <div 
+        <div
           className="glass-card p-4 rounded-xl space-y-3"
           role="status"
           aria-live="polite"
@@ -142,9 +138,7 @@ export const NLPInput: React.FC<NLPInputProps> = ({
         >
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="w-4 h-4 text-teal-400" aria-hidden="true" />
-            <h4 className="text-sm font-semibold text-white">
-              Detected Preferences
-            </h4>
+            <h4 className="text-sm font-semibold text-white">Detected Preferences</h4>
           </div>
 
           <div className="space-y-2">
@@ -164,7 +158,9 @@ export const NLPInput: React.FC<NLPInputProps> = ({
                       style={{ width: `${parseResult.confidence['projectType'] * 100}%` }}
                     />
                   </div>
-                  <span className={`text-xs font-medium ${getConfidenceColor(parseResult.confidence['projectType'])}`}>
+                  <span
+                    className={`text-xs font-medium ${getConfidenceColor(parseResult.confidence['projectType'])}`}
+                  >
                     {getConfidenceLabel(parseResult.confidence['projectType'])}
                   </span>
                 </div>
@@ -189,7 +185,9 @@ export const NLPInput: React.FC<NLPInputProps> = ({
                       style={{ width: `${parseResult.confidence['designStyle'] * 100}%` }}
                     />
                   </div>
-                  <span className={`text-xs font-medium ${getConfidenceColor(parseResult.confidence['designStyle'])}`}>
+                  <span
+                    className={`text-xs font-medium ${getConfidenceColor(parseResult.confidence['designStyle'])}`}
+                  >
                     {getConfidenceLabel(parseResult.confidence['designStyle'])}
                   </span>
                 </div>
@@ -214,7 +212,9 @@ export const NLPInput: React.FC<NLPInputProps> = ({
                       style={{ width: `${parseResult.confidence['colorTheme'] * 100}%` }}
                     />
                   </div>
-                  <span className={`text-xs font-medium ${getConfidenceColor(parseResult.confidence['colorTheme'])}`}>
+                  <span
+                    className={`text-xs font-medium ${getConfidenceColor(parseResult.confidence['colorTheme'])}`}
+                  >
                     {getConfidenceLabel(parseResult.confidence['colorTheme'])}
                   </span>
                 </div>
@@ -245,7 +245,8 @@ export const NLPInput: React.FC<NLPInputProps> = ({
             <div className="flex items-start gap-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
               <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
               <p className="text-xs text-yellow-400">
-                We detected some preferences but with low confidence. Try adding more details about your project for better results.
+                We detected some preferences but with low confidence. Try adding more details about
+                your project for better results.
               </p>
             </div>
           )}
@@ -258,8 +259,9 @@ export const NLPInput: React.FC<NLPInputProps> = ({
           <div className="flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-gray-400 mt-0.5" />
             <p className="text-sm text-gray-400">
-              No clear preferences detected. Try describing your project type (e.g., "portfolio", "e-commerce"), 
-              design style (e.g., "minimalist", "modern"), or color preferences (e.g., "blue", "warm colors").
+              No clear preferences detected. Try describing your project type (e.g., "portfolio",
+              "e-commerce"), design style (e.g., "minimalist", "modern"), or color preferences
+              (e.g., "blue", "warm colors").
             </p>
           </div>
         </div>
@@ -268,7 +270,9 @@ export const NLPInput: React.FC<NLPInputProps> = ({
       {/* Help Text */}
       {description.trim().length < 10 && (
         <div className="text-xs text-gray-500">
-          <p className="mb-1">💡 <strong>Tips for better detection:</strong></p>
+          <p className="mb-1">
+            💡 <strong>Tips for better detection:</strong>
+          </p>
           <ul className="list-disc list-inside space-y-0.5 ml-2">
             <li>Mention your project type (portfolio, e-commerce, dashboard, etc.)</li>
             <li>Describe the design style you prefer (minimalist, modern, elegant, etc.)</li>

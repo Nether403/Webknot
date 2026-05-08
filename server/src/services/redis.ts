@@ -40,7 +40,7 @@ export interface CacheStats {
 export async function getCacheStats(): Promise<CacheStats> {
   try {
     const stats = await redis.get<CacheStats>(CACHE_KEYS.STATS);
-    
+
     if (!stats) {
       return {
         totalKeys: 0,
@@ -50,7 +50,7 @@ export async function getCacheStats(): Promise<CacheStats> {
         lastUpdated: Date.now(),
       };
     }
-    
+
     return stats;
   } catch (error) {
     console.error('[Redis] Failed to get cache stats:', error);
@@ -64,7 +64,7 @@ export async function getCacheStats(): Promise<CacheStats> {
 export async function updateCacheStats(hit: boolean): Promise<void> {
   try {
     const stats = await getCacheStats();
-    
+
     const updatedStats: CacheStats = {
       totalKeys: stats.totalKeys,
       hitRate: 0,
@@ -72,11 +72,11 @@ export async function updateCacheStats(hit: boolean): Promise<void> {
       totalMisses: hit ? stats.totalMisses : stats.totalMisses + 1,
       lastUpdated: Date.now(),
     };
-    
+
     // Calculate hit rate
     const totalRequests = updatedStats.totalHits + updatedStats.totalMisses;
     updatedStats.hitRate = totalRequests > 0 ? updatedStats.totalHits / totalRequests : 0;
-    
+
     await redis.set(CACHE_KEYS.STATS, updatedStats);
   } catch (error) {
     console.error('[Redis] Failed to update cache stats:', error);
@@ -90,16 +90,16 @@ export async function updateCacheStats(hit: boolean): Promise<void> {
 export async function getCache<T>(key: string): Promise<T | null> {
   try {
     const value = await redis.get<T>(key);
-    
+
     // Update stats
     await updateCacheStats(value !== null);
-    
+
     if (value) {
       console.log(`[Redis] Cache hit: ${key}`);
     } else {
       console.log(`[Redis] Cache miss: ${key}`);
     }
-    
+
     return value;
   } catch (error) {
     console.error(`[Redis] Failed to get cache for key ${key}:`, error);
@@ -118,11 +118,11 @@ export async function setCache<T>(
   try {
     // Convert TTL from milliseconds to seconds for Redis
     const ttlSeconds = Math.floor(ttlMs / 1000);
-    
+
     await redis.set(key, value, { ex: ttlSeconds });
-    
+
     console.log(`[Redis] Cache set: ${key} (TTL: ${ttlSeconds}s)`);
-    
+
     // Update total keys count
     const stats = await getCacheStats();
     await redis.set(CACHE_KEYS.STATS, {
@@ -156,21 +156,21 @@ export async function clearCacheByPrefix(prefix: string): Promise<number> {
   try {
     // Scan for keys with the prefix
     const keys: string[] = [];
-    let cursor = 0;
-    
+    let cursor = '0';
+
     do {
       const result = await redis.scan(cursor, { match: `${prefix}*`, count: 100 });
       cursor = result[0];
       keys.push(...result[1]);
-    } while (cursor !== 0);
-    
+    } while (cursor !== '0');
+
     if (keys.length === 0) {
       return 0;
     }
-    
+
     // Delete all matching keys
     await redis.del(...keys);
-    
+
     console.log(`[Redis] Cleared ${keys.length} cache entries with prefix: ${prefix}`);
     return keys.length;
   } catch (error) {

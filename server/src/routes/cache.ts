@@ -66,12 +66,12 @@ function getCachePrefix(type: string): string {
 router.get('/', async (req: Request, res: Response) => {
   try {
     const { key, type } = getCacheSchema.parse(req.query);
-    
+
     const prefix = getCachePrefix(type);
     const fullKey = `${prefix}${key}`;
-    
+
     const value = await getCache(fullKey);
-    
+
     if (value === null) {
       return res.status(404).json({
         success: false,
@@ -79,7 +79,7 @@ router.get('/', async (req: Request, res: Response) => {
         data: null,
       });
     }
-    
+
     return res.json({
       success: true,
       message: 'Cache hit',
@@ -87,15 +87,15 @@ router.get('/', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('[Cache API] GET error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Invalid request parameters',
-        errors: error.errors,
+        errors: error.issues,
       });
     }
-    
+
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
@@ -111,12 +111,12 @@ router.get('/', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { key, type, value, ttl } = setCacheSchema.parse(req.body);
-    
+
     const prefix = getCachePrefix(type);
     const fullKey = `${prefix}${key}`;
-    
+
     await setCache(fullKey, value, ttl || appConfig.cacheTtl);
-    
+
     return res.json({
       success: true,
       message: 'Cache set successfully',
@@ -127,15 +127,15 @@ router.post('/', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('[Cache API] POST error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Invalid request body',
-        errors: error.errors,
+        errors: error.issues,
       });
     }
-    
+
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
@@ -151,27 +151,27 @@ router.post('/', async (req: Request, res: Response) => {
 router.delete('/', async (req: Request, res: Response) => {
   try {
     const { key, type } = deleteCacheSchema.parse(req.query);
-    
+
     const prefix = getCachePrefix(type);
     const fullKey = `${prefix}${key}`;
-    
+
     await deleteCache(fullKey);
-    
+
     return res.json({
       success: true,
       message: 'Cache deleted successfully',
     });
   } catch (error) {
     console.error('[Cache API] DELETE error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Invalid request parameters',
-        errors: error.errors,
+        errors: error.issues,
       });
     }
-    
+
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
@@ -187,9 +187,9 @@ router.delete('/', async (req: Request, res: Response) => {
 router.post('/clear', async (req: Request, res: Response) => {
   try {
     const { type } = clearCacheSchema.parse(req.body);
-    
+
     let deletedCount = 0;
-    
+
     if (type === 'all') {
       // Clear all cache types
       const types = ['analysis', 'suggestions', 'enhancement', 'chat'];
@@ -201,7 +201,7 @@ router.post('/clear', async (req: Request, res: Response) => {
       const prefix = getCachePrefix(type);
       deletedCount = await clearCacheByPrefix(prefix);
     }
-    
+
     return res.json({
       success: true,
       message: `Cleared ${deletedCount} cache entries`,
@@ -212,15 +212,15 @@ router.post('/clear', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('[Cache API] CLEAR error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Invalid request body',
-        errors: error.errors,
+        errors: error.issues,
       });
     }
-    
+
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
@@ -233,10 +233,10 @@ router.post('/clear', async (req: Request, res: Response) => {
  * GET /api/cache/stats
  * Get cache statistics
  */
-router.get('/stats', async (req: Request, res: Response) => {
+router.get('/stats', async (_req: Request, res: Response) => {
   try {
     const stats = await getCacheStats();
-    
+
     return res.json({
       success: true,
       message: 'Cache statistics retrieved',
@@ -244,7 +244,7 @@ router.get('/stats', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('[Cache API] STATS error:', error);
-    
+
     return res.status(500).json({
       success: false,
       message: 'Internal server error',

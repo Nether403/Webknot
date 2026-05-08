@@ -13,7 +13,7 @@ import { getMetricsService } from './metricsService';
 
 export class GeminiService {
   private config: GeminiConfig;
-  private baseUrl = 'http://localhost:3001/api/ai'; // TODO: Update to use VITE_API_URL if needed
+  private baseUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/ai`;
 
   constructor(config: GeminiConfig) {
     this.config = config;

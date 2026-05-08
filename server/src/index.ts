@@ -14,10 +14,12 @@ import aiRoutes from './routes/ai.js';
 const app: Express = express();
 
 // Middleware
-app.use(cors({
-  origin: appConfig.allowedOrigins,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: appConfig.allowedOrigins,
+    credentials: true,
+  })
+);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -25,14 +27,14 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = Date.now() - start;
     console.log(
       `[${new Date().toISOString()}] ${req.method} ${req.path} - ${res.statusCode} (${duration}ms)`
     );
   });
-  
+
   next();
 });
 
@@ -42,7 +44,7 @@ app.use('/api/cache', cacheRoutes);
 app.use('/api/ai', aiRoutes);
 
 // Root endpoint
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.json({
     name: 'WebKnot API',
     version: '1.0.0',
@@ -65,9 +67,9 @@ app.use((req: Request, res: Response) => {
 });
 
 // Error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('[Server] Unhandled error:', err);
-  
+
   res.status(500).json({
     success: false,
     message: 'Internal server error',

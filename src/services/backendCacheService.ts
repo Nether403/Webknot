@@ -298,11 +298,11 @@ let backendCacheInstance: BackendCacheService | null = null;
  */
 export function getBackendCacheService(): BackendCacheService {
   if (!backendCacheInstance) {
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
     backendCacheInstance = new BackendCacheService({
-      apiUrl: import.meta.env['VITE_API_URL']
-        ? `${import.meta.env['VITE_API_URL']}/api/cache`
-        : 'http://localhost:3001/api/cache',
-      enableBackend: import.meta.env['VITE_ENABLE_BACKEND_CACHE'] !== 'false',
+      apiUrl: `${apiBaseUrl}/api/cache`,
+      enableBackend: import.meta.env.VITE_ENABLE_BACKEND_CACHE !== 'false',
       fallbackToLocal: true,
       timeout: 5000,
     });

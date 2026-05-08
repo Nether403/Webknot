@@ -7,7 +7,6 @@ import {
   Typography,
   VisualElement,
   FunctionalityOption,
-  BackgroundOption,
   ComponentOption,
   AnimationOption,
   BackgroundSelection,
@@ -447,7 +446,10 @@ export const BoltBuilderProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     // Build react-bits summary
     const reactBitsSummary = [];
-    if (backgroundSelectionState?.type === 'react-bits' && backgroundSelectionState.reactBitsComponent) {
+    if (
+      backgroundSelectionState?.type === 'react-bits' &&
+      backgroundSelectionState.reactBitsComponent
+    ) {
       reactBitsSummary.push(`${backgroundSelectionState.reactBitsComponent.title} background`);
     }
     if (selectedComponents.length > 0) {

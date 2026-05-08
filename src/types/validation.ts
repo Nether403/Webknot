@@ -44,7 +44,7 @@ export const projectInfoSchema = z.object({
     .max(2000, 'Description must be less than 2000 characters'),
 
   type: z.enum(['Website', 'Web App', 'Mobile App', 'Dashboard', 'E-commerce', 'Portfolio'], {
-    errorMap: () => ({ message: 'Please select a valid project type' }),
+    message: 'Please select a valid project type',
   }),
 
   purpose: z.string().min(1, 'Purpose is required'),
@@ -94,7 +94,7 @@ export interface ValidationResult<T = unknown> {
 export function parseValidationErrors(error: z.ZodError): Record<string, string[]> {
   const errors: Record<string, string[]> = {};
 
-  error.errors.forEach((err) => {
+  error.issues.forEach((err) => {
     const path = err.path.join('.');
     if (!errors[path]) {
       errors[path] = [];

@@ -12,10 +12,10 @@ const router = Router();
  * GET /api/health
  * Basic health check
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_req: Request, res: Response) => {
   try {
     const redisHealthy = await checkRedisHealth();
-    
+
     const health = {
       status: redisHealthy ? 'healthy' : 'degraded',
       timestamp: new Date().toISOString(),
@@ -24,13 +24,13 @@ router.get('/', async (req: Request, res: Response) => {
         api: 'up',
       },
     };
-    
+
     const statusCode = redisHealthy ? 200 : 503;
-    
+
     return res.status(statusCode).json(health);
   } catch (error) {
     console.error('[Health] Health check failed:', error);
-    
+
     return res.status(503).json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),

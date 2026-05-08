@@ -1,9 +1,9 @@
 /**
  * SmartSuggestionPanel Component
- * 
+ *
  * Displays AI-powered suggestions based on user selections in a collapsible panel.
  * Shows confidence scores, reasoning, and allows one-click application of suggestions.
- * 
+ *
  * @module SmartSuggestionPanel
  */
 
@@ -24,7 +24,7 @@ export interface SmartSuggestionPanelProps {
 
 /**
  * SmartSuggestionPanel displays context-aware suggestions with confidence scores
- * 
+ *
  * Features:
  * - Collapsible panel to save screen space
  * - Confidence percentage for each suggestion
@@ -32,12 +32,12 @@ export interface SmartSuggestionPanelProps {
  * - One-click apply buttons for individual items
  * - Visual feedback on hover
  * - Badge showing number of suggestions
- * 
+ *
  * @param suggestions - Array of suggestions to display
  * @param onApplySuggestion - Callback when user applies a suggestion
  * @param onDismiss - Optional callback when panel is dismissed
  * @param className - Optional additional CSS classes
- * 
+ *
  * @example
  * ```tsx
  * <SmartSuggestionPanel
@@ -51,7 +51,7 @@ export interface SmartSuggestionPanelProps {
 const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
   suggestions,
   onApplySuggestion,
-  onDismiss,
+  onDismiss: _onDismiss,
   className = '',
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -71,38 +71,39 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isExpanded]);
 
-  if (suggestions.length === 0) return null;
-
   // Memoize event handlers to prevent unnecessary re-renders
-  const handleApply = useCallback((suggestion: Suggestion, item: any) => {
-    onApplySuggestion(suggestion, item);
-    setAppliedItems(prev => new Set(prev).add(item.id));
-    setAppliedCount(prev => prev + 1);
-    
-    // Track analytics event
-    trackAIEvent('suggestion_applied', {
-      category: suggestion.category,
-      confidence: suggestion.confidence,
-      itemId: item.id,
-      itemTitle: item.title,
-    });
-    
-    // Show feedback after 2 suggestions applied
-    if (appliedCount + 1 >= 2 && !showFeedback) {
-      setTimeout(() => {
-        setShowFeedback(true);
-      }, 1000);
-    }
-    
-    // Remove from applied after 2 seconds to allow re-application
-    setTimeout(() => {
-      setAppliedItems(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(item.id);
-        return newSet;
+  const handleApply = useCallback(
+    (suggestion: Suggestion, item: any) => {
+      onApplySuggestion(suggestion, item);
+      setAppliedItems((prev) => new Set(prev).add(item.id));
+      setAppliedCount((prev) => prev + 1);
+
+      // Track analytics event
+      trackAIEvent('suggestion_applied', {
+        category: suggestion.category,
+        confidence: suggestion.confidence,
+        itemId: item.id,
+        itemTitle: item.title,
       });
-    }, 2000);
-  }, [onApplySuggestion, appliedCount, showFeedback]);
+
+      // Show feedback after 2 suggestions applied
+      if (appliedCount + 1 >= 2 && !showFeedback) {
+        setTimeout(() => {
+          setShowFeedback(true);
+        }, 1000);
+      }
+
+      // Remove from applied after 2 seconds to allow re-application
+      setTimeout(() => {
+        setAppliedItems((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(item.id);
+          return newSet;
+        });
+      }, 2000);
+    },
+    [onApplySuggestion, appliedCount, showFeedback]
+  );
 
   const handleFeedback = useCallback((feedback: FeedbackData) => {
     saveFeedback(feedback);
@@ -111,12 +112,14 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
   }, []);
 
   const handleToggleExpand = useCallback(() => {
-    setIsExpanded(prev => !prev);
+    setIsExpanded((prev) => !prev);
   }, []);
 
+  if (suggestions.length === 0) return null;
+
   return (
-    <div 
-      className={`relative overflow-hidden rounded-xl ${className}`} 
+    <div
+      className={`relative overflow-hidden rounded-xl ${className}`}
       data-tour="ai-suggestions"
       role="region"
       aria-label="AI suggestions panel"
@@ -127,10 +130,8 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-teal-500" aria-hidden="true" />
-            <h3 className="text-lg font-semibold text-white">
-              AI Suggestions
-            </h3>
-            <span 
+            <h3 className="text-lg font-semibold text-white">AI Suggestions</h3>
+            <span
               className="px-2 py-0.5 text-xs font-medium bg-teal-500/20 text-teal-400 rounded-full"
               role="status"
               aria-label={`${suggestions.length} suggestions available`}
@@ -168,29 +169,26 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
         {isExpanded && (
           <div className="space-y-4" id="suggestions-content">
             {suggestions.map((suggestion, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="border-l-2 border-teal-500 pl-4"
                 role="group"
                 aria-labelledby={`suggestion-title-${index}`}
               >
                 {/* Suggestion Header */}
                 <div className="mb-2">
-                  <h4 
-                    id={`suggestion-title-${index}`}
-                    className="font-medium text-white mb-1"
-                  >
+                  <h4 id={`suggestion-title-${index}`} className="font-medium text-white mb-1">
                     {suggestion.title}
                   </h4>
                   <p className="text-sm text-gray-400">{suggestion.reason}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span 
+                    <span
                       className="text-xs text-gray-500"
                       aria-label={`Confidence level: ${Math.round(suggestion.confidence * 100)} percent`}
                     >
                       Confidence: {Math.round(suggestion.confidence * 100)}%
                     </span>
-                    <div 
+                    <div
                       className="flex-1 h-1 bg-gray-700 rounded-full overflow-hidden"
                       role="progressbar"
                       aria-valuenow={Math.round(suggestion.confidence * 100)}
@@ -207,14 +205,14 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
                 </div>
 
                 {/* Suggestion Items Grid */}
-                <div 
+                <div
                   className="grid grid-cols-2 gap-2 mt-2"
                   role="list"
                   aria-label={`${suggestion.title} options`}
                 >
                   {suggestion.items.slice(0, 6).map((item, itemIndex) => {
                     const isApplied = appliedItems.has(item.id);
-                    
+
                     return (
                       <button
                         key={itemIndex}
@@ -230,9 +228,10 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
                         disabled={isApplied}
                         className={`
                           text-left p-3 rounded-lg transition-all
-                          ${isApplied
-                            ? 'bg-teal-500/20 border border-teal-500/50'
-                            : 'bg-gray-800/50 hover:bg-gray-700/50 border border-transparent'
+                          ${
+                            isApplied
+                              ? 'bg-teal-500/20 border border-teal-500/50'
+                              : 'bg-gray-800/50 hover:bg-gray-700/50 border border-transparent'
                           }
                           disabled:cursor-not-allowed
                           focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900
@@ -247,8 +246,8 @@ const SmartSuggestionPanelComponent: React.FC<SmartSuggestionPanelProps> = ({
                             {item.title}
                           </span>
                           {isApplied && (
-                            <CheckCircle 
-                              className="w-4 h-4 text-teal-400 shrink-0" 
+                            <CheckCircle
+                              className="w-4 h-4 text-teal-400 shrink-0"
                               aria-hidden="true"
                             />
                           )}

@@ -72,44 +72,50 @@ const ProjectSetupStep: React.FC = () => {
    * Trigger AI analysis when description reaches 20 characters
    * Debounced to avoid excessive API calls
    */
-  const triggerAiAnalysis = useCallback(async (description: string) => {
-    if (description.length < 20) {
-      setAiAnalysis(null);
-      setShowAiSuggestions(false);
-      return;
-    }
-
-    try {
-      console.log('[ProjectSetupStep] Triggering AI analysis for description:', description.substring(0, 50) + '...');
-      const analysis = await analyzeProject(description);
-
-      console.log('[ProjectSetupStep] AI analysis complete:', {
-        projectType: analysis.projectType,
-        designStyle: analysis.designStyle,
-        colorTheme: analysis.colorTheme,
-        confidence: analysis.confidence,
-        isUsingFallback,
-      });
-
-      setAiAnalysis(analysis);
-
-      // Show suggestions if confidence is high enough (>0.8)
-      if (analysis.confidence > 0.8) {
-        setShowAiSuggestions(true);
+  const triggerAiAnalysis = useCallback(
+    async (description: string) => {
+      if (description.length < 20) {
+        setAiAnalysis(null);
+        setShowAiSuggestions(false);
+        return;
       }
 
-      // Track analytics
-      trackAIEvent('ai_analysis_completed', {
-        confidence: analysis.confidence,
-        projectType: analysis.projectType,
-        isUsingFallback,
-      });
-    } catch (error) {
-      console.error('[ProjectSetupStep] AI analysis failed:', error);
-      // Error is already handled by useGemini hook
-      // Just log it here for debugging
-    }
-  }, [analyzeProject, isUsingFallback]);
+      try {
+        console.log(
+          '[ProjectSetupStep] Triggering AI analysis for description:',
+          description.substring(0, 50) + '...'
+        );
+        const analysis = await analyzeProject(description);
+
+        console.log('[ProjectSetupStep] AI analysis complete:', {
+          projectType: analysis.projectType,
+          designStyle: analysis.designStyle,
+          colorTheme: analysis.colorTheme,
+          confidence: analysis.confidence,
+          isUsingFallback,
+        });
+
+        setAiAnalysis(analysis);
+
+        // Show suggestions if confidence is high enough (>0.8)
+        if (analysis.confidence > 0.8) {
+          setShowAiSuggestions(true);
+        }
+
+        // Track analytics
+        trackAIEvent('ai_analysis_completed', {
+          confidence: analysis.confidence,
+          projectType: analysis.projectType,
+          isUsingFallback,
+        });
+      } catch (error) {
+        console.error('[ProjectSetupStep] AI analysis failed:', error);
+        // Error is already handled by useGemini hook
+        // Just log it here for debugging
+      }
+    },
+    [analyzeProject, isUsingFallback]
+  );
 
   /**
    * Effect to trigger analysis when description changes
@@ -143,14 +149,14 @@ const ProjectSetupStep: React.FC = () => {
     }
 
     // Find and apply design style
-    const designStyle = designStyles.find(s => s.id === aiAnalysis.designStyle);
+    const designStyle = designStyles.find((s) => s.id === aiAnalysis.designStyle);
     if (designStyle) {
       setSelectedDesignStyle(designStyle);
       console.log('[ProjectSetupStep] Applied design style:', designStyle.title);
     }
 
     // Find and apply color theme
-    const colorTheme = colorThemes.find(t => t.id === aiAnalysis.colorTheme);
+    const colorTheme = colorThemes.find((t) => t.id === aiAnalysis.colorTheme);
     if (colorTheme) {
       setSelectedColorTheme(colorTheme);
       console.log('[ProjectSetupStep] Applied color theme:', colorTheme.title);
@@ -158,26 +164,35 @@ const ProjectSetupStep: React.FC = () => {
 
     // Apply suggested components if available
     if (aiAnalysis.suggestedComponents && aiAnalysis.suggestedComponents.length > 0) {
-      const components = componentOptions.filter(c =>
+      const components = componentOptions.filter((c) =>
         aiAnalysis.suggestedComponents?.includes(c.id)
       );
       if (components.length > 0) {
         setSelectedComponents(components);
-        console.log('[ProjectSetupStep] Applied suggested components:', components.map(c => c.title));
+        console.log(
+          '[ProjectSetupStep] Applied suggested components:',
+          components.map((c) => c.title)
+        );
 
         // Store auto-selected component IDs for visual indicators
-        sessionStorage.setItem('autoSelectedComponents', JSON.stringify(components.map(c => c.id)));
+        sessionStorage.setItem(
+          'autoSelectedComponents',
+          JSON.stringify(components.map((c) => c.id))
+        );
       }
     }
 
     // Apply suggested animations if available
     if (aiAnalysis.suggestedAnimations && aiAnalysis.suggestedAnimations.length > 0) {
-      const animations = animationOptions.filter(a =>
+      const animations = animationOptions.filter((a) =>
         aiAnalysis.suggestedAnimations?.includes(a.id)
       );
       if (animations.length > 0) {
         setSelectedAnimations(animations);
-        console.log('[ProjectSetupStep] Applied suggested animations:', animations.map(a => a.title));
+        console.log(
+          '[ProjectSetupStep] Applied suggested animations:',
+          animations.map((a) => a.title)
+        );
       }
     }
 
@@ -315,7 +330,7 @@ const ProjectSetupStep: React.FC = () => {
       if (background) {
         setBackgroundSelection({
           type: 'react-bits',
-          id: background.id
+          reactBitsComponent: background,
         });
       }
     }
@@ -326,18 +341,21 @@ const ProjectSetupStep: React.FC = () => {
       // Log component auto-selection
       if (components.length > 0) {
         console.log('[Smart Defaults] Auto-selecting components:', {
-          components: components.map(c => c.title),
+          components: components.map((c) => c.title),
           reason: `Recommended for ${projectInfo.type} projects`,
           timestamp: new Date().toISOString(),
         });
 
         // Store auto-selected component IDs for visual indicators
-        sessionStorage.setItem('autoSelectedComponents', JSON.stringify(components.map(c => c.id)));
+        sessionStorage.setItem(
+          'autoSelectedComponents',
+          JSON.stringify(components.map((c) => c.id))
+        );
 
         // Show notification about auto-selected components
         toast({
           title: 'Components Auto-Selected',
-          description: `${components.length} component${components.length > 1 ? 's' : ''} selected: ${components.map(c => c.title).join(', ')}. You can review and modify these in the Components step.`,
+          description: `${components.length} component${components.length > 1 ? 's' : ''} selected: ${components.map((c) => c.title).join(', ')}. You can review and modify these in the Components step.`,
           duration: 5000,
         });
       }
@@ -391,7 +409,7 @@ const ProjectSetupStep: React.FC = () => {
       if (error instanceof z.ZodError) {
         // Extract errors from Zod validation
         const newErrors: Record<string, string[]> = {};
-        error.errors.forEach((err) => {
+        error.issues.forEach((err) => {
           const path = err.path.join('.');
           if (!newErrors[path]) {
             newErrors[path] = [];
@@ -542,7 +560,9 @@ const ProjectSetupStep: React.FC = () => {
             <div className="flex items-center gap-3">
               <Loader2 className="w-5 h-5 text-teal-400 animate-spin" />
               <div className="flex-1">
-                <p className="text-sm text-white font-medium">AI is analyzing your description...</p>
+                <p className="text-sm text-white font-medium">
+                  AI is analyzing your description...
+                </p>
                 <p className="text-xs text-gray-400 mt-1">This may take a moment</p>
               </div>
             </div>
@@ -557,7 +577,8 @@ const ProjectSetupStep: React.FC = () => {
               <div className="flex-1">
                 <p className="text-sm text-white font-medium">AI temporarily unavailable</p>
                 <p className="text-xs text-gray-400 mt-1">
-                  Using standard rule-based analysis. The wizard remains fully functional with intelligent defaults.
+                  Using standard rule-based analysis. The wizard remains fully functional with
+                  intelligent defaults.
                 </p>
               </div>
             </div>
@@ -608,13 +629,15 @@ const ProjectSetupStep: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Design Style:</span>
                     <span className="text-white font-medium">
-                      {designStyles.find(s => s.id === aiAnalysis.designStyle)?.title || aiAnalysis.designStyle}
+                      {designStyles.find((s) => s.id === aiAnalysis.designStyle)?.title ||
+                        aiAnalysis.designStyle}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Color Theme:</span>
                     <span className="text-white font-medium">
-                      {colorThemes.find(t => t.id === aiAnalysis.colorTheme)?.title || aiAnalysis.colorTheme}
+                      {colorThemes.find((t) => t.id === aiAnalysis.colorTheme)?.title ||
+                        aiAnalysis.colorTheme}
                     </span>
                   </div>
                 </div>
@@ -656,12 +679,10 @@ const ProjectSetupStep: React.FC = () => {
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-sm font-semibold text-white mb-1">
-                  Using Standard Analysis
-                </h3>
+                <h3 className="text-sm font-semibold text-white mb-1">Using Standard Analysis</h3>
                 <p className="text-sm text-gray-300">
-                  AI features are temporarily unavailable. We've applied our standard analysis based on your description.
-                  The recommendations are still accurate and helpful!
+                  AI features are temporarily unavailable. We've applied our standard analysis based
+                  on your description. The recommendations are still accurate and helpful!
                 </p>
               </div>
             </div>
@@ -703,7 +724,6 @@ const ProjectSetupStep: React.FC = () => {
           <select
             id="project-type"
             value={projectInfo.type}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e) => {
               setProjectInfo({ ...projectInfo, type: e.target.value as any });
               setSmartDefaultsApplied(false); // Reset when type changes

@@ -9,7 +9,7 @@
  * - Harmony level thresholds
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   checkCompatibility,
   calculateCompatibilityScore,
@@ -499,6 +499,7 @@ describe('Compatibility Checker System', () => {
     it('should return default result on error', () => {
       // Pass invalid input that might cause an error
       const selections: any = null;
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const result = safeCheckCompatibility(selections);
 
@@ -506,6 +507,8 @@ describe('Compatibility Checker System', () => {
       expect(result.issues).toEqual([]);
       expect(result.warnings).toEqual([]);
       expect(result.harmony).toBe('good');
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('should not throw error on malformed input', () => {

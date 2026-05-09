@@ -9,7 +9,7 @@ import { TemplateSelector } from '../preview/TemplateSelector';
 import { FeedbackPrompt, FeedbackData } from '../ai/FeedbackPrompt';
 import { saveFeedback } from '../../utils/feedbackStorage';
 import { trackAIEvent } from '../../utils/analyticsTracking';
-import { useGemini } from '../../hooks/useGemini';
+import { useEnhancePrompt } from '../../hooks/ai/useAiMutations';
 import { isAIEnabled } from '../../utils/aiPreferences';
 import {
   renderTemplate,
@@ -50,8 +50,7 @@ const PreviewStep: React.FC = () => {
   const [showEnhancement, setShowEnhancement] = useState(false);
   const [enhancement, setEnhancement] = useState<PromptEnhancementType | null>(null);
   
-  // Initialize Gemini hook for prompt enhancement
-  const { enhancePrompt, isLoading: isEnhancing, error: enhancementError } = useGemini();
+  const { enhancePrompt, isEnhancing, enhancementError } = useEnhancePrompt();
 
   const generatePromptType = (type: 'basic' | 'detailed') => {
     let prompt: string;

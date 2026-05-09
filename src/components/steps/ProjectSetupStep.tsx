@@ -20,7 +20,7 @@ import { FeedbackPrompt, FeedbackData } from '../ai/FeedbackPrompt';
 import { saveFeedback } from '../../utils/feedbackStorage';
 import { trackAIEvent } from '../../utils/analyticsTracking';
 import { toast } from '../../hooks/use-toast';
-import { useGemini } from '../../hooks/useGemini';
+import { useAnalyzeProject } from '../../hooks/ai/useAiMutations';
 import type { ProjectAnalysis } from '../../types/gemini';
 import { AIErrorFeedback } from '../ai/AIErrorFeedback';
 
@@ -60,13 +60,12 @@ const ProjectSetupStep: React.FC = () => {
   const [aiAnalysis, setAiAnalysis] = useState<ProjectAnalysis | null>(null);
   const [showAiSuggestions, setShowAiSuggestions] = useState(false);
 
-  // Initialize Gemini hook
   const {
     analyzeProject,
-    isLoading: isAnalyzing,
-    error: analysisError,
+    isAnalyzing,
+    analysisError,
     isUsingFallback,
-  } = useGemini();
+  } = useAnalyzeProject();
 
   /**
    * Trigger AI analysis when description reaches 20 characters

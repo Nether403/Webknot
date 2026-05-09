@@ -293,6 +293,8 @@ describe('Error Handling - Compatibility Mappings', () => {
 
 describe('Error Handling - Wizard Functionality', () => {
   it('should allow wizard to continue when AI features fail', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     // Test that wizard state is not corrupted by AI errors
     const wizardState = {
       currentStep: 'color-theme',
@@ -308,6 +310,8 @@ describe('Error Handling - Wizard Functionality', () => {
     // Wizard state should remain intact
     expect(wizardState.currentStep).toBe('color-theme');
     expect(wizardState.selectedLayout).toBe('single-column');
+
+    consoleErrorSpy.mockRestore();
   });
 
   it('should handle multiple concurrent AI errors', () => {

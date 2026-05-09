@@ -8,12 +8,11 @@ import type {
   ConversationMessage,
 } from '../types/gemini';
 import type { BoltBuilderState } from '../types';
-import { sanitizeInput } from '../utils/sanitization';
 import { getMetricsService } from './metricsService';
+import { aiClient } from './aiClient';
 
 export class GeminiService {
   private config: GeminiConfig;
-  private baseUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/ai`;
 
   constructor(config: GeminiConfig) {
     this.config = config;
@@ -42,14 +41,7 @@ export class GeminiService {
     const metricsService = getMetricsService();
 
     try {
-      const response = await fetch(`${this.baseUrl}/suggest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state }),
-      });
-
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const result = await response.json();
+      const result = await aiClient.suggestImprovements(state);
 
       metricsService.logApiCall({
         timestamp: Date.now(),
@@ -61,7 +53,7 @@ export class GeminiService {
         success: true,
       });
 
-      return result.suggestions || [];
+      return result.suggestions;
     } catch (error) {
       metricsService.logApiCall({
         timestamp: Date.now(),
@@ -82,14 +74,7 @@ export class GeminiService {
     const metricsService = getMetricsService();
 
     try {
-      const response = await fetch(`${this.baseUrl}/enhance`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ basicPrompt }),
-      });
-
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const result = await response.json();
+      const result = await aiClient.enhancePrompt(basicPrompt);
 
       metricsService.logApiCall({
         timestamp: Date.now(),
@@ -132,15 +117,7 @@ export class GeminiService {
     const metricsService = getMetricsService();
 
     try {
-      const sanitized = sanitizeInput(message);
-      const response = await fetch(`${this.baseUrl}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: sanitized, context, history }),
-      });
-
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const result = await response.json();
+      const result = await aiClient.chat(message, context, history);
 
       metricsService.logApiCall({
         timestamp: Date.now(),
@@ -173,15 +150,7 @@ export class GeminiService {
     const metricsService = getMetricsService();
 
     try {
-      const sanitized = sanitizeInput(description);
-      const response = await fetch(`${this.baseUrl}/analyze`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: sanitized }),
-      });
-
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const result = await response.json();
+      const result = await aiClient.analyzeProject(description);
 
       metricsService.logApiCall({
         timestamp: Date.now(),

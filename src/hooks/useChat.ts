@@ -9,7 +9,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { useGemini } from './useGemini';
+import { useAiChat } from './ai/useAiMutations';
 import { useBoltBuilder } from '../contexts/BoltBuilderContext';
 import type { ConversationMessage } from '../types/gemini';
 import {
@@ -70,7 +70,7 @@ export function useChat(): UseChatResult {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   
-  const { chat, isLoading } = useGemini();
+  const { sendChatMessage, isChatting } = useAiChat();
   const wizardContext = useBoltBuilder();
   
   // Load conversation history on mount
@@ -165,7 +165,11 @@ export function useChat(): UseChatResult {
         
         // Get AI response with wizard context
         // Note: chat method signature is (message, wizardState?, currentStep?)
-        const response = await chat(message, wizardState, wizardContext.currentStep);
+        const response = await sendChatMessage({
+          message,
+          wizardState,
+          currentStep: wizardContext.currentStep,
+        });
         
         // Add assistant message to history
         const assistantMessage: ConversationMessage = {
@@ -204,7 +208,7 @@ export function useChat(): UseChatResult {
         throw error;
       }
     },
-    [chat]
+    [sendChatMessage, wizardContext]
   );
   
   /**
@@ -223,7 +227,7 @@ export function useChat(): UseChatResult {
     toggleChat,
     messages,
     sendMessage,
-    isLoading,
+    isLoading: isChatting,
     clearHistory,
   };
 }

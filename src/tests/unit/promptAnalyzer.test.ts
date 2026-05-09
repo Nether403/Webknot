@@ -9,7 +9,7 @@
  * - Auto-fix application
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   analyzePrompt,
   calculatePromptScore,
@@ -461,6 +461,7 @@ describe('Prompt Analyzer System', () => {
     it('should return default result on error', () => {
       // Pass invalid input that might cause an error
       const input: any = null;
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const result = safeAnalyzePrompt(input);
 
@@ -468,12 +469,17 @@ describe('Prompt Analyzer System', () => {
       expect(result.suggestions).toEqual([]);
       expect(result.strengths).toEqual([]);
       expect(result.weaknesses).toEqual([]);
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('should not throw error on malformed input', () => {
       const input: any = { prompt: null };
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       expect(() => safeAnalyzePrompt(input)).not.toThrow();
+
+      consoleErrorSpy.mockRestore();
     });
   });
 });

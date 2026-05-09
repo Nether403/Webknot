@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { useGemini } from './useGemini';
+import { useSuggestImprovements } from './ai/useAiMutations';
 import { useBoltBuilder } from '../contexts/BoltBuilderContext';
 import type { DesignSuggestion } from '../types/gemini';
 
@@ -90,8 +90,7 @@ export function useDesignSuggestions(
     debounceMs = 1000,
   } = options;
   
-  // Get Gemini hook for AI operations
-  const { suggestImprovements, isLoading, error } = useGemini();
+  const { suggestImprovements, isSuggesting, suggestionError } = useSuggestImprovements();
   
   // Get wizard state
   const state = useBoltBuilder();
@@ -236,8 +235,8 @@ export function useDesignSuggestions(
   
   return {
     suggestions,
-    isLoading,
-    error,
+    isLoading: isSuggesting,
+    error: suggestionError,
     isVisible,
     analyzeSuggestions,
     showSuggestions,

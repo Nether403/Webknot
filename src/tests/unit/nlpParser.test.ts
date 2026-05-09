@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { parseProjectDescription, safeParseProjectDescription } from '../../utils/nlpParser';
 
 describe('NLP Parser', () => {
@@ -31,9 +31,13 @@ describe('NLP Parser', () => {
   });
 
   it('safe parser handles invalid input gracefully', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     const result = safeParseProjectDescription(null as unknown as string);
 
     expect(result.confidence).toEqual({});
     expect(result.detectedKeywords).toEqual([]);
+
+    consoleErrorSpy.mockRestore();
   });
 });
